@@ -1,5 +1,6 @@
 package com.controllers;
 
+import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +19,11 @@ import java.io.IOException;
  */
 public class LoginMenuController {
 
+    private Placeholder placeholder = new Placeholder();
+
     private Stage stage;
 
-    private String placeholder = "PLACEHOLDER";
+   // private String placeholder = "PLACEHOLDER";
 
     @FXML
     private TextField textField_Login;
@@ -35,25 +38,25 @@ public class LoginMenuController {
     private Button button_SignUp;
 
 
-    public void placeholder(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(placeholder);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
+//    public void placeholder(ActionEvent event) {
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setContentText(placeholder);
+//        alert.setHeaderText(null);
+//        alert.showAndWait();
+//    }
 
-    public void placeholder() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(placeholder);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
+//    public void placeholder() {
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setContentText(placeholder);
+//        alert.setHeaderText(null);
+//        alert.showAndWait();
+//    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public void signIn(ActionEvent event) {
+    public void signIn(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         if(textField_Login.getText().equals("")){
@@ -65,7 +68,21 @@ public class LoginMenuController {
         } else if (textField_Login.getText().equals(passwordField_Password.getText())) {
 
             //TODO
-            placeholder();
+           // placeholder();
+
+            //placeholder.getAlert();
+
+            FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/mainMenu.fxml"));
+            Pane mainMenuPane = (Pane)mainMenuLoader.load();
+            Scene mainMenuScene = new Scene(mainMenuPane);
+            stage.setScene(mainMenuScene);
+            stage.setMinHeight(500);
+            stage.setMinWidth(600);
+            stage.setResizable(true);
+            stage.setTitle("Main menu");
+            MainMenuController mainMenuController = (MainMenuController)mainMenuLoader.getController();
+            mainMenuController.setStage(stage);
+            stage.show();
 
         } else {
             alert.setContentText("Login or password incorrect!");

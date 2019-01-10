@@ -1,5 +1,12 @@
 package com.models;
 
+import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * Created by Admin on 06.01.2019.
  */
@@ -16,6 +23,18 @@ public class Doctor {
         this.login = login;
         this.password = password;
     }
+
+    public Doctor() {
+
+    }
+
+    public Doctor fromJson(HttpResponse response) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+        String json = reader.readLine();
+
+        return new Gson().fromJson(json, Doctor.class);
+    }
+
 
     public String getName() {
         return name;

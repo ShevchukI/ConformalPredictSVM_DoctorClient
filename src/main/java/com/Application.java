@@ -1,6 +1,6 @@
 package com;
 
-import com.controllers.LoginMenuController;
+import com.controllers.windows.LoginMenuController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

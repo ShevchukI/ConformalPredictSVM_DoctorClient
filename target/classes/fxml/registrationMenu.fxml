@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.PasswordField?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.RegistrationMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.RegistrationMenuController">
    <children>
       <FlowPane prefHeight="43.0" prefWidth="600.0">
          <children>

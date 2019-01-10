@@ -10,13 +10,10 @@ import java.io.InputStreamReader;
 /**
  * Created by Admin on 06.01.2019.
  */
-
 public class Doctor {
 
-    private int id;
     private String name;
     private String surname;
-    private Specialization specialization;
     private String login;
     private String password;
 
@@ -27,16 +24,6 @@ public class Doctor {
         this.password = password;
     }
 
-    public Doctor(String name, String surname, Specialization specialization) {
-        this.name = name;
-        this.surname = surname;
-        this.specialization = specialization;
-    }
-
-    public Doctor(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-    }
     public Doctor() {
 
     }
@@ -48,13 +35,6 @@ public class Doctor {
         return new Gson().fromJson(json, Doctor.class);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -72,10 +52,6 @@ public class Doctor {
         this.surname = surname;
     }
 
-    public Specialization getSpecialization() {
-        return specialization;
-    }
-
     public String getLogin() {
         return login;
     }
@@ -91,5 +67,4 @@ public class Doctor {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

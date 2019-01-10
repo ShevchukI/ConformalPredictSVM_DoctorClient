@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.AddPatientAndCardMenuController">
+<?import javafx.scene.control.PasswordField?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.RegistrationMenuController">
    <children>
       <FlowPane prefHeight="43.0" prefWidth="600.0">
          <children>
@@ -38,67 +39,64 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="31.0" prefWidth="408.0">
-         <children>
-            <Label prefHeight="18.0" prefWidth="125.0" text="Telephone:">
-               <FlowPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </FlowPane.margin>
-            </Label>
-            <TextField fx:id="textField_Telephone" prefHeight="26.0" prefWidth="225.0" promptText="+380XXXXXXXXX">
-               <tooltip>
-                  <Tooltip fx:id="tooltip_Telephone" text="Enter your telephone" />
-               </tooltip>
-            </TextField>
-         </children>
-      </FlowPane>
       <FlowPane prefHeight="1.0" prefWidth="600.0">
          <children>
-            <Label prefHeight="18.0" prefWidth="125.0" text="Address:">
+            <Label prefHeight="18.0" prefWidth="125.0" text="Login:">
                <FlowPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </FlowPane.margin>
             </Label>
-            <TextField fx:id="textField_Address" prefHeight="26.0" prefWidth="225.0" promptText="Region, City, Street">
+            <TextField fx:id="textField_Login" prefHeight="26.0" prefWidth="225.0" promptText="Login">
                <tooltip>
-                  <Tooltip fx:id="tooltip_Address" text="Enter your address" />
+                  <Tooltip fx:id="tooltip_Login" text="Enter your login" />
                </tooltip>
             </TextField>
          </children>
       </FlowPane>
       <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
-            <Label prefHeight="18.0" prefWidth="125.0" text="Email:">
+            <Label prefHeight="18.0" prefWidth="125.0" text="Password:">
                <FlowPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </FlowPane.margin>
             </Label>
-            <TextField fx:id="textField_Email" prefHeight="26.0" prefWidth="225.0" promptText="example@example.com">
+            <PasswordField fx:id="passwordField_Password" prefHeight="26.0" prefWidth="225.0">
                <tooltip>
-                  <Tooltip fx:id="tooltip_Email" text="Enter your email" />
+                  <Tooltip fx:id="tooltip_Password" text="Enter your password" />
                </tooltip>
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin>
-            </TextField>
+            </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="40.0" prefWidth="408.0">
+      <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
-            <Button onAction="#savePatient" prefHeight="26.0" prefWidth="60.0" text="Save">
+            <Label prefHeight="18.0" prefWidth="125.0" text="Confirm password:">
+               <FlowPane.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </FlowPane.margin>
+            </Label>
+            <PasswordField fx:id="passwordField_ConfirmPassword" prefHeight="26.0" prefWidth="225.0">
+               <tooltip>
+                  <Tooltip fx:id="tooltip_ConfirmPassword" text="Confirm your password" />
+               </tooltip>
+            </PasswordField>
+         </children>
+      </FlowPane>
+      <FlowPane prefHeight="41.0" prefWidth="390.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#register" text="Register">
                <FlowPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </FlowPane.margin>
                <tooltip>
-                  <Tooltip text="Click to save patient" />
+                  <Tooltip text="Click to register" />
                </tooltip>
             </Button>
-            <Button  onAction="#cancel" prefHeight="26.0" prefWidth="80.0" text="Cancel">
+            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel">
                <FlowPane.margin>
                   <Insets bottom="20.0" left="210.0" top="20.0" />
                </FlowPane.margin>
                <tooltip>
-                  <Tooltip text="Click to cancel and return to main menu" />
+                  <Tooltip text="Click to cancel and return to login menu" />
                </tooltip>
             </Button>
          </children>

@@ -1,6 +1,7 @@
 package com.controllers.requests;
 
-
+import com.google.gson.Gson;
+import com.models.Doctor;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -27,9 +28,14 @@ public class AuthorizationController {
 
     private int statusCode;
 
+    private final static String HOSTNAME = "localhost";
+    private final static int PORT = 8888;
+    private final static String SCHEME = "http";
+    private final static String URL = "http://localhost:8888";
+
     public HttpResponse getDoctorAuth(String name, String password) throws IOException {
 
-        HttpHost targetHost = new HttpHost("localhost", 8888, "http");
+        HttpHost targetHost = new HttpHost(HOSTNAME, PORT, SCHEME);
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(name, password));
 
@@ -43,7 +49,7 @@ public class AuthorizationController {
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpResponse response = client.execute(
-                new HttpGet("http://localhost:8888/doctor_auth"), context);
+                new HttpGet(URL + "/doctor_auth"), context);
 
 //        statusCode = response.getStatusLine().getStatusCode();
 //
@@ -56,7 +62,6 @@ public class AuthorizationController {
 //        System.out.println(data.getName() + " " + data.getSurname());
 
 
-
         return response;
     }
 
@@ -64,15 +69,20 @@ public class AuthorizationController {
         Client client = Client.create();
 
         WebResource webResource = client
-                .resource("http://localhost:8888/doctor_registration");
+                .resource(URL + "/doctor_registration");
 
-        String input = "{\"name\":\"" + name + "\"," +
-                "\"surname\":\"" + surname + "\"," +
-                "\"login\":\"" + login + "\"," +
-                "\"password\":\"" + password + "\"}";
+
+        Doctor doctor = new Doctor(name, surname, login, password);
+
+        String json = new Gson().toJson(doctor);
+
+//        String input = "{\"name\":\"" + name + "\"," +
+//                "\"surname\":\"" + surname + "\"," +
+//                "\"login\":\"" + login + "\"," +
+//                "\"password\":\"" + password + "\"}";
 
         ClientResponse response = webResource.type("application/json")
-                .post(ClientResponse.class, input);
+                .post(ClientResponse.class, json);
 
         statusCode = response.getStatus();
 

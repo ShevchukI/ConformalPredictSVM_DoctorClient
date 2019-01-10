@@ -10,10 +10,12 @@ import java.io.InputStreamReader;
 /**
  * Created by Admin on 06.01.2019.
  */
+
 public class Doctor {
 
     private String name;
     private String surname;
+
     private String login;
     private String password;
 

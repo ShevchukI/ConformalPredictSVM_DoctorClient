@@ -1,9 +1,7 @@
 package com.controllers.windows;
 
 import com.controllers.requests.DoctorController;
-import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import com.models.Doctor;
 import com.tools.Encryptor;
 import com.tools.Placeholder;
@@ -13,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,23 +31,18 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    DoctorController doctorController = new DoctorController();
+    private Stage stage;
 
-    private int statusCode;
-
-    private String key;
-    private String initVector;
+    private DoctorController doctorController = new DoctorController();
 
     private Encryptor encryptor = new Encryptor();
+
+    private int statusCode;
 
 
     private Placeholder placeholder = new Placeholder();
 
-    //private Stage stage;
-
     private WindowsController windowsController = new WindowsController();
-
-    // private String getPlaceholderAlert = "PLACEHOLDER";
 
     @FXML
     private TextField textField_Login;
@@ -63,41 +57,19 @@ public class LoginMenuController extends MenuController {
     private Button button_SignUp;
 
 
-//    public void getPlaceholderAlert(ActionEvent event) {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setContentText(getPlaceholderAlert);
-//        alert.setHeaderText(null);
-//        alert.showAndWait();
-//    }
-
-//    public void getPlaceholderAlert() {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setContentText(getPlaceholderAlert);
-//        alert.setHeaderText(null);
-//        alert.showAndWait();
-//    }
-
-//    public void setStage(Stage stage) {
-//        this.stage = stage;
-//    }
-
-    HazelcastInstance hz = Hazelcast.newHazelcastInstance();
-//    HazelcastInstance hz;
-
-
-    IMap<String, String> logmap = hz.getMap("login");
-//    IMap<String, String> logmap;
-
     public void initialize() {
-//        logmap.put("login", "");
-//        logmap.put("password", "");
-//        logmap.put("key", "");
-//        logmap.put("vector", "");
-        logmap.clear();
-        key = encryptor.genRandString();
-        initVector = encryptor.genRandString();
+//        System.out.println(this.getStage().getTitle());
+//        System.out.println(this.getInstance().toString());
+//        System.out.println(stage.getTitle());
+    }
 
-
+    public void initialize(Stage stage,HazelcastInstance hazelcastInstance){
+        userMap = hazelcastInstance.getMap("userMap");
+        stage.setOnHidden(event ->{hazelcastInstance.getLifecycleService().shutdown();});
+        setStage(stage);
+        setInstance(hazelcastInstance);
+        getMap().clear();
+        System.out.println(getMap().size());
     }
 
     public void signIn(ActionEvent event) throws IOException {
@@ -119,83 +91,36 @@ public class LoginMenuController extends MenuController {
 
                 Doctor doctor = new Doctor().fromJson(response);
 
-//                System.out.println(doctor.getName() + " : " + doctor.getSurname() + " : " + doctor.getSpecialization().getName() + " : " + doctor.getSpecialization().getId());
+//                doctor.setLogin(textField_Login.getText());
+//                doctor.setPassword(passwordField_Password.getText());
 
+                String key = encryptor.genRandString();
+                String vector = encryptor.genRandString();
 
-                //TODO
+                getMap().put("key", key);
+                getMap().put("vector", vector);
+                getMap().put("login", encryptor.encrypt(key, vector, textField_Login.getText()));
+                getMap().put("password", encryptor.encrypt(key, vector, passwordField_Password.getText()));
 
-                logmap.put("login", encryptor.encrypt(key, initVector, textField_Login.getText()));
-                logmap.put("password", encryptor.encrypt(key, initVector, passwordField_Password.getText()));
-
-                logmap.put("key", key);
-                logmap.put("vector", initVector);
-
-                System.out.println("login: "+logmap.get("login"));
-                System.out.println("password: "+logmap.get("password"));
-                System.out.println("key: "+logmap.get("key"));
-                System.out.println("vector: "+logmap.get("vector"));
-
-                windowsController.openWindowResizable("mainMenu.fxml", this.getStage(), mainMenuController, doctor, "Main menu", 600, 640);
+                System.out.println(getMap().get("key"));
+                System.out.println(getMap().get("vector"));
+                System.out.println(getMap().get("login") + " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()));
+                System.out.println(getMap().get("password")+ " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
+                System.out.println(getMap().size());
+                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, doctor, "Main menu", 600, 640);
             } else {
+
                 alert.setHeaderText("Status code: " + statusCode);
                 alert.setContentText("Login or password incorrect!");
                 alert.showAndWait();
             }
         }
-
-
-
-//        } else if (textField_Login.getText().equals(passwordField_Password.getText())) {
-//
-//            //TODO
-//
-//            statusCode = doctorController.getDoctorAuth(textField_Login.getText(), passwordField_Password.getText());
-//
-//            if (statusCode == 200) {
-//                System.out.println(statusCode);
-//                windowsController.openWindowResizable("mainMenu.fxml", this.getStage(), mainMenuController, "Main menu", 600, 500);
-//            } else if(){
-//
-//            }
-//            // getPlaceholderAlert();
-//
-//            //getPlaceholderAlert.getAlert();
-//
-////            windowsController.openWindowResizable("mainMenu.fxml", this.getStage(), mainMenuController, "Main menu", 600, 500);
-//
-////            FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/mainMenu.fxml"));
-////            Pane mainMenuPane = (Pane)mainMenuLoader.load();
-////            Scene mainMenuScene = new Scene(mainMenuPane);
-////            stage.setScene(mainMenuScene);
-////            stage.setMinHeight(500);
-////            stage.setMinWidth(600);
-////            stage.setResizable(true);
-////            stage.setTitle("Main menu");
-////            MainMenuController mainMenuController = (MainMenuController)mainMenuLoader.getController();
-////            mainMenuController.setStage(stage);
-////            stage.show();
-//
-//        } else {
-//            alert.setContentText("Login or password incorrect!");
-//            alert.showAndWait();
-//        }
     }
 
     public void signUp(ActionEvent event) throws IOException {
 
-        //RegistrationMenuController registrationMenuController = new RegistrationMenuController();
+        windowsController.openWindow("registrationMenu.fxml", getStage(), getInstance(), registrationMenuController, "Registration", 408, 460);
 
-        windowsController.openWindow("registrationMenu.fxml", this.getStage(), registrationMenuController, "Registration", 408, 460);
-
-//        FXMLLoader registrationMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/registrationMenu.fxml"));
-//        Pane registrationMenuPane = (Pane) registrationMenuLoader.load();
-//        Scene registrationMenuScene = new Scene(registrationMenuPane);
-//        stage.setScene(registrationMenuScene);
-//        stage.setResizable(false);
-//        stage.setTitle("Registration");
-//        RegistrationMenuController registrationMenuController = (RegistrationMenuController) registrationMenuLoader.getController();
-//        registrationMenuController.setStage(stage);
-//        stage.show();
     }
 
 

@@ -37,6 +37,7 @@ public class Doctor {
 
     }
 
+
     public Doctor fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();

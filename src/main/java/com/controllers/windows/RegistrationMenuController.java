@@ -2,6 +2,8 @@ package com.controllers.windows;
 
 import com.controllers.requests.DoctorController;
 import com.controllers.requests.SpecializationController;
+import com.hazelcast.core.HazelcastInstance;
+import com.models.Doctor;
 import com.models.Specialization;
 import com.tools.Placeholder;
 import javafx.collections.FXCollections;
@@ -9,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,15 +28,15 @@ public class RegistrationMenuController extends MenuController {
     @Autowired
     LoginMenuController loginMenuController;
 
-    WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController = new WindowsController();
 
-    Placeholder placeholder = new Placeholder();
+    private Placeholder placeholder = new Placeholder();
 
-    DoctorController doctorController = new DoctorController();
+    private DoctorController doctorController = new DoctorController();
 
-    SpecializationController specializationController = new SpecializationController();
+    private SpecializationController specializationController = new SpecializationController();
 
-    ObservableList<Specialization> specializations = FXCollections.observableArrayList();
+    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
 
     @FXML
     private TextField textField_Name;
@@ -81,7 +84,12 @@ public class RegistrationMenuController extends MenuController {
     private int statusCode;
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
+        userMap = hazelcastInstance.getMap("userMap");
+        stage.setOnHidden(event ->{hazelcastInstance.getLifecycleService().shutdown();});
+        setStage(stage);
+        setInstance(hazelcastInstance);
+
         specializations.add(new Specialization(-1, "None"));
 
         specializations.addAll(specializationController.getAllSpecialization());
@@ -124,9 +132,6 @@ public class RegistrationMenuController extends MenuController {
         placeholder.getAlert();
     }
 
-//    public void setStage(Stage stage) {
-//        this.stage = stage;
-//    }
 
     public void register(ActionEvent event) throws IOException {
 
@@ -197,9 +202,10 @@ public class RegistrationMenuController extends MenuController {
                 && passwordField_Password.getStyle().equals("-fx-border-color: inherit")
                 && passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
 
-            statusCode = doctorController.postDoctorRegistration(textField_Name.getText(), textField_Surname.getText(),
-                    comboBox_Specialization.getSelectionModel().getSelectedItem().getId(),
+            Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText(),
                     textField_Login.getText(), passwordField_ConfirmPassword.getText());
+
+            statusCode = doctorController.doctorRegistration(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
@@ -208,7 +214,7 @@ public class RegistrationMenuController extends MenuController {
                 alert.setHeaderText("Status code: " + statusCode);
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
-                windowsController.openWindow("loginMenu.fxml", this.getStage(), loginMenuController, "Login menu", 350, 190);
+                windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setHeaderText("Status code:" + statusCode);
@@ -234,27 +240,13 @@ public class RegistrationMenuController extends MenuController {
                 e.printStackTrace();
             }
         }
-//        else {
-//            alert.setContentText("You press Cancel!");
-//            alert.showAndWait();
-//        }
     }
 
     public void returnToLoginMenu() throws IOException {
 
 
-        windowsController.openWindow("loginMenu.fxml", this.getStage(), loginMenuController, "Login menu", 350, 190);
+        windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
 
-//        FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/loginMenu.fxml"));
-//        Pane loginMenuPane = null;
-//        loginMenuPane = (Pane) loginMenuLoader.load();
-//        Scene loginMenuScene = new Scene(loginMenuPane);
-//        stage.setScene(loginMenuScene);
-//        stage.setResizable(false);
-//        stage.setTitle("DocClient");
-//        LoginMenuController loginMenuController = (LoginMenuController) loginMenuLoader.getController();
-//        loginMenuController.setStage(stage);
-//        stage.show();
 
     }
 }

@@ -3,7 +3,6 @@ package com;
 import com.controllers.windows.LoginMenuController;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -17,8 +16,8 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        HazelcastInstance hz = Hazelcast.newHazelcastInstance();
-        IMap<String, String> logmap = hz.getMap("login");
+
+        HazelcastInstance hazelcastInstance = getInstance();
 
 
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/loginMenu.fxml"));
@@ -28,8 +27,19 @@ public class Application extends javafx.application.Application {
         stage.setResizable(false);
         stage.setTitle("DocClient");
         LoginMenuController loginMenuController = (LoginMenuController)loginMenuLoader.getController();
-        loginMenuController.setStage(stage);
+//        loginMenuController.setStage(stage);
+
+        loginMenuController.initialize(stage, hazelcastInstance);
+
+//        loginMenuController.setInstance(hazelcastInstance);
+
         stage.show();
 
+    }
+
+    public static HazelcastInstance getInstance(){
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+//        IMap<String, String> userMap = hazelcastInstance.getMap("userMap");
+        return  hazelcastInstance;
     }
 }

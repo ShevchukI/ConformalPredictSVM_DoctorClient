@@ -12,3 +12,6 @@ target
 .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_6_0.xml
 src/test/
 target/generated-sources/
+
+target/
+.idea/

@@ -15,6 +15,7 @@ public class Doctor {
 
     private String name;
     private String surname;
+    private Specialization specialization;
 
     private String login;
     private String password;
@@ -24,6 +25,12 @@ public class Doctor {
         this.surname = surname;
         this.login = login;
         this.password = password;
+    }
+
+    public Doctor(String name, String surname, Specialization specialization) {
+        this.name = name;
+        this.surname = surname;
+        this.specialization = specialization;
     }
 
     public Doctor() {
@@ -52,6 +59,10 @@ public class Doctor {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public Specialization getSpecialization() {
+        return specialization;
     }
 
     public String getLogin() {

@@ -1,10 +1,15 @@
 package com.controllers.windows;
 
-import com.controllers.requests.AuthorizationController;
+import com.controllers.requests.DoctorController;
+import com.controllers.requests.SpecializationController;
+import com.models.Specialization;
 import com.tools.Placeholder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -24,13 +29,20 @@ public class RegistrationMenuController extends MenuController {
 
     Placeholder placeholder = new Placeholder();
 
-    AuthorizationController authorizationController = new AuthorizationController();
+    DoctorController doctorController = new DoctorController();
+
+    SpecializationController specializationController = new SpecializationController();
+
+    ObservableList<Specialization> specializations = FXCollections.observableArrayList();
 
     @FXML
     private TextField textField_Name;
 
     @FXML
     private TextField textField_Surname;
+
+    @FXML
+    private ComboBox<Specialization> comboBox_Specialization;
 
     @FXML
     private TextField textField_Login;
@@ -48,6 +60,9 @@ public class RegistrationMenuController extends MenuController {
     private Tooltip tooltip_Surname;
 
     @FXML
+    private Tooltip tooltip_Specialization;
+
+    @FXML
     private Tooltip tooltip_Login;
 
     @FXML
@@ -58,12 +73,52 @@ public class RegistrationMenuController extends MenuController {
 
     private Tooltip tooltipError_Name = new Tooltip();
     private Tooltip tooltipError_Surname = new Tooltip();
+    private Tooltip tooltipError_Specialization = new Tooltip();
     private Tooltip tooltipError_Login = new Tooltip();
     private Tooltip tooltipError_Password = new Tooltip();
     private Tooltip tooltipError_ConfirmPassword = new Tooltip();
 
     private int statusCode;
 
+    @FXML
+    public void initialize() throws IOException {
+        specializations.add(new Specialization(-1, "None"));
+
+        specializations.addAll(specializationController.getAllSpecialization());
+
+        comboBox_Specialization.setItems(specializations);
+        comboBox_Specialization.setCellFactory(new Callback<ListView<Specialization>, ListCell<Specialization>>() {
+            @Override
+            public ListCell<Specialization> call(ListView<Specialization> p) {
+                ListCell cell = new ListCell<Specialization>() {
+                    @Override
+                    protected void updateItem(Specialization item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText("");
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+        comboBox_Specialization.setButtonCell(new ListCell<Specialization>() {
+            @Override
+            protected void updateItem(Specialization t, boolean bln) {
+                super.updateItem(t, bln);
+                if (bln) {
+                    setText("");
+                } else {
+                    setText(t.getName());
+                }
+            }
+        });
+        comboBox_Specialization.setVisibleRowCount(5);
+        comboBox_Specialization.getSelectionModel().select(0);
+
+    }
 
     public void getPlaceholderAlert() {
         placeholder.getAlert();
@@ -91,6 +146,15 @@ public class RegistrationMenuController extends MenuController {
         } else {
             textField_Surname.setTooltip(tooltip_Surname);
             textField_Surname.setStyle("-fx-border-color: inherit");
+        }
+
+        if (comboBox_Specialization.getSelectionModel().getSelectedItem().getId() == -1) {
+            tooltipError_Specialization.setText("You specialization is empty!");
+            comboBox_Specialization.setTooltip(tooltipError_Specialization);
+            comboBox_Specialization.setStyle("-fx-border-color: red");
+        } else {
+            comboBox_Specialization.setTooltip(tooltip_Specialization);
+            comboBox_Specialization.setStyle("-fx-border-color: inherit");
         }
 
         if (textField_Login.getText().equals("")) {
@@ -126,18 +190,23 @@ public class RegistrationMenuController extends MenuController {
             passwordField_ConfirmPassword.setStyle("-fx-border-color: inherit");
         }
 
-        if (textField_Name.getStyle().equals("-fx-border-color: inherit") &&
-                textField_Surname.getStyle().equals("-fx-border-color: inherit") &&
-                textField_Login.getStyle().equals("-fx-border-color: inherit") &&
-                passwordField_Password.getStyle().equals("-fx-border-color: inherit") &&
-                passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
+        if (textField_Name.getStyle().equals("-fx-border-color: inherit")
+                && textField_Surname.getStyle().equals("-fx-border-color: inherit")
+                && comboBox_Specialization.getStyle().equals("-fx-border-color: inherit")
+                && textField_Login.getStyle().equals("-fx-border-color: inherit")
+                && passwordField_Password.getStyle().equals("-fx-border-color: inherit")
+                && passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
 
-            statusCode = authorizationController.postDoctorRegistration(textField_Name.getText(), textField_Surname.getText(),
+            statusCode = doctorController.postDoctorRegistration(textField_Name.getText(), textField_Surname.getText(),
+                    comboBox_Specialization.getSelectionModel().getSelectedItem().getId(),
                     textField_Login.getText(), passwordField_ConfirmPassword.getText());
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            if(statusCode == 200){
-                alert.setContentText("Status code: " + statusCode);
+
+            if (statusCode == 201) {
+                alert.setHeaderText("Status code: " + statusCode);
+                alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
                 windowsController.openWindow("loginMenu.fxml", this.getStage(), loginMenuController, "Login menu", 350, 190);
             } else {
@@ -147,7 +216,6 @@ public class RegistrationMenuController extends MenuController {
                 alert.showAndWait();
             }
         }
-
     }
 
     public void cancel(ActionEvent event) {
@@ -165,10 +233,11 @@ public class RegistrationMenuController extends MenuController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            alert.setContentText("You press Cancel!");
-            alert.showAndWait();
         }
+//        else {
+//            alert.setContentText("You press Cancel!");
+//            alert.showAndWait();
+//        }
     }
 
     public void returnToLoginMenu() throws IOException {

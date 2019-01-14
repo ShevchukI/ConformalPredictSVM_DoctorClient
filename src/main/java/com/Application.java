@@ -1,6 +1,9 @@
 package com;
 
 import com.controllers.windows.LoginMenuController;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -14,6 +17,9 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        HazelcastInstance hz = Hazelcast.newHazelcastInstance();
+        IMap<String, String> logmap = hz.getMap("login");
+
 
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/loginMenu.fxml"));
         Pane loginMenuPane = (Pane)loginMenuLoader.load();

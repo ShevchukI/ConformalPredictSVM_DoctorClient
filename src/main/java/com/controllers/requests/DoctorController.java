@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Created by Admin on 10.01.2019.
  */
-public class AuthorizationController {
+public class DoctorController {
 
     private int statusCode;
 
@@ -65,11 +65,11 @@ public class AuthorizationController {
         return response;
     }
 
-    public int postDoctorRegistration(String name, String surname, String login, String password) {
+    public int postDoctorRegistration(String name, String surname, int specialization, String login, String password) {
         Client client = Client.create();
 
         WebResource webResource = client
-                .resource(URL + "/doctor_registration");
+                .resource(URL + "/doctor_registration/"+specialization);
 
 
         Doctor doctor = new Doctor(name, surname, login, password);

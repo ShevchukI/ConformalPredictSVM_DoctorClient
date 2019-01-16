@@ -1,10 +1,22 @@
 package com.models;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.apache.http.HttpResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Admin on 14.01.2019.
  */
 public class Patient {
 
+    private int id;
     private String name;
     private String surname;
     private String telephone;
@@ -17,6 +29,18 @@ public class Patient {
         this.telephone = telephone;
         this.address = address;
         this.email = email;
+    }
+
+    public Patient() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -57,5 +81,14 @@ public class Patient {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Patient> listFromJson(HttpResponse response) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+        String json = reader.readLine();
+        Type patientListType = new TypeToken<ArrayList<Patient>>(){}.getType();
+        Gson gson = new Gson();
+        List<Patient> list = gson.fromJson(json, patientListType);
+        return list;
     }
 }

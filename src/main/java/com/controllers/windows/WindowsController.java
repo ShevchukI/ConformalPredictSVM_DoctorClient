@@ -127,4 +127,20 @@ public class WindowsController {
 
     }
 
+    public void openWindowResizable(String rootName, Stage stage, HazelcastInstance instance, MenuController controller, String title, int minWidth, int minHeight) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName));
+        Pane pane = (Pane) loader.load();
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.setMinWidth(minWidth);
+        stage.setMinHeight(minHeight);
+        stage.setMaxWidth(sSize.getWidth());
+        stage.setMaxHeight(sSize.getHeight());
+        stage.setResizable(true);
+        stage.setTitle(title);
+        controller = (MenuController) loader.getController();
+        controller.initialize(stage, instance);
+
+        stage.show();
+    }
 }

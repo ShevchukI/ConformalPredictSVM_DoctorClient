@@ -3,6 +3,8 @@ package com.controllers.requests;
 import com.google.gson.Gson;
 import com.models.Patient;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -23,11 +25,8 @@ public class PatientController {
     private final static String URL = "http://localhost:8888";
 
     public int createPatient(String name, String password, Patient patient) throws IOException {
-
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
-
         String json = new Gson().toJson(patient);
-
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         HttpPost request = new HttpPost(URL + "/create_patient");
@@ -39,5 +38,19 @@ public class PatientController {
         statusCode = response.getStatusLine().getStatusCode();
 
         return statusCode;
+    }
+
+    public HttpResponse getAllPatient(String name, String password) throws IOException {
+
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(URL + "/get_all_patients");
+
+        // add request header
+        request.addHeader("Authorization", basicAuthPayload);
+        HttpResponse response = client.execute(request);
+
+        return response;
     }
 }

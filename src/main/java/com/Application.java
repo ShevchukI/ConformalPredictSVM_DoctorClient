@@ -19,7 +19,6 @@ public class Application extends javafx.application.Application {
 
         HazelcastInstance hazelcastInstance = getInstance();
 
-
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/loginMenu.fxml"));
         Pane loginMenuPane = (Pane)loginMenuLoader.load();
         Scene loginMenuScene = new Scene(loginMenuPane);
@@ -27,19 +26,13 @@ public class Application extends javafx.application.Application {
         stage.setResizable(false);
         stage.setTitle("DocClient");
         LoginMenuController loginMenuController = (LoginMenuController)loginMenuLoader.getController();
-//        loginMenuController.setStage(stage);
-
         loginMenuController.initialize(stage, hazelcastInstance);
-
-//        loginMenuController.setInstance(hazelcastInstance);
-
         stage.show();
 
     }
 
     public static HazelcastInstance getInstance(){
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
-//        IMap<String, String> userMap = hazelcastInstance.getMap("userMap");
         return  hazelcastInstance;
     }
 }

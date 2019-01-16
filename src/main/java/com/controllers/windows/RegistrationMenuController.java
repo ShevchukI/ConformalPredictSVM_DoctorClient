@@ -125,7 +125,6 @@ public class RegistrationMenuController extends MenuController {
         });
         comboBox_Specialization.setVisibleRowCount(5);
         comboBox_Specialization.getSelectionModel().select(0);
-
     }
 
     public void getPlaceholderAlert() {
@@ -134,7 +133,6 @@ public class RegistrationMenuController extends MenuController {
 
 
     public void register(ActionEvent event) throws IOException {
-
         if (textField_Name.getText().equals("")) {
             tooltipError_Name.setText("You name is empty!");
             textField_Name.setTooltip(tooltipError_Name);
@@ -243,10 +241,6 @@ public class RegistrationMenuController extends MenuController {
     }
 
     public void returnToLoginMenu() throws IOException {
-
-
         windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
-
-
     }
 }

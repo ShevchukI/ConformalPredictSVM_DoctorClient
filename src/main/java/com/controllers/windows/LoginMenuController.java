@@ -8,7 +8,6 @@ import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -31,7 +30,10 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private Stage stage;
+//    private Stage stage;
+
+    private String key;
+    private String vector;
 
     private DoctorController doctorController = new DoctorController();
 
@@ -50,17 +52,8 @@ public class LoginMenuController extends MenuController {
     @FXML
     private PasswordField passwordField_Password;
 
-    @FXML
-    private Button button_SignIn;
-
-    @FXML
-    private Button button_SignUp;
-
-
     public void initialize() {
-//        System.out.println(this.getStage().getTitle());
-//        System.out.println(this.getInstance().toString());
-//        System.out.println(stage.getTitle());
+
     }
 
     public void initialize(Stage stage,HazelcastInstance hazelcastInstance){
@@ -69,7 +62,6 @@ public class LoginMenuController extends MenuController {
         setStage(stage);
         setInstance(hazelcastInstance);
         getMap().clear();
-        System.out.println(getMap().size());
     }
 
     public void signIn(ActionEvent event) throws IOException {
@@ -87,27 +79,37 @@ public class LoginMenuController extends MenuController {
             statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
-                System.out.println("Status code: " + statusCode);
+//                System.out.println("Status code: " + statusCode);
 
                 Doctor doctor = new Doctor().fromJson(response);
 
-//                doctor.setLogin(textField_Login.getText());
-//                doctor.setPassword(passwordField_Password.getText());
-
-                String key = encryptor.genRandString();
-                String vector = encryptor.genRandString();
+                key = encryptor.genRandString();
+                vector = encryptor.genRandString();
 
                 getMap().put("key", key);
                 getMap().put("vector", vector);
                 getMap().put("login", encryptor.encrypt(key, vector, textField_Login.getText()));
                 getMap().put("password", encryptor.encrypt(key, vector, passwordField_Password.getText()));
 
-                System.out.println(getMap().get("key"));
-                System.out.println(getMap().get("vector"));
-                System.out.println(getMap().get("login") + " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()));
-                System.out.println(getMap().get("password")+ " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
-                System.out.println(getMap().size());
-                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, doctor, "Main menu", 600, 640);
+                getMap().put("name", doctor.getName());
+                getMap().put("surname", doctor.getSurname());
+                if(doctor.getSpecialization() != null){
+                    getMap().put("specId", doctor.getSpecialization().getId());
+                    getMap().put("specName", doctor.getSpecialization().getName());
+                }
+                else {
+                    getMap().put("specId", "-2");
+                    getMap().put("specName", "Empty");
+                }
+
+//                System.out.println(getMap().get("key"));
+//                System.out.println(getMap().get("vector"));
+//                System.out.println(getMap().get("login") + " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()));
+//                System.out.println(getMap().get("password")+ " :: " + encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
+//                System.out.println(getMap().size());
+
+
+                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
             } else {
 
                 alert.setHeaderText("Status code: " + statusCode);

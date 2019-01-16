@@ -32,8 +32,8 @@ public class AddPatientMenuController extends MenuController {
 
     private Encryptor encryptor = new Encryptor();
 
-    @Autowired
-    Doctor doctor;
+//    @Autowired
+//    Doctor doctor;
 
     private Placeholder placeholder = new Placeholder();
 
@@ -83,6 +83,15 @@ public class AddPatientMenuController extends MenuController {
 
     public void initialize(Doctor doctor, Stage stage, HazelcastInstance hazelcastInstance) {
         this.doctor = doctor;
+        userMap = hazelcastInstance.getMap("userMap");
+        stage.setOnHidden(event -> {
+            hazelcastInstance.getLifecycleService().shutdown();
+        });
+        setStage(stage);
+        setInstance(hazelcastInstance);
+    }
+
+    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
         userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
             hazelcastInstance.getLifecycleService().shutdown();
@@ -165,7 +174,7 @@ public class AddPatientMenuController extends MenuController {
                 alert.setHeaderText("Status code: " + statusCode);
                 alert.setContentText("Congratulations, patient is registered!");
                 alert.showAndWait();
-                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, doctor, "Main menu", 600, 640);
+                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setHeaderText("Status code:" + statusCode);
@@ -196,7 +205,7 @@ public class AddPatientMenuController extends MenuController {
 
     public void returnToMainMenu() throws IOException {
 
-        windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, doctor, "Main menu", 600, 640);
+        windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
 
     }
 }

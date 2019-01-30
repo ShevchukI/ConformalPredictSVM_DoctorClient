@@ -5,6 +5,7 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -25,6 +26,8 @@ public class Application extends javafx.application.Application {
         stage.setScene(loginMenuScene);
         stage.setResizable(false);
         stage.setTitle("DocClient");
+        stage.getIcons().add(new Image("img/icons/icon.png"));
+
         LoginMenuController loginMenuController = (LoginMenuController)loginMenuLoader.getController();
         loginMenuController.initialize(stage, hazelcastInstance);
         stage.show();

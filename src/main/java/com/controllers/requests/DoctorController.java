@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -33,7 +34,7 @@ public class DoctorController {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(URL + "/doctor_auth");
+        HttpGet request = new HttpGet(URL + "/doctor-system/doctor/authorization");
 
         // add request header
         request.addHeader("Authorization", basicAuthPayload);
@@ -101,14 +102,37 @@ public class DoctorController {
         String json = new Gson().toJson(doctor);
 
         CloseableHttpClient client = HttpClientBuilder.create().build();
-
-        HttpPost request = new HttpPost(URL + "/doctor_registration/"+specialization);
+        HttpPost request = new HttpPost(URL + "/doctor-system/doctor/registration/"+specialization);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(json));
-
         HttpResponse response = client.execute(request);
 
-
         return response.getStatusLine().getStatusCode();
+    }
+
+    public HttpResponse changePassword(String name, String password, String newPassword) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+
+        HttpPut request = new HttpPut(URL + "/doctor-system/doctor/psw");
+//        request.setHeader("Content-Type", "application/json");
+        request.setHeader("Authorization", basicAuthPayload);
+        request.setEntity(new StringEntity(newPassword));
+        HttpResponse response = client.execute(request);
+        return response;
+    }
+
+    public HttpResponse changeName(String name, String password, Doctor doctor, int specialization) throws IOException {
+        String json = new Gson().toJson(doctor);
+
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPut request = new HttpPut(URL + "/doctor-system/doctor/"+specialization);
+        request.setHeader("Authorization", basicAuthPayload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(new StringEntity(json));
+        HttpResponse response = client.execute(request);
+
+        return response;
     }
 }

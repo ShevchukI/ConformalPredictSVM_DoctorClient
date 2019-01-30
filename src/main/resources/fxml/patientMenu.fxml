@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.AddPatientMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.PatientMenuController">
    <children>
-      <FlowPane prefHeight="43.0" prefWidth="600.0">
+      <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Name:">
                <FlowPane.margin>
@@ -23,7 +23,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="16.0" prefWidth="600.0">
+      <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Surname:">
                <FlowPane.margin>
@@ -37,7 +37,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="31.0" prefWidth="408.0">
+      <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Telephone:">
                <FlowPane.margin>
@@ -51,7 +51,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="1.0" prefWidth="600.0">
+      <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Address:">
                <FlowPane.margin>

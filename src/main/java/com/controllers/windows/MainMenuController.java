@@ -7,8 +7,7 @@ import com.models.Patient;
 import com.tools.Encryptor;
 import com.tools.Placeholder;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,7 +30,7 @@ public class MainMenuController extends MenuController {
     RegistrationMenuController registrationMenuController;
 
     @Autowired
-    AddPatientMenuController addPatientMenuController;
+    AddPatientAndCardMenuController addPatientAndCardMenuController;
 
     @Autowired
     CardMenuController cardMenuController;
@@ -45,9 +44,6 @@ public class MainMenuController extends MenuController {
 
     private WindowsController windowsController = new WindowsController();
 
-//    @Autowired
-//    Doctor doctor;
-
     private Encryptor encryptor = new Encryptor();
 
     private int statusCode;
@@ -59,14 +55,16 @@ public class MainMenuController extends MenuController {
 
     private List<Patient> patientList;
 
+    private MenuController menuController;
+
     @FXML
     private ObservableList<Patient> patientObservableList;
 
     @FXML
-    private TableView tableView_PatientTable;
+    private TableView<Patient> tableView_PatientTable;
 
     @FXML
-    private TableColumn tableColumn_Number;
+    private TableColumn<Patient, Number> tableColumn_Number = new TableColumn<Patient, Number>("#");
 
     @FXML
     private TableColumn tableColumn_Name;
@@ -93,10 +91,26 @@ public class MainMenuController extends MenuController {
     private Label label_Count;
 
     @FXML
-    public void initialize(Doctor doctor) {
-//        HazelcastInstance hz = Hazelcast.newHazelcastInstance();
-//        IMap<String, String> logmap = hz.getMap("login");
+    private Button button_View;
 
+    @FXML
+    private RadioButton radio_Name;
+
+    @FXML
+    private RadioButton radio_Surname;
+
+    @FXML
+    private RadioButton radio_All;
+
+    @FXML
+    private TextField textField_Search;
+
+    private int searchType;
+
+    private MainMenuController mainMenuController;
+
+    @FXML
+    public void initialize(Doctor doctor) {
         this.doctor = doctor;
         menuBarController.init(this);
         label_Name.setText(doctor.getName());
@@ -104,7 +118,6 @@ public class MainMenuController extends MenuController {
     }
 
     public void initialize(Doctor doctor, Stage stage, HazelcastInstance hazelcastInstance) {
-//        setDoctor(doctor);
         userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
             hazelcastInstance.getLifecycleService().shutdown();
@@ -120,21 +133,6 @@ public class MainMenuController extends MenuController {
         } else {
             label_Specialization.setText(doctor.getSpecialization().getName());
         }
-
-//        try {
-//            response = patientController.getAllPatient(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()),
-//                    encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
-//            statusCode = response.getStatusLine().getStatusCode();
-//            System.out.println(statusCode);
-//            List<Patient> patients = new Patient().listFromJson(response);
-//            ObservableList<Patient> list = FXCollections.observableArrayList(patients);
-//            for (int i =0; i<list.size(); i++){
-//                System.out.println(list.get(i).getId()+":"+list.get(i).getName()+":"+list.get(i).getSurname()+":"+list.get(i).getTelephone()+":"+list.get(i).getAddress()+":"+list.get(i).getEmail());
-//            }
-//        } catch (IOException e) {
-//            System.out.println("ERROR!");
-//        }
-
     }
 
     public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
@@ -146,32 +144,23 @@ public class MainMenuController extends MenuController {
         setInstance(hazelcastInstance);
 
         menuBarController.init(this);
-        label_Name.setText(getMap().get("name").toString());
+        label_Name.setText(getMap().get("surname").toString() + " " + getMap().get("name").toString());
         label_Specialization.setText(getMap().get("specName").toString());
 
-        response = patientController.getAllPatient(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()),
-                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
+//        response = patientController.getAllPatient(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()),
+//                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()));
+
+        response = patientController.findPatient(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()),
+                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()),
+                textField_Search.getText(), 0);
 
         patientList = new Patient().listFromJson(response);
 
         patientObservableList = FXCollections.observableList(patientList);
 
-        tableColumn_Number.setCellFactory(col -> {
-            TableCell<String, Integer> indexCell = new TableCell<>();
-            ReadOnlyObjectProperty<TableRow> rowProperty = indexCell.tableRowProperty();
-            ObjectBinding<String> rowBinding = Bindings.createObjectBinding(() -> {
-                TableRow<String> row = rowProperty.get();
-                if (row != null) {
-                    int rowIndex = row.getIndex()+1;
-                    if (rowIndex <=row.getTableView().getItems().size()) {
-                        return Integer.toString(rowIndex);
-                    }
-                }
-                return null;
-            }, rowProperty);
-            indexCell.textProperty().bind(rowBinding);
-            return indexCell;
-        });
+        tableColumn_Number.setSortable(false);
+        tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PatientTable.getItems().indexOf(column.getValue()) + 1));
+
         tableColumn_Name.setCellValueFactory(new PropertyValueFactory<Patient, String>("name"));
         tableColumn_Surname.setCellValueFactory(new PropertyValueFactory<Patient, String>("surname"));
         tableColumn_Address.setCellValueFactory(new PropertyValueFactory<Patient, String>("address"));
@@ -182,17 +171,28 @@ public class MainMenuController extends MenuController {
 
         label_Count.setText(String.valueOf(patientObservableList.size()));
 
+        button_View.disableProperty().bind(Bindings.isEmpty(tableView_PatientTable.getSelectionModel().getSelectedItems()));
+
+        tableView_PatientTable.setRowFactory(tv -> {
+            TableRow<Patient> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    try {
+                        viewPatient();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
+
     }
 
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
-//    public void setDoctor(Doctor doctor){
-//        this.doctor = doctor;
-//    }
 
     public Stage getStage() {
         return stage;
@@ -203,18 +203,27 @@ public class MainMenuController extends MenuController {
     }
 
     public void addPatient(ActionEvent event) throws IOException {
-//        System.out.println(doctor.getName());
-//        System.out.println(doctor.getSurname());
-//        System.out.println(doctor.getSpecialization().getName());
-//        System.out.println(doctor.getLogin());
-//        System.out.println(doctor.getPassword());
 
-        windowsController.openWindow("addPatientMenu.fxml", getStage(), getInstance(), addPatientMenuController, "Add new patient", 408, 400);
-
+        windowsController.openNewModalWindow("addPatientAndRecordMenu.fxml", getStage(), getInstance(),
+                addPatientAndCardMenuController, patientObservableList, tableView_PatientTable, "Add new patient", 740, 500);
     }
 
     public void viewPatient(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("cardMenu.fxml", getStage(), getInstance(), cardMenuController, "Card", 600, 640);
+        if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
+            System.out.println("ERROR!");
+        } else {
+            Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
+            windowsController.openWindowResizable("cardMenu.fxml", getStage(), getInstance(), cardMenuController, patient, "Card", 600, 640);
+        }
+    }
+
+    public void viewPatient() throws IOException {
+        if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
+            System.out.println("ERROR!");
+        } else {
+            Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
+            windowsController.openWindowResizable("cardMenu.fxml", getStage(), getInstance(), cardMenuController, patient, "Card", 600, 640);
+        }
     }
 
     public void getMap(ActionEvent event) {
@@ -232,4 +241,31 @@ public class MainMenuController extends MenuController {
     }
 
 
+    public void search(ActionEvent event) throws IOException {
+        if (radio_All.isSelected()) {
+            searchType = 0;
+        } else if (radio_Name.isSelected()) {
+            searchType = 1;
+        } else if (radio_Surname.isSelected()) {
+            searchType = 2;
+        }
+        response = patientController.findPatient(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("login").toString()),
+                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(), getMap().get("password").toString()),
+                textField_Search.getText(), searchType);
+        statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == 200) {
+            patientList = new Patient().listFromJson(response);
+            patientObservableList = FXCollections.observableList(patientList);
+            tableView_PatientTable.setItems(patientObservableList);
+            label_Count.setText(String.valueOf(patientObservableList.size()));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setContentText("Oops! Status code: " + statusCode);
+        }
+    }
+
+    public Label getLabel_Name() {
+        return label_Name;
+    }
 }

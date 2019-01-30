@@ -18,15 +18,12 @@ import java.util.ArrayList;
  */
 public class SpecializationController {
 
-    private final static String HOSTNAME = "localhost";
-    private final static int PORT = 8888;
-    private final static String SCHEME = "http";
     private final static String URL = "http://localhost:8888";
 
     public ArrayList getAllSpecialization() throws IOException {
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(URL + "/specializations");
+        HttpGet request = new HttpGet(URL + "/doctor-system/doctor/specializations");
 
         // add request header
         HttpResponse response = client.execute(request);

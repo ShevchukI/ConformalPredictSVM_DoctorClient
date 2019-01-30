@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 
 public class Doctor {
 
+    private int id;
     private String name;
     private String surname;
     private Specialization specialization;
@@ -33,10 +34,14 @@ public class Doctor {
         this.specialization = specialization;
     }
 
+
+    public Doctor(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
     public Doctor() {
 
     }
-
 
     public Doctor fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -45,6 +50,13 @@ public class Doctor {
         return new Gson().fromJson(json, Doctor.class);
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

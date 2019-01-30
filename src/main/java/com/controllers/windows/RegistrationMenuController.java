@@ -23,8 +23,6 @@ import java.util.Optional;
  */
 public class RegistrationMenuController extends MenuController {
 
-//    private Stage stage;
-
     @Autowired
     LoginMenuController loginMenuController;
 
@@ -86,12 +84,13 @@ public class RegistrationMenuController extends MenuController {
     @FXML
     public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
         userMap = hazelcastInstance.getMap("userMap");
-        stage.setOnHidden(event ->{hazelcastInstance.getLifecycleService().shutdown();});
+        stage.setOnHidden(event -> {
+            hazelcastInstance.getLifecycleService().shutdown();
+        });
         setStage(stage);
         setInstance(hazelcastInstance);
 
         specializations.add(new Specialization(-1, "None"));
-
         specializations.addAll(specializationController.getAllSpecialization());
 
         comboBox_Specialization.setItems(specializations);
@@ -133,6 +132,48 @@ public class RegistrationMenuController extends MenuController {
 
 
     public void register(ActionEvent event) throws IOException {
+        if (checkRegister()) {
+            Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText(),
+                    textField_Login.getText(), passwordField_ConfirmPassword.getText());
+            statusCode = doctorController.doctorRegistration(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            if (statusCode == 201) {
+                alert.setContentText("Congratulations, you are registered!");
+                alert.showAndWait();
+                windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(),
+                        loginMenuController, "Login menu", 350, 190);
+            } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setContentText("Already exist!");
+                alert.showAndWait();
+            }
+        }
+    }
+
+    public void cancel(ActionEvent event) {
+        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to leave?", ok, cancel);
+        questionOfCancellation.setHeaderText(null);
+        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        if (result.orElse(cancel) == ok) {
+            try {
+                returnToLoginMenu();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void returnToLoginMenu() throws IOException {
+        windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
+    }
+
+    public boolean checkRegister() {
         if (textField_Name.getText().equals("")) {
             tooltipError_Name.setText("You name is empty!");
             textField_Name.setTooltip(tooltipError_Name);
@@ -199,48 +240,9 @@ public class RegistrationMenuController extends MenuController {
                 && textField_Login.getStyle().equals("-fx-border-color: inherit")
                 && passwordField_Password.getStyle().equals("-fx-border-color: inherit")
                 && passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
-
-            Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText(),
-                    textField_Login.getText(), passwordField_ConfirmPassword.getText());
-
-            statusCode = doctorController.doctorRegistration(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-
-            if (statusCode == 201) {
-                alert.setHeaderText("Status code: " + statusCode);
-                alert.setContentText("Congratulations, you are registered!");
-                alert.showAndWait();
-                windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
-            } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Status code:" + statusCode);
-                alert.setContentText("Already exist!");
-                alert.showAndWait();
-            }
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    public void cancel(ActionEvent event) {
-        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to leave?", ok, cancel);
-        questionOfCancellation.setHeaderText(null);
-        Optional<ButtonType> result = questionOfCancellation.showAndWait();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        if (result.orElse(cancel) == ok) {
-            try {
-                returnToLoginMenu();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void returnToLoginMenu() throws IOException {
-        windowsController.openWindow("loginMenu.fxml", getStage(), getInstance(), loginMenuController, "Login menu", 350, 190);
     }
 }

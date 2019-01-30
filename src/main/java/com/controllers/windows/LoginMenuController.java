@@ -91,6 +91,7 @@ public class LoginMenuController extends MenuController {
                 getMap().put("login", encryptor.encrypt(key, vector, textField_Login.getText()));
                 getMap().put("password", encryptor.encrypt(key, vector, passwordField_Password.getText()));
 
+                getMap().put("id", doctor.getId());
                 getMap().put("name", doctor.getName());
                 getMap().put("surname", doctor.getSurname());
                 if(doctor.getSpecialization() != null){
@@ -110,6 +111,8 @@ public class LoginMenuController extends MenuController {
 
 
                 windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
+
+//                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
             } else {
 
                 alert.setHeaderText("Status code: " + statusCode);

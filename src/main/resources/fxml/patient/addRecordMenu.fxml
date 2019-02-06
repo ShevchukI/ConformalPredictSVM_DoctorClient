@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="392.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.AddPatientAndCardMenuController">
+<BorderPane prefHeight="392.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.AddPatientAndCardMenuController">
     <center>
         <VBox prefHeight="370.0" prefWidth="426.0">
             <children>

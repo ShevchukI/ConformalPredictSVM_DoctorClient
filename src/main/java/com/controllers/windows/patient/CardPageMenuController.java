@@ -1,11 +1,14 @@
-package com.controllers.windows;
+package com.controllers.windows.patient;
 
 import com.controllers.requests.PageController;
+import com.controllers.windows.menu.MainMenuController;
+import com.controllers.windows.menu.MenuBarController;
+import com.controllers.windows.menu.MenuController;
+import com.controllers.windows.menu.WindowsController;
 import com.hazelcast.core.HazelcastInstance;
 import com.models.Page;
 import com.models.Patient;
 import com.tools.Encryptor;
-import com.tools.Placeholder;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,74 +29,50 @@ import java.util.Optional;
  */
 public class CardPageMenuController extends MenuController {
 
-    @FXML
-    private MenuBarController menuBarController;
-
-    private WindowsController windowsController = new WindowsController();
-
-    private MainMenuController mainMenuController = new MainMenuController();
-
     @Autowired
     CardMenuController cardMenuController;
 
+    private WindowsController windowsController = new WindowsController();
+    private MainMenuController mainMenuController = new MainMenuController();
+    private DiagnosticMenuController diagnosticMenuController = new DiagnosticMenuController();
+    private String action;
+    private int row;
+    private ArrayList<Page> pages;
+    private String oldDescription;
+    private String oldTheme;
+    private HttpResponse response;
+    private PageController pageController = new PageController();
+    private Encryptor encryptor = new Encryptor();
+    private LocalDate localDate = LocalDate.now();
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private int statusCode;
+
+    @FXML
+    private MenuBarController menuBarController;
     @FXML
     private Label label_PatientName;
-
     @FXML
     private Label label_DoctorName;
-
     @FXML
     private TextField textField_Theme;
-
     @FXML
     private TextArea textArea_Description;
-
     @FXML
     private Label label_CurrentDate;
-
     @FXML
     private Label label_Result;
-
     @FXML
     private Button button_Previous;
-
     @FXML
     private Button button_Next;
-
     @FXML
     private Button button_Save;
-
     @FXML
-    private Button button_Button;
-
+    private Button button_Diagnostic;
     @FXML
     private Button button_Change;
-
     @FXML
     private ComboBox comboBox_Combo;
-
-    private String action;
-
-    private int row;
-
-    private ArrayList<Page> pages;
-
-    private String oldDescription;
-
-    private String oldTheme;
-
-//    private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-
-    private HttpResponse response;
-
-    private PageController pageController = new PageController();
-
-    private Encryptor encryptor = new Encryptor();
-    LocalDate localDate = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    private int statusCode;
 
     public void initialize(Patient patient, ArrayList<Page> pages, int row, Stage stage, HazelcastInstance hazelcastInstance, String action) {
         menuBarController.init(this);
@@ -104,14 +83,11 @@ public class CardPageMenuController extends MenuController {
         });
         setStage(stage);
         setInstance(hazelcastInstance);
-
         this.pages = pages;
         this.row = row;
         this.action = action;
-
         label_PatientName.setText(getPatient().getSurname() + " " + getPatient().getName());
         textArea_Description.setWrapText(true);
-
         if (action.equals("view")) {
             oldTheme = textField_Theme.getText();
             oldDescription = textArea_Description.getText();
@@ -123,33 +99,8 @@ public class CardPageMenuController extends MenuController {
             label_Result.setText(pages.get(row).getAnswer());
             button_Save.setDisable(true);
             comboBox_Combo.setDisable(true);
-            button_Button.setDisable(true);
+            button_Diagnostic.setDisable(true);
             label_DoctorName.setText(pages.get(row).getDoctor().getSurname() + " " + pages.get(row).getDoctor().getName());
-//            BooleanBinding checkField = new BooleanBinding() {
-//                {
-//                    super.bind(textField_Theme.textProperty(),
-//                            textArea_Description.textProperty());
-//                }
-//                @Override
-//                protected boolean computeValue() {
-//                    return (!textField_Theme.getText().equals(oldTheme)
-//                            && !textArea_Description.getText().equals(oldDescription));
-//                }
-//            };
-//            button_Save.disableProperty().bind(checkField);
-
-
-//        } else if (action.equals("change")) {
-//            oldTheme = textField_Theme.getText();
-//            oldDescription = textArea_Description.getText();
-//            textField_Theme.setText(pages.get(row).getTheme());
-//            textArea_Description.setText(pages.get(row).getDescription());
-//            label_CurrentDate.setText(pages.get(row).getDate());
-//            label_Result.setText(pages.get(row).getAnswer());
-//            button_Save.setDisable(true);
-//            comboBox_Combo.setDisable(true);
-//            button_Button.setDisable(true);
-
             if (pages.get(row).getDoctor().getId() == Integer.parseInt(getMap().get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
@@ -159,12 +110,14 @@ public class CardPageMenuController extends MenuController {
             label_CurrentDate.setText(localDate.format(formatter));
             button_Previous.setDisable(true);
             button_Next.setDisable(true);
+            button_Change.setDisable(true);
             label_DoctorName.setText(getMap().get("surname").toString() + " " + getMap().get("name").toString());
             BooleanBinding checkEmptyField = new BooleanBinding() {
                 {
                     super.bind(textField_Theme.textProperty(),
                             textArea_Description.textProperty());
                 }
+
                 @Override
                 protected boolean computeValue() {
                     return (textField_Theme.getText().isEmpty()
@@ -173,22 +126,12 @@ public class CardPageMenuController extends MenuController {
             };
             button_Save.disableProperty().bind(checkEmptyField);
         }
-
-
         if (row == 0) {
             button_Previous.setDisable(true);
         }
         if (row == pages.size() - 1) {
             button_Next.setDisable(true);
         }
-
-
-    }
-
-    private Placeholder placeholder = new Placeholder();
-
-    public void getPlaceholderAlert(ActionEvent event) {
-        placeholder.getAlert();
     }
 
     public void previousPage(ActionEvent event) {
@@ -275,29 +218,30 @@ public class CardPageMenuController extends MenuController {
                                 getMap().get("password").toString()), page, getPatient().getId());
                 statusCode = response.getStatusLine().getStatusCode();
             }
-            if (statusCode == 200) {
+            if (checkStatusCode(statusCode)) {
                 pages.get(row).setPage(page);
                 alert.setContentText("Changed!");
                 alert.showAndWait();
-            } else if (statusCode == 201) {
+            } else if (checkStatusCode(statusCode)) {
                 alert.setContentText("Saved!");
                 alert.showAndWait();
                 button_Next.setDisable(false);
-            } else {
-                alert.setHeaderText("Status code:" + statusCode);
-                alert.setContentText("You can not save this entry!");
-                alert.showAndWait();
-                textArea_Description.setText(pages.get(row).getDescription());
             }
+//            else {
+//                alert.setHeaderText("Status code:" + statusCode);
+//                alert.setContentText("You can not save this entry!");
+//                alert.showAndWait();
+//                textArea_Description.setText(pages.get(row).getDescription());
+//            }
         }
     }
 
     public void backToCardMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("cardMenu.fxml", getStage(), getInstance(), cardMenuController, getPatient(), "Card", 600, 640);
+        windowsController.openWindowResizable("patient/cardMenu.fxml", getStage(), getInstance(), cardMenuController, getPatient(), "Card", 600, 640);
     }
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
+        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
     }
 
     public void changeText() {
@@ -317,6 +261,11 @@ public class CardPageMenuController extends MenuController {
         button_Save.setDisable(false);
         textField_Theme.setEditable(true);
         textArea_Description.setEditable(true);
+    }
+
+    public void diagnostic(ActionEvent event) throws IOException {
+        windowsController.openNewModalWindow("patient/diagnosticMenu.fxml", getStage(), getInstance(), diagnosticMenuController,
+                "Main menu", 600, 400);
 
     }
 }

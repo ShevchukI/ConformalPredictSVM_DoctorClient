@@ -17,7 +17,6 @@ public class Doctor {
     private String name;
     private String surname;
     private Specialization specialization;
-
     private String login;
     private String password;
 
@@ -33,7 +32,6 @@ public class Doctor {
         this.surname = surname;
         this.specialization = specialization;
     }
-
 
     public Doctor(String name, String surname) {
         this.name = name;

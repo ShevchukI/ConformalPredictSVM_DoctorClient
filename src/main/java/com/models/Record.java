@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
  * Created by Admin on 26.01.2019.
  */
 public class Record {
-//    private int id;
     private double weight;
     private double height;
     private String bloodGroup;
@@ -35,14 +34,6 @@ public class Record {
         this.bloodGroup = bloodGroup;
         this.birthday = birthday;
     }
-
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
 
     public double getWeight() {
         return weight;

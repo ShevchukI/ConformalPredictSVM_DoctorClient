@@ -1,5 +1,6 @@
-package com.controllers.windows;
+package com.controllers.windows.patient;
 
+import com.controllers.windows.menu.MenuController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,52 +12,12 @@ import javafx.scene.control.Tooltip;
 /**
  * Created by Admin on 16.01.2019.
  */
-public class RecordMenuController extends MenuController{
+public class RecordMenuController extends MenuController {
 
     private MenuController menuController;
-
     private ObservableList<String> sex  = FXCollections.observableArrayList("Male", "Female");
     private ObservableList<String> bloodGroup  = FXCollections.observableArrayList("O", "A", "B", "AB");
     private ObservableList<String> bloodType  = FXCollections.observableArrayList("+", "-");
-
-    @FXML
-    private DatePicker datePicker_Birthday;
-
-    @FXML
-    private ChoiceBox<String> choiceBox_Sex;
-
-    @FXML
-    private ChoiceBox<String> choiceBox_BloodGroup;
-
-    @FXML
-    private ChoiceBox<String> choiceBox_BloodType;
-
-    @FXML
-    private TextField textField_Weight;
-
-    @FXML
-    private TextField textField_Height;
-
-
-    @FXML
-    private Tooltip tooltip_Birthday;
-
-    @FXML
-    private Tooltip tooltip_Sex;
-
-    @FXML
-    private Tooltip tooltip_BloodGroup;
-
-    @FXML
-    private Tooltip tooltip_BloodType;
-
-    @FXML
-    private Tooltip tooltip_Weight;
-
-    @FXML
-    private Tooltip tooltip_Height;
-
-
     private Tooltip tooltipError_Birthday = new Tooltip();
     private Tooltip tooltipError_Sex = new Tooltip();
     private Tooltip tooltipError_BloodGroup = new Tooltip();
@@ -64,6 +25,30 @@ public class RecordMenuController extends MenuController{
     private Tooltip tooltipError_Weight = new Tooltip();
     private Tooltip tooltipError_Height = new Tooltip();
 
+    @FXML
+    private DatePicker datePicker_Birthday;
+    @FXML
+    private ChoiceBox<String> choiceBox_Sex;
+    @FXML
+    private ChoiceBox<String> choiceBox_BloodGroup;
+    @FXML
+    private ChoiceBox<String> choiceBox_BloodType;
+    @FXML
+    private TextField textField_Weight;
+    @FXML
+    private TextField textField_Height;
+    @FXML
+    private Tooltip tooltip_Birthday;
+    @FXML
+    private Tooltip tooltip_Sex;
+    @FXML
+    private Tooltip tooltip_BloodGroup;
+    @FXML
+    private Tooltip tooltip_BloodType;
+    @FXML
+    private Tooltip tooltip_Weight;
+    @FXML
+    private Tooltip tooltip_Height;
 
     public void init(MenuController menuController){
         this.menuController = menuController;

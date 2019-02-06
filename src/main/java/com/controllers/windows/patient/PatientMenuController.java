@@ -1,5 +1,6 @@
-package com.controllers.windows;
+package com.controllers.windows.patient;
 
+import com.controllers.windows.menu.MenuController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -7,48 +8,35 @@ import javafx.scene.control.Tooltip;
 /**
  * Created by Admin on 16.01.2019.
  */
-public class PatientMenuController extends MenuController{
-
-
-    @FXML
-    private TextField textField_Name;
-
-    @FXML
-    private TextField textField_Surname;
-
-    @FXML
-    private TextField textField_Telephone;
-
-    @FXML
-    private TextField textField_Address;
-
-    @FXML
-    private TextField textField_Email;
-
-
-    @FXML
-    private Tooltip tooltip_Name;
-
-    @FXML
-    private Tooltip tooltip_Surname;
-
-    @FXML
-    private Tooltip tooltip_Telephone;
-
-    @FXML
-    private Tooltip tooltip_Address;
-
-    @FXML
-    private Tooltip tooltip_Email;
-
+public class PatientMenuController extends MenuController {
 
     private Tooltip tooltipError_Name = new Tooltip();
     private Tooltip tooltipError_Surname = new Tooltip();
     private Tooltip tooltipError_Telephone = new Tooltip();
     private Tooltip tooltipError_Address = new Tooltip();
     private Tooltip tooltipError_Email = new Tooltip();
-
     private MenuController menuController;
+
+    @FXML
+    private TextField textField_Name;
+    @FXML
+    private TextField textField_Surname;
+    @FXML
+    private TextField textField_Telephone;
+    @FXML
+    private TextField textField_Address;
+    @FXML
+    private TextField textField_Email;
+    @FXML
+    private Tooltip tooltip_Name;
+    @FXML
+    private Tooltip tooltip_Surname;
+    @FXML
+    private Tooltip tooltip_Telephone;
+    @FXML
+    private Tooltip tooltip_Address;
+    @FXML
+    private Tooltip tooltip_Email;
 
     public void init(MenuController menuController){
         this.menuController = menuController;
@@ -173,4 +161,7 @@ public class PatientMenuController extends MenuController{
     public void setTooltipError_Email(Tooltip tooltipError_Email) {
         this.tooltipError_Email = tooltipError_Email;
     }
+
+
+
 }

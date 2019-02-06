@@ -1,7 +1,8 @@
-package com.controllers.windows;
+package com.controllers.windows.doctor;
 
 import com.controllers.requests.DoctorController;
 import com.controllers.requests.SpecializationController;
+import com.controllers.windows.menu.MenuController;
 import com.hazelcast.core.HazelcastInstance;
 import com.models.Doctor;
 import com.models.Specialization;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -23,57 +25,45 @@ import java.io.IOException;
  */
 public class ChangeInfoMenuController extends MenuController {
 
-    private SpecializationController specializationController = new SpecializationController();
+    @Autowired
+    HttpResponse response;
 
+    private SpecializationController specializationController = new SpecializationController();
     private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
+    private Tooltip tooltipError_CurrentPassword = new Tooltip();
+    private Tooltip tooltipError_NewPassword = new Tooltip();
+    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
+    private Tooltip tooltipError_Name = new Tooltip();
+    private Tooltip tooltipError_Surname = new Tooltip();
+    private Encryptor encryptor = new Encryptor();
+    private DoctorController doctorController = new DoctorController();
+    private int statusCode;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
-
     @FXML
     private PasswordField passwordField_NewPassword;
-
     @FXML
     private PasswordField passwordField_ConfirmPassword;
-
     @FXML
     private TextField textField_Name;
-
     @FXML
     private TextField textField_Surname;
-
     @FXML
     private ComboBox<Specialization> comboBox_Specialization;
-
     @FXML
     private Tooltip tooltip_CurrentPassword;
     @FXML
     private Tooltip tooltip_NewPassword;
     @FXML
     private Tooltip tooltip_ConfirmPassword;
-
     @FXML
     private Tooltip tooltip_Name;
-
     @FXML
     private Tooltip tooltip_Surname;
 
-    private Tooltip tooltipError_CurrentPassword = new Tooltip();
-    private Tooltip tooltipError_NewPassword = new Tooltip();
-    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-
-    private Encryptor encryptor = new Encryptor();
-
-    private DoctorController doctorController = new DoctorController();
-
-    private HttpResponse response;
-
-    private int statusCode;
-
     @FXML
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) throws IOException {
+    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
         userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
             hazelcastInstance.getLifecycleService().shutdown();
@@ -81,44 +71,43 @@ public class ChangeInfoMenuController extends MenuController {
         setStage(stage);
         setInstance(hazelcastInstance);
         setNewWindow(newWindow);
-
-        specializations.add(new Specialization(-1, "None"));
-        specializations.addAll(specializationController.getAllSpecialization());
-
-        comboBox_Specialization.setItems(specializations);
-        comboBox_Specialization.setCellFactory(new Callback<ListView<Specialization>, ListCell<Specialization>>() {
-            @Override
-            public ListCell<Specialization> call(ListView<Specialization> p) {
-                ListCell cell = new ListCell<Specialization>() {
-                    @Override
-                    protected void updateItem(Specialization item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setText("");
-                        } else {
-                            setText(item.getName());
+        if (change) {
+            specializations.add(new Specialization(-1, "None"));
+            specializations.addAll(specializationController.getAllSpecialization());
+            comboBox_Specialization.setItems(specializations);
+            comboBox_Specialization.setCellFactory(new Callback<ListView<Specialization>, ListCell<Specialization>>() {
+                @Override
+                public ListCell<Specialization> call(ListView<Specialization> p) {
+                    ListCell cell = new ListCell<Specialization>() {
+                        @Override
+                        protected void updateItem(Specialization item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setText("");
+                            } else {
+                                setText(item.getName());
+                            }
                         }
-                    }
-                };
-                return cell;
-            }
-        });
-        comboBox_Specialization.setButtonCell(new ListCell<Specialization>() {
-            @Override
-            protected void updateItem(Specialization t, boolean bln) {
-                super.updateItem(t, bln);
-                if (bln) {
-                    setText("");
-                } else {
-                    setText(t.getName());
+                    };
+                    return cell;
                 }
-            }
-        });
-        comboBox_Specialization.setVisibleRowCount(5);
-        comboBox_Specialization.getSelectionModel().select(Integer.parseInt(getMap().get("specId").toString()));
-
-        textField_Name.setText(getMap().get("name").toString());
-        textField_Surname.setText(getMap().get("surname").toString());
+            });
+            comboBox_Specialization.setButtonCell(new ListCell<Specialization>() {
+                @Override
+                protected void updateItem(Specialization t, boolean bln) {
+                    super.updateItem(t, bln);
+                    if (bln) {
+                        setText("");
+                    } else {
+                        setText(t.getName());
+                    }
+                }
+            });
+            comboBox_Specialization.setVisibleRowCount(5);
+            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(getMap().get("specId").toString()));
+            textField_Name.setText(getMap().get("name").toString());
+            textField_Surname.setText(getMap().get("surname").toString());
+        }
     }
 
     public void savePassword(ActionEvent event) throws IOException {
@@ -127,7 +116,6 @@ public class ChangeInfoMenuController extends MenuController {
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
                     getMap().get("password").toString()))) {
-
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
                     response = doctorController.changePassword(encryptor.decrypt(getMap().get("key").toString(),
                             getMap().get("vector").toString(), getMap().get("login").toString()),
@@ -150,7 +138,6 @@ public class ChangeInfoMenuController extends MenuController {
                 alert.showAndWait();
             }
         }
-
     }
 
     public void cancel(ActionEvent event) {
@@ -166,7 +153,6 @@ public class ChangeInfoMenuController extends MenuController {
             passwordField_CurrentPassword.setTooltip(tooltip_CurrentPassword);
             passwordField_CurrentPassword.setStyle("-fx-border-color: inherit");
         }
-
         if (passwordField_NewPassword.getText().equals("")) {
             tooltipError_NewPassword.setText("You surname is empty!");
             passwordField_NewPassword.setTooltip(tooltipError_NewPassword);
@@ -175,7 +161,6 @@ public class ChangeInfoMenuController extends MenuController {
             passwordField_NewPassword.setTooltip(tooltip_NewPassword);
             passwordField_NewPassword.setStyle("-fx-border-color: inherit");
         }
-
         if (passwordField_ConfirmPassword.getText().equals("")) {
             tooltipError_ConfirmPassword.setText("You login is empty!");
             passwordField_ConfirmPassword.setTooltip(tooltipError_ConfirmPassword);
@@ -184,7 +169,6 @@ public class ChangeInfoMenuController extends MenuController {
             passwordField_ConfirmPassword.setTooltip(tooltip_ConfirmPassword);
             passwordField_ConfirmPassword.setStyle("-fx-border-color: inherit");
         }
-
         if (passwordField_CurrentPassword.getStyle().equals("-fx-border-color: inherit")
                 && passwordField_NewPassword.getStyle().equals("-fx-border-color: inherit")
                 && passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
@@ -203,7 +187,6 @@ public class ChangeInfoMenuController extends MenuController {
             textField_Name.setTooltip(tooltip_Name);
             textField_Name.setStyle("-fx-border-color: inherit");
         }
-
         if (textField_Surname.getText().equals("")) {
             tooltipError_Surname.setText("You surname is empty!");
             textField_Surname.setTooltip(tooltipError_Surname);
@@ -212,7 +195,6 @@ public class ChangeInfoMenuController extends MenuController {
             textField_Surname.setTooltip(tooltip_Surname);
             textField_Surname.setStyle("-fx-border-color: inherit");
         }
-
         if (textField_Name.getStyle().equals("-fx-border-color: inherit")
                 && textField_Surname.getStyle().equals("-fx-border-color: inherit")) {
             return true;
@@ -231,19 +213,16 @@ public class ChangeInfoMenuController extends MenuController {
                     encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
                             getMap().get("password").toString()), doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
             statusCode = response.getStatusLine().getStatusCode();
-            if(statusCode == 200){
+            if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
                 getMap().put("name", doctor.getName());
                 getMap().put("surname", doctor.getSurname());
                 getMap().put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
                 getMap().put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
-            }else {
-                alert.setContentText("Error! Status code: " + statusCode);
-                alert.showAndWait();
+                getNewWindow().close();
             }
-
-            getNewWindow().close();
+//            getNewWindow().close();
         }
     }
 }

@@ -7,14 +7,14 @@ import javafx.scene.control.Alert;
  */
 public class Placeholder {
 
-    private String placeholder = "PLACEHOLDER";
+    private final static String PLACEHOLDER = "PLACEHOLDER";
 
     public Placeholder() {
     }
 
-    public void getAlert(){
+    public void getAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("PLACEHOLDER");
+        alert.setContentText(PLACEHOLDER);
         alert.setHeaderText(null);
         alert.showAndWait();
     }

@@ -109,6 +109,5 @@ public class Page {
         this.parameters = page.getParameters();
         this.answer = page.getAnswer();
         this.date = page.getDate();
-//        this.doctor = page.getDoctor();
     }
 }

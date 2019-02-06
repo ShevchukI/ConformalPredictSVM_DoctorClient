@@ -1,6 +1,7 @@
-package com.controllers.windows;
+package com.controllers.windows.menu;
 
-import com.tools.Placeholder;
+import com.controllers.windows.doctor.ChangeInfoMenuController;
+import com.controllers.windows.doctor.LoginMenuController;
 import javafx.event.ActionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,19 +12,12 @@ import java.io.IOException;
  */
 public class MenuBarController extends MenuController {
 
-
     @Autowired
     LoginMenuController loginMenuController;
-
     @Autowired
     ChangeInfoMenuController changeInfoMenuController;
 
     private WindowsController windowsController = new WindowsController();
-
-
-    private Placeholder placeholder = new Placeholder();
-
-
     private MenuController menuController;
 
 
@@ -38,22 +32,18 @@ public class MenuBarController extends MenuController {
         menuController.getStage().close();
     }
 
-    public void getPlaceholderAlert(ActionEvent event) {
-        placeholder.getAlert();
-    }
 
     public void signOut(ActionEvent event) throws IOException {
-        windowsController.openWindow("loginMenu.fxml", menuController.getStage(), menuController.getInstance(), loginMenuController, "Login menu", 350, 190);
+        windowsController.openWindow("doctor/loginMenu.fxml", menuController.getStage(), menuController.getInstance(), loginMenuController, "Login menu", 350, 190);
     }
 
     public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("changeName.fxml", menuController.getStage(), menuController.getInstance(),
-                changeInfoMenuController, "Change name and surname", 400, 200);
+        windowsController.openNewModalWindow("doctor/changeName.fxml", menuController.getStage(), menuController.getInstance(),
+                changeInfoMenuController, "Change name and surname", true, 400, 200);
     }
 
     public void changePassword(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("changePassword.fxml", menuController.getStage(), menuController.getInstance(),
-                changeInfoMenuController, "Change password", 400, 200);
-
+        windowsController.openNewModalWindow("doctor/changePassword.fxml", menuController.getStage(), menuController.getInstance(),
+                changeInfoMenuController, "Change password", false, 400, 200);
     }
 }

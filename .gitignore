@@ -1,0 +1,17 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Java template
+
+# IntelliJ project files
+.idea
+*.iml
+target
+
+.gitignore
+.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_6_0.xml
+.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_6_0.xml
+.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_6_0.xml
+src/test/
+target/generated-sources/
+
+target/
+.idea/

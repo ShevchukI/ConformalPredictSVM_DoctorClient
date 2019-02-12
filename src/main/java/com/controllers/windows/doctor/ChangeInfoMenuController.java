@@ -122,18 +122,20 @@ public class ChangeInfoMenuController extends MenuController {
                             encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
                                     getMap().get("password").toString()), passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
-                    if (statusCode == 200) {
+                    if (checkStatusCode(statusCode)) {
                         getMap().put("password", encryptor.encrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();
                         getNewWindow().close();
-                    } else {
-                        alert.setContentText("Error! Status code: " + statusCode);
-                        alert.showAndWait();
                     }
+//                    else {
+//                        alert.setContentText("Error! Status code: " + statusCode);
+//                        alert.showAndWait();
+//                    }
                 }
             } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setContentText("Error! Current password incorrect, please try again.");
                 alert.showAndWait();
             }
@@ -222,7 +224,6 @@ public class ChangeInfoMenuController extends MenuController {
                 getMap().put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
                 getNewWindow().close();
             }
-//            getNewWindow().close();
         }
     }
 }

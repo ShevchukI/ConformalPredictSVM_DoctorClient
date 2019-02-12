@@ -25,7 +25,6 @@ import java.util.Base64;
  */
 public class DoctorController extends MainController {
 
-
     public HttpResponse getDoctorAuth(String name, String password) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
         HttpClient client = HttpClientBuilder.create().build();

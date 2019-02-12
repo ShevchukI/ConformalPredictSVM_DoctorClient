@@ -37,8 +37,9 @@ public class MainMenuController extends MenuController {
     CardMenuController cardMenuController;
     @Autowired
     HttpResponse response;
-    PatientController patientController = new PatientController();
 
+    private ObservableList<Patient> patientObservableList;
+    private PatientController patientController = new PatientController();
     private WindowsController windowsController = new WindowsController();
     private Encryptor encryptor = new Encryptor();
     private int statusCode;
@@ -56,8 +57,8 @@ public class MainMenuController extends MenuController {
     private MenuBarController menuBarController;
     @FXML
     private Pagination pagination_Patient;
-    @FXML
-    private ObservableList<Patient> patientObservableList;
+
+
     @FXML
     private TableView<Patient> tableView_PatientTable;
     @FXML

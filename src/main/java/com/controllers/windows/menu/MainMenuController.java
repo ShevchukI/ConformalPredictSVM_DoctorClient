@@ -4,9 +4,9 @@ import com.controllers.requests.PatientController;
 import com.controllers.windows.doctor.RegistrationMenuController;
 import com.controllers.windows.patient.AddPatientAndCardMenuController;
 import com.controllers.windows.patient.CardMenuController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Patient;
 import com.models.PatientPage;
+import com.tools.Constant;
 import com.tools.Encryptor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -90,17 +90,16 @@ public class MainMenuController extends MenuController {
     @FXML
     private TextField textField_Search;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         menuBarController.init(this);
-        label_Name.setText(getMap().get("surname").toString() + " " + getMap().get("name").toString());
-        label_Specialization.setText(getMap().get("specName").toString());
-        pageIndx = Integer.parseInt(getMap().get("pageIndex").toString());
+        label_Name.setText(Constant.getMapByName("user").get("surname").toString() + " "
+                + Constant.getMapByName("user").get("name").toString());
+        label_Specialization.setText(Constant.getMapByName("user").get("specName").toString());
+        pageIndx = Integer.parseInt(Constant.getMapByName("misc").get("pageIndex").toString());
         tableColumn_Number.setSortable(false);
         tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_PatientTable.getItems().
                 indexOf(column.getValue()) + 1) + (pageIndx - 1) * objectOnPage));
@@ -132,21 +131,21 @@ public class MainMenuController extends MenuController {
     }
 
     public void addPatient(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu.fxml", getStage(), getInstance(),
+        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", getStage(),
                 addPatientAndCardMenuController, patientObservableList, tableView_PatientTable,
                 "Add new patient", 740, 500);
     }
 
     public void viewPatient(ActionEvent event) throws IOException {
-        if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
-            System.out.println("ERROR!");
-        } else {
-            Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
-            getMap().put("pageIndex", String.valueOf(pageIndx));
-            System.out.println(getMap().get("pageIndex"));
-            windowsController.openWindowResizable("patient/cardMenu.fxml", getStage(), getInstance(), cardMenuController, patient,
-                    "Card", 600, 640);
-        }
+        viewPatient();
+//        if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
+//            System.out.println("ERROR!");
+//        } else {
+//            Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
+//            Constant.getMapByName("misc").put("pageIndex", String.valueOf(pageIndx));
+//            windowsController.openWindowResizable("patient/cardMenu", getStage(), cardMenuController, patient,
+//                    "Card", 600, 640);
+//        }
     }
 
     public void viewPatient() throws IOException {
@@ -154,8 +153,11 @@ public class MainMenuController extends MenuController {
             System.out.println("ERROR!");
         } else {
             Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
-            getMap().put("pageIndex", String.valueOf(pageIndx));
-            windowsController.openWindowResizable("patient/cardMenu.fxml", getStage(), getInstance(), cardMenuController, patient,
+            Constant.getMapByName("misc").put("pageIndex", String.valueOf(pageIndx));
+            Constant.getMapByName("patient").put("name", patient.getName());
+            Constant.getMapByName("patient").put("id", patient.getId());
+            Constant.getMapByName("patient").put("surname", patient.getId());
+            windowsController.openWindowResizable("patient/cardMenu", getStage(), cardMenuController,
                     "Card", 600, 640);
         }
     }
@@ -163,24 +165,25 @@ public class MainMenuController extends MenuController {
     public void search(ActionEvent event) throws IOException {
         if (textField_Search.getText().equals("")) {
             checkSearch = false;
-            getMap().put("pageIndex", "1");
-            pageIndx = Integer.parseInt(getMap().get("pageIndex").toString());
+            Constant.getMapByName("misc").put("pageIndex", "1");
+            pageIndx = Integer.parseInt(Constant.getMapByName("misc").get("pageIndex").toString());
             getPage(pageIndx, objectOnPage);
         } else {
             if (radio_All.isSelected()) {
                 searchType = 0;
-                getMap().put("searchType", "0");
+                Constant.getMapByName("misc").put("searchType", "0");
             } else if (radio_Name.isSelected()) {
                 searchType = 1;
-                getMap().put("searchType", "1");
+                Constant.getMapByName("misc").put("searchType", "1");
             } else if (radio_Surname.isSelected()) {
                 searchType = 2;
-                getMap().put("searchType", "2");
+                Constant.getMapByName("misc").put("searchType", "2");
             }
             checkSearch = true;
-            getMap().put("pageIndex", "1");
-            pageIndx = Integer.parseInt(getMap().get("pageIndex").toString());
-            searchPage(pageIndx, objectOnPage, textField_Search.getText(), Integer.parseInt(getMap().get("searchType").toString()));
+            Constant.getMapByName("misc").put("pageIndex", "1");
+            pageIndx = Integer.parseInt(Constant.getMapByName("misc").get("pageIndex").toString());
+            searchPage(pageIndx, objectOnPage, textField_Search.getText(),
+                    Integer.parseInt(Constant.getMapByName("misc").get("searchType").toString()));
         }
     }
 
@@ -196,7 +199,7 @@ public class MainMenuController extends MenuController {
         } else {
             try {
                 pageIndx = pageIndex + 1;
-                searchPage(pageIndx, objectOnPage, textField_Search.getText(), Integer.parseInt(getMap().get("searchType").toString()));
+                searchPage(pageIndx, objectOnPage, textField_Search.getText(), Integer.parseInt(Constant.getMapByName("misc").get("searchType").toString()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -205,10 +208,7 @@ public class MainMenuController extends MenuController {
     }
 
     public void getPage(int pageIndx, int objectOnPage) throws IOException {
-        response = patientController.getPatientPage(encryptor.decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                encryptor.decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
+        response = patientController.getPatientPage(Constant.getAuth(),
                 pageIndx, objectOnPage);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
@@ -222,10 +222,7 @@ public class MainMenuController extends MenuController {
     }
 
     public void searchPage(int pageIndx, int objectOnPage, String search, int searchType) throws IOException {
-        response = patientController.findPatientPage(encryptor.decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                encryptor.decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
+        response = patientController.findPatientPage(Constant.getAuth(),
                 search, searchType, pageIndx, objectOnPage);
         statusCode = response.getStatusLine().getStatusCode();
         if (statusCode == 200) {
@@ -239,6 +236,8 @@ public class MainMenuController extends MenuController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             alert.setContentText("Oops! Status code: " + statusCode);
+            alert.showAndWait();
         }
     }
+
 }

@@ -1,38 +1,33 @@
 package com.controllers.windows.menu;
 
 import com.controllers.requests.SpecializationController;
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.models.Doctor;
 import com.models.Page;
 import com.models.Patient;
 import com.models.Specialization;
-import com.tools.Encryptor;
-import com.tools.Placeholder;
+import com.tools.Constant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Created by Admin on 10.01.2019.
  */
 public abstract class MenuController {
 
-    @Autowired
-    protected Patient patient;
-    @Autowired
-    protected HazelcastInstance instance;
-    @Autowired
-    protected IMap<String, Object> userMap;
+//    @Autowired
+//    protected HazelcastInstance instance;
+//    @Autowired
+//    protected IMap<String, Object> userMap;
 
-    private Placeholder placeholder = new Placeholder();
+//    private Placeholder placeholder = new Placeholder();
     private Stage stage;
     private Stage newWindow;
     private SpecializationController specializationController = new SpecializationController();
@@ -46,43 +41,29 @@ public abstract class MenuController {
         return stage;
     }
 
-    public void getPlaceholderAlert(ActionEvent event) {
-        placeholder.getAlert();
+//    public void getPlaceholderAlert(ActionEvent event) {
+//        placeholder.getAlert();
+//    }
+
+    public void initialize(Stage stage) throws IOException {
+//        userMap = Hazelcast.getHazelcastInstanceByName("mainInstance").getMap("userMap");
+        stage.setOnHidden(event -> {
+            Constant.getInstance().getLifecycleService().shutdown();
+//            Hazelcast.getHazelcastInstanceByName("mainDoctorInstance").getLifecycleService().shutdown();
+        });
+        setStage(stage);
+//        setInstance(hazelcastInstance);
     }
 
-    public HazelcastInstance getInstance() {
-        return instance;
-    }
+//    public void initialize(Stage stage) throws IOException {
+//
+//    }
 
-    public void setInstance(HazelcastInstance hazelcastInstance) {
-        instance = hazelcastInstance;
-    }
-
-    public IMap getMap() {
-        return userMap;
-    }
-
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-
-    }
-
-    public void initialize(Patient patient, Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void initialize(Patient patient, ArrayList<Page> pages, int row, Stage stage, HazelcastInstance hazelcastInstance, String action) {
+    public void initialize(ArrayList<Page> pages, int row, Stage stage, String action) throws IOException {
 
     }
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) throws IOException {
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
 
     }
 
@@ -94,12 +75,12 @@ public abstract class MenuController {
         return newWindow;
     }
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, ObservableList<Patient> patientObservableList,
+    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
                            TableView<Patient> tableView_PatientTable) throws IOException {
 
     }
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
+    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
 
     }
 
@@ -127,26 +108,45 @@ public abstract class MenuController {
         }
     }
 
-    public void fillMap(Doctor doctorFromJson, String login, String password) {
-        Doctor doctor = doctorFromJson;
-        String key;
-        String vector;
-        key = new Encryptor().genRandString();
-        vector = new Encryptor().genRandString();
-        getMap().put("key", key);
-        getMap().put("vector", vector);
-        getMap().put("login", new Encryptor().encrypt(key, vector, login));
-        getMap().put("password", new Encryptor().encrypt(key, vector, password));
-        getMap().put("id", doctor.getId());
-        getMap().put("name", doctor.getName());
-        getMap().put("surname", doctor.getSurname());
-        if (doctor.getSpecialization() != null) {
-            getMap().put("specId", doctor.getSpecialization().getId());
-            getMap().put("specName", doctor.getSpecialization().getName());
+//    public void fillMap(Doctor doctorFromJson, String login, String password) {
+//        Doctor doctor = doctorFromJson;
+//        String key;
+//        String vector;
+//        key = new Encryptor().genRandString();
+//        vector = new Encryptor().genRandString();
+//        getMap().put("key", key);
+//        getMap().put("vector", vector);
+//        getMap().put("login", new Encryptor().encrypt(key, vector, login));
+//        getMap().put("password", new Encryptor().encrypt(key, vector, password));
+//        getMap().put("id", doctor.getId());
+//        getMap().put("name", doctor.getName());
+//        getMap().put("surname", doctor.getSurname());
+//        if (doctor.getSpecialization() != null) {
+//            getMap().put("specId", doctor.getSpecialization().getId());
+//            getMap().put("specName", doctor.getSpecialization().getName());
+//        } else {
+//            getMap().put("specId", "-2");
+//            getMap().put("specName", "Empty");
+//        }
+//        getMap().put("pageIndex", "1");
+//    }
+
+    public void getAlert(String header, String content, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    public boolean questionOkCancel(String questionText){
+        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, questionText, ok, cancel);
+        questionOfCancellation.setHeaderText(null);
+        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+        if(result.orElse(cancel) == ok){
+            return true;
         } else {
-            getMap().put("specId", "-2");
-            getMap().put("specName", "Empty");
+            return false;
         }
-        getMap().put("pageIndex", "1");
     }
 }

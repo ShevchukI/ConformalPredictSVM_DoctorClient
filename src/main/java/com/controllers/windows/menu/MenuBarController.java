@@ -27,25 +27,22 @@ public class MenuBarController extends MenuController {
     }
 
     public void closeApplication(ActionEvent event) {
-        menuController.getStage().setOnHiding(event1 -> {
-            menuController.getInstance().shutdown();
-        });
         menuController.getStage().close();
     }
 
 
     public void signOut(ActionEvent event) throws IOException {
-        windowsController.openWindow("doctor/loginMenu.fxml", menuController.getStage(), menuController.getInstance(), loginMenuController,
+        windowsController.openWindow("doctor/loginMenu", menuController.getStage(), loginMenuController,
                 "Login menu", 350, 190);
     }
 
     public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("doctor/changeName.fxml", menuController.getStage(), menuController.getInstance(),
+        windowsController.openNewModalWindow("doctor/changeName", menuController.getStage(),
                 changeInfoMenuController, "Change name and surname", true, 400, 200);
     }
 
     public void changePassword(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("doctor/changePassword.fxml", menuController.getStage(), menuController.getInstance(),
+        windowsController.openNewModalWindow("doctor/changePassword", menuController.getStage(),
                 changeInfoMenuController, "Change password", false, 400, 200);
     }
 
@@ -55,4 +52,6 @@ public class MenuBarController extends MenuController {
         alert.setContentText("By DayRo\nBy Kosades");
         alert.showAndWait();
     }
+
+
 }

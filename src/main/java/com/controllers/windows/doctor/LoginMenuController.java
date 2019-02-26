@@ -4,15 +4,13 @@ import com.controllers.requests.DoctorController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Doctor;
-import com.tools.Encryptor;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,10 +28,8 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private String key;
-    private String vector;
+
     private DoctorController doctorController = new DoctorController();
-    private Encryptor encryptor = new Encryptor();
     private int statusCode;
     private WindowsController windowsController = new WindowsController();
 
@@ -42,15 +38,13 @@ public class LoginMenuController extends MenuController {
     @FXML
     private PasswordField passwordField_Password;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) {
-        userMap = hazelcastInstance.getMap("userMap");
-        stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
-        });
-        setStage(stage);
-        setInstance(hazelcastInstance);
-        getMap().clear();
-    }
+//    public void initialize(Stage stage) {
+//        stage.setOnHidden(event -> {
+//            Constant.getInstance().getLifecycleService().shutdown();
+//        });
+//        setStage(stage);
+//        Constant.getInstance().clear();
+//    }
 
     public void signIn(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -62,18 +56,21 @@ public class LoginMenuController extends MenuController {
             alert.setContentText("Password is empty!");
             alert.showAndWait();
         } else {
-            response = doctorController.getDoctorAuth(textField_Login.getText(), passwordField_Password.getText());
+            String[] authorization = new String[2];
+            authorization[0] = textField_Login.getText();
+            authorization[1] = passwordField_Password.getText();
+            response = doctorController.getDoctorAuth(authorization);
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
-                fillMap(new Doctor().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
-                windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController,
+                Constant.fillMap(new Doctor().fromJson(response), authorization);
+                windowsController.openWindowResizable("menu/mainMenu", getStage(),  mainMenuController,
                         "Main menu", 600, 640);
             }
         }
     }
 
     public void signUp(ActionEvent event) throws IOException {
-        windowsController.openWindow("doctor/registrationMenu.fxml", getStage(), getInstance(), registrationMenuController,
+        windowsController.openWindow("doctor/registrationMenu", getStage(), registrationMenuController,
                 "Registration", 408, 460);
     }
 }

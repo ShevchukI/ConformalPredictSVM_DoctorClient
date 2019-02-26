@@ -5,24 +5,21 @@ import com.controllers.requests.RecordController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Patient;
 import com.models.Record;
+import com.tools.Constant;
 import com.tools.Encryptor;
 import com.tools.Placeholder;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Created by Admin on 14.01.2019.
@@ -52,26 +49,22 @@ public class AddPatientAndCardMenuController extends MenuController {
     @FXML
     private RecordMenuController recordMenuController;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         patientMenuController.init(this);
         recordMenuController.init(this);
     }
 
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, ObservableList<Patient> patientObservableList,
+    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
                            TableView<Patient> tableView_PatientTable) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
         this.patientObservableList = patientObservableList;
         this.tableView_PatientTable = tableView_PatientTable;
@@ -94,51 +87,36 @@ public class AddPatientAndCardMenuController extends MenuController {
             } else {
                 record.setSex(false);
             }
-            response = patientControleller.createPatient(encryptor.decrypt(getMap().get("key").toString(),
-                    getMap().get("vector").toString(), getMap().get("login").toString()),
-                    encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                            getMap().get("password").toString()),
-                    patient);
+            response = patientControleller.createPatient(Constant.getAuth(), patient);
             statusCode = response.getStatusLine().getStatusCode();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
             if (checkStatusCode(statusCode)) {
                 int id = new Patient().getIdFromJson(response);
-                response = recordController.changeRecord(encryptor.decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()),
+                response = recordController.changeRecord(Constant.getAuth(),
                         record, id);
                 statusCode = response.getStatusLine().getStatusCode();
                 if (checkStatusCode(statusCode)) {
                     alert.setContentText("Congratulations, patient is registered!");
                     alert.showAndWait();
-                    windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
+                    TableView tableView = (TableView)getStage().getScene().lookup("#tableView_PatientTable");
+                    tableView.refresh();
+//                    windowsController.openWindowResizable("menu/mainMenu", getStage(),
+//                            mainMenuController, "Main menu", 600, 640);
                     getNewWindow().close();
                 }
-//                else {
-//                    alert.setAlertType(Alert.AlertType.ERROR);
-//                    alert.setContentText("Error! Status code: " + statusCode);
-//                    alert.showAndWait();
-//                }
             }
-//            else {
-//                alert.setAlertType(Alert.AlertType.ERROR);
-//                alert.setContentText("Error! Status code: " + statusCode);
-//                alert.showAndWait();
-//            }
         }
     }
 
     public void cancel(ActionEvent event) {
-        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to leave?", ok, cancel);
-        questionOfCancellation.setHeaderText(null);
-        Optional<ButtonType> result = questionOfCancellation.showAndWait();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        if (result.orElse(cancel) == ok) {
+//        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+//        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+//        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to leave?", ok, cancel);
+//        questionOfCancellation.setHeaderText(null);
+//        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+        boolean result = questionOkCancel("Do you really want to leave?");
+        if (result) {
             getNewWindow().close();
         }
     }

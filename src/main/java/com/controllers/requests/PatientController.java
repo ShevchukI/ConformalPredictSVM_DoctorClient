@@ -24,8 +24,8 @@ import java.util.Base64;
  */
 public class PatientController extends MainController{
 
-    public HttpResponse createPatient(String name, String password, Patient patient) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse createPatient(String[] authorization, Patient patient) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         String json = new Gson().toJson(patient);
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(getUrl()+"/patient");
@@ -42,8 +42,8 @@ public class PatientController extends MainController{
         return response;
     }
 
-    public HttpResponse getAllPatient(String name, String password) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse getAllPatient(String[] authorization) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/patient/all");
         request.addHeader("Authorization", basicAuthPayload);
@@ -57,11 +57,11 @@ public class PatientController extends MainController{
         return response;
     }
 
-    public HttpResponse findPatient(String name, String password, String search, int searchType) throws IOException {
+    public HttpResponse findPatient(String[] authorization, String search, int searchType) throws IOException {
         String[] parameter = getSearchParameter(search, searchType);
         String searchName = parameter[0];
         String searchSurname =  parameter[1];
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/patient/params?name=" + searchName + "&surname=" + searchSurname);
         request.addHeader("Authorization", basicAuthPayload);
@@ -75,8 +75,8 @@ public class PatientController extends MainController{
         return response;
     }
 
-    public HttpResponse getPatientPage(String name, String password, int page, int objectOnPage) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse getPatientPage(String[] authorization, int page, int objectOnPage) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/patient/all/" + page + "/" + objectOnPage);
         request.addHeader("Authorization", basicAuthPayload);
@@ -90,11 +90,11 @@ public class PatientController extends MainController{
         return response;
     }
 
-    public HttpResponse findPatientPage(String name, String password, String search, int searchType, int page, int objectOnPage) throws IOException {
+    public HttpResponse findPatientPage(String[] authorization, String search, int searchType, int page, int objectOnPage) throws IOException {
         String[] parameter = getSearchParameter(search, searchType);
         String searchName = parameter[0];
         String searchSurname =  parameter[1];
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/patient/params/" + page + "/" + objectOnPage + "?name=" + searchName + "&surname=" + searchSurname);
         request.addHeader("Authorization", basicAuthPayload);

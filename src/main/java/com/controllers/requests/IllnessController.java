@@ -1,14 +1,15 @@
 package com.controllers.requests;
 
+
 import com.google.gson.Gson;
-import com.models.Record;
+import com.models.ParameterSingleObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultHttpResponseFactory;
@@ -20,18 +21,35 @@ import java.io.IOException;
 import java.util.Base64;
 
 /**
- * Created by Admin on 26.01.2019.
+ * Created by Admin on 22.02.2019.
  */
-public class RecordController extends MainController{
+public class IllnessController extends MainController {
 
-    public HttpResponse changeRecord(String[] authorization, Record record, int id) throws IOException {
+    public HttpResponse startSingleTest(String[] authorization, int configurationId, ParameterSingleObject parameterSingleObject) throws IOException {
+        String json = new Gson().toJson(parameterSingleObject);
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        String json = new Gson().toJson(record);
         CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(getUrl()+"/record/" + id);
+        HttpPost request = new HttpPost(getUrl() + "/illness/result/" + configurationId + "/start");
+        request.addHeader("Authorization", basicAuthPayload);
         request.setHeader("Content-Type", "application/json");
-        request.setHeader("Authorization", basicAuthPayload);
         request.setEntity(new StringEntity(json));
+        HttpResponse response = null;
+        try {
+            response = client.execute(request);
+        } catch (HttpHostConnectException e) {
+            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public HttpResponse resultSingleTest(String[] authorization, int processId) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(getUrl() + "/illness/result/" + processId + "/start");
+        request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
             response = client.execute(request);
@@ -42,10 +60,10 @@ public class RecordController extends MainController{
         return response;
     }
 
-    public HttpResponse getRecordByPatientId(String[] authorization, int id) throws IOException {
+    public HttpResponse getAllActiveDataSet(String[] authorization) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl()+"/record/" + id);
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(getUrl() + "/illness/datasets");
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {

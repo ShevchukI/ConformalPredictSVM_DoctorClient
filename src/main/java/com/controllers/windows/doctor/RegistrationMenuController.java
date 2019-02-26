@@ -4,9 +4,9 @@ import com.controllers.requests.DoctorController;
 import com.controllers.requests.SpecializationController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Doctor;
 import com.models.Specialization;
+import com.tools.Constant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ import java.util.Optional;
  */
 public class RegistrationMenuController extends MenuController {
 
+    @Autowired
+    HttpResponse response;
     @Autowired
     LoginMenuController loginMenuController;
 
@@ -65,15 +68,17 @@ public class RegistrationMenuController extends MenuController {
     private Tooltip tooltip_ConfirmPassword;
 
     @FXML
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         specializations.add(new Specialization(-1, "None"));
-        specializations.addAll(specializationController.getAllSpecialization());
+        response = specializationController.getAllSpecialization();
+        statusCode = response.getStatusLine().getStatusCode();
+        if(checkStatusCode(statusCode)) {
+            specializations.addAll(new Specialization().getListFromResponse(response));
+        }
         comboBox_Specialization.setItems(specializations);
         comboBox_Specialization.setCellFactory(new Callback<ListView<Specialization>, ListCell<Specialization>>() {
             @Override
@@ -117,7 +122,7 @@ public class RegistrationMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
-                windowsController.openWindow("doctor/loginMenu.fxml", getStage(), getInstance(),
+                windowsController.openWindow("doctor/loginMenu", getStage(),
                         loginMenuController, "Login menu", 350, 190);
             }
         }
@@ -133,16 +138,12 @@ public class RegistrationMenuController extends MenuController {
         alert.setHeaderText(null);
         if (result.orElse(cancel) == ok) {
             try {
-                returnToLoginMenu();
+                windowsController.openWindow("doctor/loginMenu.fxml", getStage(), loginMenuController,
+                        "Login menu", 350, 190);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void returnToLoginMenu() throws IOException {
-        windowsController.openWindow("doctor/loginMenu.fxml", getStage(), getInstance(), loginMenuController,
-                "Login menu", 350, 190);
     }
 
     public boolean checkRegister() {

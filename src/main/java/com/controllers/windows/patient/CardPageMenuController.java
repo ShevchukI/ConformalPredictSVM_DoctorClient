@@ -1,19 +1,22 @@
 package com.controllers.windows.patient;
 
+import com.controllers.requests.IllnessController;
 import com.controllers.requests.PageController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
+import com.models.Dataset;
 import com.models.Page;
-import com.models.Patient;
-import com.tools.Encryptor;
+import com.tools.Constant;
 import javafx.beans.binding.BooleanBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,7 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by Admin on 14.01.2019.
@@ -35,6 +37,9 @@ public class CardPageMenuController extends MenuController {
     private WindowsController windowsController = new WindowsController();
     private MainMenuController mainMenuController = new MainMenuController();
     private DiagnosticMenuController diagnosticMenuController = new DiagnosticMenuController();
+    private IllnessController illnessController = new IllnessController();
+    private ObservableList<Dataset> datasets = FXCollections.observableArrayList();
+
     private String action;
     private int row;
     private ArrayList<Page> pages;
@@ -42,7 +47,6 @@ public class CardPageMenuController extends MenuController {
     private String oldTheme;
     private HttpResponse response;
     private PageController pageController = new PageController();
-    private Encryptor encryptor = new Encryptor();
     private LocalDate localDate = LocalDate.now();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private int statusCode;
@@ -72,21 +76,18 @@ public class CardPageMenuController extends MenuController {
     @FXML
     private Button button_Change;
     @FXML
-    private ComboBox comboBox_Combo;
+    private ComboBox<Dataset> comboBox_Illness;
 
-    public void initialize(Patient patient, ArrayList<Page> pages, int row, Stage stage, HazelcastInstance hazelcastInstance, String action) {
+    public void initialize(ArrayList<Page> pages, int row, Stage stage, String action) throws IOException {
         menuBarController.init(this);
-        setPatient(patient);
-        userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         this.pages = pages;
         this.row = row;
         this.action = action;
-        label_PatientName.setText(getPatient().getSurname() + " " + getPatient().getName());
+        label_PatientName.setText(Constant.getMapByName("patient").get("name") + " " + Constant.getMapByName("patient").get("surname"));
         textArea_Description.setWrapText(true);
         if (action.equals("view")) {
             oldTheme = textField_Theme.getText();
@@ -98,10 +99,10 @@ public class CardPageMenuController extends MenuController {
             label_CurrentDate.setText(pages.get(row).getDate());
             label_Result.setText(pages.get(row).getAnswer());
             button_Save.setDisable(true);
-            comboBox_Combo.setDisable(true);
+            comboBox_Illness.setDisable(true);
             button_Diagnostic.setDisable(true);
             label_DoctorName.setText(pages.get(row).getDoctor().getSurname() + " " + pages.get(row).getDoctor().getName());
-            if (pages.get(row).getDoctor().getId() == Integer.parseInt(getMap().get("id").toString())) {
+            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
                 button_Change.setDisable(true);
@@ -111,7 +112,7 @@ public class CardPageMenuController extends MenuController {
             button_Previous.setDisable(true);
             button_Next.setDisable(true);
             button_Change.setDisable(true);
-            label_DoctorName.setText(getMap().get("surname").toString() + " " + getMap().get("name").toString());
+            label_DoctorName.setText(Constant.getMapByName("user").get("name").toString() + " " + Constant.getMapByName("user").get("surname").toString());
             BooleanBinding checkEmptyField = new BooleanBinding() {
                 {
                     super.bind(textField_Theme.textProperty(),
@@ -132,6 +133,41 @@ public class CardPageMenuController extends MenuController {
         if (row == pages.size() - 1) {
             button_Next.setDisable(true);
         }
+        response = illnessController.getAllActiveDataSet(Constant.getAuth());
+        statusCode = response.getStatusLine().getStatusCode();
+        if(checkStatusCode(statusCode)) {
+            datasets.addAll(new Dataset().getListFromResponse(response));
+        }
+        comboBox_Illness.setItems(datasets);
+        comboBox_Illness.setCellFactory(new Callback<ListView<Dataset>, ListCell<Dataset>>() {
+            @Override
+            public ListCell<Dataset> call(ListView<Dataset> p) {
+                ListCell cell = new ListCell<Dataset>() {
+                    @Override
+                    protected void updateItem(Dataset item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText("");
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+        comboBox_Illness.setButtonCell(new ListCell<Dataset>() {
+            @Override
+            protected void updateItem(Dataset t, boolean bln) {
+                super.updateItem(t, bln);
+                if (bln) {
+                    setText("");
+                } else {
+                    setText(t.getName());
+                }
+            }
+        });
+        comboBox_Illness.setVisibleRowCount(5);
     }
 
     public void previousPage(ActionEvent event) {
@@ -152,7 +188,7 @@ public class CardPageMenuController extends MenuController {
         if (row != pages.size() - 1) {
             button_Next.setDisable(false);
         }
-        if (pages.get(row).getDoctor().getId() == Integer.parseInt(getMap().get("id").toString())) {
+        if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
             button_Change.setDisable(false);
         } else {
             button_Change.setDisable(true);
@@ -184,7 +220,7 @@ public class CardPageMenuController extends MenuController {
             if (row != 0) {
                 button_Previous.setDisable(false);
             }
-            if (pages.get(row).getDoctor().getId() == Integer.parseInt(getMap().get("id").toString())) {
+            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
                 button_Change.setDisable(true);
@@ -193,40 +229,42 @@ public class CardPageMenuController extends MenuController {
     }
 
     public void savePage(ActionEvent event) throws IOException {
-        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to save the changes?", ok, cancel);
-        questionOfCancellation.setHeaderText(null);
-        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+//        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+//        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+//        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to save the changes?", ok, cancel);
+//        questionOfCancellation.setHeaderText(null);
+//        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+        boolean result = questionOkCancel("Do you really want to save the changes?");
         Page page = null;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
-        if (result.orElse(cancel) == ok) {
+        if (result) {
             if (action.equals("view")) {
                 page = new Page(textField_Theme.getText(), textArea_Description.getText(), pages.get(row).getParameters(), pages.get(row).getAnswer(), pages.get(row).getDate());
-                response = pageController.changePage(encryptor.decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()), page, pages.get(row).getId());
+                response = pageController.changePage(Constant.getAuth(), page, pages.get(row).getId());
                 statusCode = response.getStatusLine().getStatusCode();
             } else if (action.equals("new")) {
                 page = new Page(textField_Theme.getText(), textArea_Description.getText(), "placeholderParam", label_Result.getText(), label_CurrentDate.getText());
                 page.setDate(label_CurrentDate.getText());
-                response = pageController.createPage(encryptor.decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()), page, getPatient().getId());
+                response = pageController.createPage(Constant.getAuth(), page, Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
                 statusCode = response.getStatusLine().getStatusCode();
             }
             if (checkStatusCode(statusCode)) {
-                pages.get(row).setPage(page);
-                alert.setContentText("Changed!");
-                alert.showAndWait();
-            } else if (checkStatusCode(statusCode)) {
-                alert.setContentText("Saved!");
-                alert.showAndWait();
-                button_Next.setDisable(false);
+                if(action.equals("view")) {
+                    pages.get(row).setPage(page);
+                    alert.setContentText("Changed!");
+                    alert.showAndWait();
+                } else if(action.equals("new")){
+                    alert.setContentText("Saved!");
+                    alert.showAndWait();
+                    button_Next.setDisable(false);
+                }
             }
+//            else if (checkStatusCode(statusCode)) {
+//                alert.setContentText("Saved!");
+//                alert.showAndWait();
+//                button_Next.setDisable(false);
+//            }
 //            else {
 //                alert.setHeaderText("Status code:" + statusCode);
 //                alert.setContentText("You can not save this entry!");
@@ -237,11 +275,13 @@ public class CardPageMenuController extends MenuController {
     }
 
     public void backToCardMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("patient/cardMenu.fxml", getStage(), getInstance(), cardMenuController, getPatient(), "Card", 600, 640);
+        windowsController.openWindowResizable("patient/cardMenu", getStage(),
+                cardMenuController, "Card", 600, 640);
     }
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
+        windowsController.openWindowResizable("menu/mainMenu", getStage(),
+                mainMenuController, "Main menu", 600, 640);
     }
 
     public void changeText() {
@@ -261,11 +301,20 @@ public class CardPageMenuController extends MenuController {
         button_Save.setDisable(false);
         textField_Theme.setEditable(true);
         textArea_Description.setEditable(true);
+        comboBox_Illness.setDisable(false);
+        button_Diagnostic.setDisable(false);
     }
 
     public void diagnostic(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("patient/diagnosticMenu.fxml", getStage(), getInstance(), diagnosticMenuController,
-                "Main menu", 600, 400);
-
+        Constant.getMapByName("dataset").put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
+        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
+        if(comboBox_Illness.getSelectionModel().getSelectedItem()!=null) {
+            Constant.getMapByName("dataset").put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName("dataset").put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
+            windowsController.openNewModalWindow("patient/diagnosticMenu", getStage(),
+                    diagnosticMenuController, "Main menu", 600, 400);
+        } else {
+            getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
+        }
     }
 }

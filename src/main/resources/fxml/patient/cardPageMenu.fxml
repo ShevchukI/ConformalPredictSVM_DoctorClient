@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.CardPageMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.CardPageMenuController">
     <top>
         <VBox>
             <children>
@@ -33,17 +33,17 @@
             </children></AnchorPane>
     </center>
    <right>
-      <AnchorPane prefHeight="390.0" prefWidth="174.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="420.0" prefWidth="216.0" BorderPane.alignment="CENTER">
          <children>
             <Separator orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
                 <Label layoutX="112.0" layoutY="8.0" prefHeight="18.0" prefWidth="40.0" text="Date:" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="124.0" AnchorPane.topAnchor="14.0" />
                 <Label fx:id="label_CurrentDate" layoutX="181.0" layoutY="9.0" prefHeight="18.0" prefWidth="110.0" text="placeholder" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <ComboBox fx:id="comboBox_Combo" layoutY="45.0" prefHeight="14.0" prefWidth="150.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="42.0" />
-            <Button fx:id="button_Diagnostic" alignment="CENTER" layoutX="25.0" layoutY="87.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="110.0" text="Button" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0" onAction="#diagnostic"/>
+            <ComboBox fx:id="comboBox_Illness" layoutY="45.0" prefHeight="14.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="42.0" />
+            <Button fx:id="button_Diagnostic" alignment="CENTER" layoutX="53.0" layoutY="79.0" mnemonicParsing="false" onAction="#diagnostic" prefHeight="14.0" prefWidth="110.0" text="Button" AnchorPane.topAnchor="79.0" />
             <Label alignment="CENTER" layoutX="23.0" layoutY="133.0" prefHeight="14.0" prefWidth="120.0" text="Diagnostic result:" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="130.0" />
             <Label fx:id="label_Result" alignment="CENTER" layoutX="12.0" layoutY="161.0" prefHeight="14.0" prefWidth="100.0" text="placeholder" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="155.0" />
             <Label alignment="CENTER" layoutX="26.0" layoutY="186.0" prefHeight="14.0" prefWidth="120.0" text="Diagnostic data:" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="190.0" />
-            <Button alignment="CENTER" layoutX="48.0" layoutY="221.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="110.0" text="View" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="220.0" onAction="#getPlaceholderAlert"/>
+            <Button alignment="CENTER" layoutX="53.0" layoutY="219.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="110.0" text="View" AnchorPane.topAnchor="219.0" />
          </children>
       </AnchorPane>
    </right>

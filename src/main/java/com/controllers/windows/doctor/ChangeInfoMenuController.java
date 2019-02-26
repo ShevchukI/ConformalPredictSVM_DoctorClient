@@ -3,9 +3,9 @@ package com.controllers.windows.doctor;
 import com.controllers.requests.DoctorController;
 import com.controllers.requests.SpecializationController;
 import com.controllers.windows.menu.MenuController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Doctor;
 import com.models.Specialization;
+import com.tools.Constant;
 import com.tools.Encryptor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +35,6 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_ConfirmPassword = new Tooltip();
     private Tooltip tooltipError_Name = new Tooltip();
     private Tooltip tooltipError_Surname = new Tooltip();
-    private Encryptor encryptor = new Encryptor();
     private DoctorController doctorController = new DoctorController();
     private int statusCode;
 
@@ -63,17 +62,19 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltip_Surname;
 
     @FXML
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
         if (change) {
             specializations.add(new Specialization(-1, "None"));
-            specializations.addAll(specializationController.getAllSpecialization());
+            response = specializationController.getAllSpecialization();
+            statusCode = response.getStatusLine().getStatusCode();
+            if(checkStatusCode(statusCode)) {
+                specializations.addAll(new Specialization().getListFromResponse(response));
+            }
             comboBox_Specialization.setItems(specializations);
             comboBox_Specialization.setCellFactory(new Callback<ListView<Specialization>, ListCell<Specialization>>() {
                 @Override
@@ -104,9 +105,9 @@ public class ChangeInfoMenuController extends MenuController {
                 }
             });
             comboBox_Specialization.setVisibleRowCount(5);
-            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(getMap().get("specId").toString()));
-            textField_Name.setText(getMap().get("name").toString());
-            textField_Surname.setText(getMap().get("surname").toString());
+            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(Constant.getMapByName("user").get("specId").toString()));
+            textField_Name.setText(Constant.getMapByName("user").get("name").toString());
+            textField_Surname.setText(Constant.getMapByName("user").get("surname").toString());
         }
     }
 
@@ -114,25 +115,18 @@ public class ChangeInfoMenuController extends MenuController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         if (checkPasswords()) {
-            if (passwordField_CurrentPassword.getText().equals(encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                    getMap().get("password").toString()))) {
+            if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = doctorController.changePassword(encryptor.decrypt(getMap().get("key").toString(),
-                            getMap().get("vector").toString(), getMap().get("login").toString()),
-                            encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                    getMap().get("password").toString()), passwordField_ConfirmPassword.getText());
+                    response = doctorController.changePassword(Constant.getAuth(), passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
-                        getMap().put("password", encryptor.encrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
+                        Constant.getMapByName("user").put("password", new Encryptor().encrypt(Constant.getMapByName("key").get("key").toString(),
+                                Constant.getMapByName("key").get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();
                         getNewWindow().close();
                     }
-//                    else {
-//                        alert.setContentText("Error! Status code: " + statusCode);
-//                        alert.showAndWait();
-//                    }
                 }
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
@@ -210,18 +204,21 @@ public class ChangeInfoMenuController extends MenuController {
         alert.setHeaderText(null);
         if (checkNames()) {
             Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText());
-            response = doctorController.changeName(encryptor.decrypt(getMap().get("key").toString(),
-                    getMap().get("vector").toString(), getMap().get("login").toString()),
-                    encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                            getMap().get("password").toString()), doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+            response = doctorController.changeName(Constant.getAuth(), doctor,
+                    comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
-                getMap().put("name", doctor.getName());
-                getMap().put("surname", doctor.getSurname());
-                getMap().put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-                getMap().put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
+                Constant.getMapByName("user").put("name", doctor.getName());
+                Constant.getMapByName("user").put("surname", doctor.getSurname());
+                Constant.getMapByName("user").put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+                Constant.getMapByName("user").put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
+                Label label_Name = (Label)getStage().getScene().lookup("#label_Name");
+                label_Name.setText(Constant.getMapByName("user").get("name").toString() + " "
+                        + Constant.getMapByName("user").get("surname").toString());
+                Label label_Specialization = (Label)getStage().getScene().lookup("#label_Specialization");
+                label_Specialization.setText(Constant.getMapByName("user").get("specName").toString());
                 getNewWindow().close();
             }
         }

@@ -6,10 +6,10 @@ import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Page;
 import com.models.Patient;
 import com.models.Record;
+import com.tools.Constant;
 import com.tools.Encryptor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * Created by Admin on 14.01.2019.
@@ -76,21 +75,15 @@ public class CardMenuController extends MenuController {
     @FXML
     private ObservableList<Page> pageObservableList;
 
-    public void initialize(Patient patient, Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
+    public void initialize(Stage stage) throws IOException {
         menuBarController.init(this);
-        setPatient(patient);
-        userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
-        label_Name.setText(getPatient().getSurname() + " " + getPatient().getName());
-        response = recordController.getRecordByPatientId(encryptor.decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                        getMap().get("password").toString()),
-                getPatient().getId());
+        label_Name.setText(Constant.getMapByName("patient").get("name") + " " + Constant.getMapByName("patient").get("surname"));
+        response = recordController.getRecordByPatientId(Constant.getAuth(),
+                Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             Record record = new Record().fromJson(response);
@@ -110,11 +103,8 @@ public class CardMenuController extends MenuController {
 //            alert.setContentText("ERROR!");
 //            alert.showAndWait();
 //        }
-        response = pageController.getAllPageByPatientId(encryptor.decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                        getMap().get("password").toString()),
-                getPatient().getId());
+        response = pageController.getAllPageByPatientId(Constant.getAuth(),
+                Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             pages = pageController.getAllPage(response);
@@ -144,26 +134,27 @@ public class CardMenuController extends MenuController {
     }
 
     public void viewPage(ActionEvent event) throws IOException {
-        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable("patient/cardPageMenu.fxml", getStage(), getInstance(), cardPageMenuController,
-                patient, pages, row, "view", "Page", 800, 640);
+        viewPage();
+//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+//        windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
+//                pages, row, "view", "Page", 800, 640);
     }
 
     public void viewPage() throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable("patient/cardPageMenu.fxml", getStage(), getInstance(), cardPageMenuController,
-                patient, pages, row, "view", "Page", 800, 640);
+        windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
+               pages, row, "view", "Page", 800, 640);
     }
 
     public void newPage(ActionEvent event) throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable("patient/cardPageMenu.fxml", getStage(), getInstance(), cardPageMenuController,
-                patient, pages, row, "new", "Page", 800, 640);
+        windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
+                 pages, row, "new", "Page", 800, 640);
     }
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController,
+        windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController,
                 "Main menu", 600, 640);
     }
 
@@ -171,20 +162,18 @@ public class CardMenuController extends MenuController {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
-        if (pages.get(row).getDoctor().getId() == Integer.parseInt(getMap().get("id").toString())) {
-            ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to delete this page?", ok, cancel);
-            questionOfCancellation.setHeaderText(null);
-            Optional<ButtonType> result = questionOfCancellation.showAndWait();
-            if (result.orElse(cancel) == ok) {
+        if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
+//            ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+//            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+//            Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to delete this page?", ok, cancel);
+//            questionOfCancellation.setHeaderText(null);
+//            Optional<ButtonType> result = questionOfCancellation.showAndWait();
+            boolean result = questionOkCancel("Do you really want to delete this page?");
+            if (result) {
                 try {
                     row = tableView_PageTable.getSelectionModel().getFocusedIndex();
                     int id = pageObservableList.get(row).getId();
-                    response = pageController.deletePage(encryptor.decrypt(getMap().get("key").toString(),
-                            getMap().get("vector").toString(), getMap().get("login").toString()),
-                            encryptor.decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                    getMap().get("password").toString()), id);
+                    response = pageController.deletePage(Constant.getAuth(), id);
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
                         alert.setContentText("Page deleted!");

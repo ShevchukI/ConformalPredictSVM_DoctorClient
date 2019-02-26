@@ -1,116 +1,272 @@
 package com.controllers.windows.patient;
 
+import com.controllers.requests.IllnessController;
+import com.controllers.requests.PageController;
 import com.controllers.windows.menu.MenuController;
-import com.hazelcast.core.HazelcastInstance;
+import com.models.Dataset;
+import com.models.Page;
+import com.models.ParameterSingleObject;
+import com.models.Predict;
+import com.tools.Constant;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.apache.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Admin on 06.02.2019.
  */
 public class DiagnosticMenuController extends MenuController {
 
+    @Autowired
+    HttpResponse response;
+
+    private Dataset dataset;
+    //    private ConfigurationEntity configurationEntity;
+    private int statusCode;
+    private int datasetId;
+    private int configurationId;
+    private String[] columns;
+    //    private DataSetController dataSetController = new DataSetController();
+//    private ConfigurationController configurationController = new ConfigurationController();
+    private IllnessController illnessController = new IllnessController();
+    private List<Predict> predictList = new ArrayList<>();
+    private ObservableList<Predict> predicts;
+    private PageController pageController = new PageController();
+    private Predict predict;
+
     @FXML
     private CheckBox checkBox_Significance;
     @FXML
     private Slider slider_Significance;
     @FXML
-    private Spinner<Double> spinner_Significance;
+    private TextField textField_Significance;
     @FXML
     private ScrollPane scrollPane_Data;
     @FXML
     private GridPane gridPane_Data;
-
-    private int row = 7;
+    @FXML
+    private TableView<Predict> tableView_Result;
+    @FXML
+    private TableColumn tableColumn_Class;
+    @FXML
+    private TableColumn tableColumn_Credibility;
+    @FXML
+    private StackPane stackPane_Table;
+    @FXML
+    private StackPane stackPane_Progress;
+    @FXML
+    private Button button_Run;
+    @FXML
+    private Button button_Save;
 
     @FXML
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
+        newWindow.setOnHidden(event -> {
+            Constant.getMapByName("dataset").remove("id");
+            Constant.getMapByName("dataset").remove("columns");
+            Constant.getMapByName("dataset").remove("name");
+            Constant.getMapByName("misc").remove("pageId");
+        });
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
-
+        stackPane_Table.setVisible(true);
+        stackPane_Progress.setVisible(false);
+        button_Save.setDisable(true);
+        tableColumn_Class.setSortable(false);
+        tableColumn_Class.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleClass"));
+        tableColumn_Credibility.setSortable(false);
+        tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
+        NumberFormat formatter = new DecimalFormat("#0.00");
         slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        spinner_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-
+        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
         slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                spinner_Significance.getValueFactory().setValue(Double.parseDouble(String.valueOf(new_val)));
+                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
             }
         });
-
-        SpinnerValueFactory spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(40.00, 100.00, 80.00, 0.01);
-        spinner_Significance.setValueFactory(spinnerValueFactory);
-        spinner_Significance.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                slider_Significance.setValue(Double.parseDouble(String.valueOf(spinnerValueFactory.getValue())));
-            }
-        });
-
+        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        getPlaceholderFill(row);
+        configurationId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
+        createFields(Constant.getMapByName("dataset").get("columns").toString());
     }
 
 
-    public void getPlaceholderFill(int row) {
-//        anchorPane = new AnchorPane();
-//        anchorPane.setId("test");
-//        GridPane gridPane = new GridPane();
-        for (int i = 0; i < row; i++) {
-//            HBox hBox = new HBox();
-            Label label = new Label("label treeeeeeeeeeee " + i);
-            TextField textField = new TextField("234" + i);
-            textField.setId("qwerty" + i);
+    public void runDiagnostic(ActionEvent event) throws IOException {
+//        stackPane_Table.setVisible(false);
+//        stackPane_Progress.setVisible(true);
+        tableView_Result.setOpacity(0);
+        stackPane_Progress.setVisible(true);
+        button_Run.setDisable(true);
+        ParameterSingleObject parameterSingleObject = new ParameterSingleObject("", 0);
+        for (int i = 2; i < columns.length; i++) {
+            TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
+            if (!textField.getText().equals("")) {
+                parameterSingleObject.setParams(parameterSingleObject.getParams() + textField.getText());
+            } else {
+                parameterSingleObject.setParams(parameterSingleObject.getParams() + 0);
+            }
+            if (i != columns.length - 1) {
+                parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
+            }
+
+        }
+        if (checkBox_Significance.isSelected()) {
+            parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
+        } else {
+            parameterSingleObject.setSignificance(100);
+        }
+        System.out.println(parameterSingleObject.toString());
+        response = illnessController.startSingleTest(Constant.getAuth(), configurationId, parameterSingleObject);
+        statusCode = response.getStatusLine().getStatusCode();
+        System.out.println("First request: " + statusCode);
+        if (checkStatusCode(statusCode)) {
+            int processId = Integer.parseInt(Constant.responseToString(response));
+            Thread calculation = new Thread(new Runnable() {
+                @Override
+                public void run() {
+//                    button_Run.setDisable(true);
+                    predict = new Predict();
+                    predict.setPredictClass(0);
+//                    double progress = 0;
+                    while (predict.getPredictClass() == 0) {
+                        try {
+                            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
+                            statusCode = response.getStatusLine().getStatusCode();
+                            System.out.println("Second request: " + statusCode);
+                            if (statusCode == 200) {
+                                predict = new Predict().fromJson(response);
+                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
+                                if (predict.getPredictClass() != 0) {
+                                    if (predict.getRealClass() == predict.getPredictClass()) {
+                                        switch (predict.getPredictClass()) {
+                                            case 1:
+                                                predict.setVisibleClass("Positive");
+                                                break;
+                                            case -1:
+                                                predict.setVisibleClass("Negative");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+//                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
+//                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
+                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+                                    } else {
+                                        predict.setVisibleClass("Uncertain");
+                                        predict.setVisibleConfidence("");
+                                    }
+                                    predictList.clear();
+                                    predictList.add(predict);
+                                    predicts = FXCollections.observableArrayList(predictList);
+                                    tableView_Result.setItems(predicts);
+//                                    stackPane_Table.setVisible(true);
+                                    stackPane_Progress.setVisible(false);
+                                    tableView_Result.setOpacity(100);
+                                    button_Run.setDisable(false);
+                                    button_Save.setDisable(false);
+                                }
+                                Thread.sleep(1000 * 1);
+                            } else {
+                                return;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        button_Run.setDisable(false);
+                    }
+                }
+            });
+            calculation.start();
+//            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
+//            statusCode = response.getStatusLine().getStatusCode();
+//            System.out.println("Second request: " + statusCode);
+//            if (checkStatusCode(statusCode)) {
+//                Predict predict = new Predict().fromJson(response);
+//                if (predict.getRealClass() == predict.getPredictClass()) {
+//                    predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
+//                    predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
+//                } else {
+//                    predict.setVisibleClass("Uncertain");
+//                    predict.setVisibleCredibility("");
+//                }
+//                predictList.clear();
+//                predictList.add(predict);
+//                predicts = FXCollections.observableArrayList(predictList);
+//                tableView_Result.setItems(predicts);
+//                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
+        }
+    }
+
+
+    public void cancel(ActionEvent event) {
+        getNewWindow().close();
+    }
+
+
+    public void setSignificanceValue(ActionEvent event) {
+        setSignificanceValue();
+    }
+
+    public void setSignificanceValue() {
+        slider_Significance.setValue(Double.parseDouble(textField_Significance.getText()));
+    }
+
+    private void createFields(String columns) throws IOException {
+        this.columns = columns.split(",");
+        for (int i = 2; i < this.columns.length; i++) {
+            Label label = new Label(this.columns[i]);
+            TextField textField = new TextField();
+            textField.setId("parameter" + i);
             textField.setMaxWidth(100.0);
             gridPane_Data.add(label, 0, i);
             gridPane_Data.setHalignment(label, HPos.LEFT);
             gridPane_Data.add(textField, 1, i);
             gridPane_Data.setHalignment(textField, HPos.RIGHT);
-
             gridPane_Data.setMargin(label, new Insets(14, 5, 10, 14));
             gridPane_Data.setMargin(textField, new Insets(14, 14, 10, 5));
         }
-//        anchorPane.setTopAnchor(gridPane, 0.0);
-//        anchorPane.setLeftAnchor(gridPane, 14.0);
-//        anchorPane.setRightAnchor(gridPane, 0.0);
-//        anchorPane.setBottomAnchor(gridPane, 0.0);
-//        anchorPane.getChildren().add(gridPane);
-//        scrollPane_Data.setContent(anchorPane);
     }
 
-    public void runDiagnostic(ActionEvent event) {
-        if(checkBox_Significance.isSelected()) {
-            for (int i = 0; i < row; i++) {
-                TextField textField = (TextField) gridPane_Data.lookup("#qwerty" + i);
-                if(Double.parseDouble(textField.getText()) >= spinner_Significance.getValue()) {
-                    System.out.println(textField.getText());
-                }
-            }
-        } else {
-            for (int i = 0; i < row; i++) {
-                TextField textField = (TextField) gridPane_Data.lookup("#qwerty" + i);
-                System.out.println(textField.getText());
+    public void save(ActionEvent event) throws IOException {
+        response = pageController.getPage(Constant.getAuth(),
+                Integer.parseInt(Constant.getMapByName("misc").get("pageId").toString()));
+        statusCode = response.getStatusLine().getStatusCode();
+        if(checkStatusCode(statusCode)){
+            Page page = new Page().fromResponse(response);
+            page.setAnswer(Constant.getMapByName("dataset").get("name").toString() + ":\n" + predict.getVisibleClass());
+            response = pageController.changePage(Constant.getAuth(), page, page.getId());
+            statusCode = response.getStatusLine().getStatusCode();
+            if(checkStatusCode(statusCode)){
+               Label label = (Label)getStage().getScene().lookup("#label_Result");
+//               Label label = (Label)getStage().getScene().lookup("#label_Result");
+               label.setText(Constant.getMapByName("dataset").get("name").toString() + ": " + predict.getVisibleClass());
             }
         }
-    }
-
-    public void cancel(ActionEvent event) {
-        getNewWindow().close();
     }
 }
 

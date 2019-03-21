@@ -8,18 +8,20 @@ import com.controllers.windows.menu.WindowsController;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import com.tools.Encryptor;
-import com.tools.Placeholder;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Admin on 14.01.2019.
@@ -38,8 +40,6 @@ public class AddPatientAndCardMenuController extends MenuController {
     private WindowsController windowsController = new WindowsController();
     private PatientController patientControleller = new PatientController();
     private RecordController recordController = new RecordController();
-    private Encryptor encryptor = new Encryptor();
-    private Placeholder placeholder = new Placeholder();
     private ObservableList<Patient> patientObservableList;
     private TableView<Patient> tableView_PatientTable;
     private int statusCode;
@@ -48,6 +48,14 @@ public class AddPatientAndCardMenuController extends MenuController {
     private PatientMenuController patientMenuController;
     @FXML
     private RecordMenuController recordMenuController;
+    @FXML
+    private Button button_Save;
+    @FXML
+    private Button button_Cancel;
+
+
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
@@ -70,18 +78,25 @@ public class AddPatientAndCardMenuController extends MenuController {
         this.tableView_PatientTable = tableView_PatientTable;
         patientMenuController.init(this);
         recordMenuController.init(this);
+        button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
+        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
     }
 
-    public void savePatient(ActionEvent event) throws IOException {
+    public void savePatient(ActionEvent event) throws IOException, ParseException {
         if (checkPatientFields() && checkCardFields()) {
             Patient patient = new Patient(patientMenuController.getTextField_Name().getText(),
                     patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
                     patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
+//            Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
+//                    Double.parseDouble(recordMenuController.getTextField_Height().getText()),
+//                    recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
+//                            + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
+//                    recordMenuController.getDatePicker_Birthday().getValue().toString());
             Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
                     Double.parseDouble(recordMenuController.getTextField_Height().getText()),
                     recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
                             + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
-                    recordMenuController.getDatePicker_Birthday().getValue().toString());
+                    formatter1.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()));
             if (recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem().equals("Male")) {
                 record.setSex(true);
             } else {
@@ -99,10 +114,10 @@ public class AddPatientAndCardMenuController extends MenuController {
                 if (checkStatusCode(statusCode)) {
                     alert.setContentText("Congratulations, patient is registered!");
                     alert.showAndWait();
-                    TableView tableView = (TableView)getStage().getScene().lookup("#tableView_PatientTable");
-                    tableView.refresh();
-//                    windowsController.openWindowResizable("menu/mainMenu", getStage(),
-//                            mainMenuController, "Main menu", 600, 640);
+//                    TableView tableView = (TableView)getStage().getScene().lookup("#tableView_PatientTable");
+//                    tableView.refresh();
+                    windowsController.openWindowResizable("menu/mainMenu", getStage(),
+                            mainMenuController, "Main menu", 600, 680);
                     getNewWindow().close();
                 }
             }

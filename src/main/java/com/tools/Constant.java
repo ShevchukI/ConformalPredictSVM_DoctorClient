@@ -8,6 +8,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.models.Doctor;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -97,5 +98,20 @@ public class Constant {
 
         if(Platform.isFxApplicationThread()) treatment.run();
         else Platform.runLater(treatment);
+    }
+
+    public static void clearInstance(){
+        getMapByName(USER_MAP_NAME).clear();
+        getMapByName(DATASET_MAP_NAME).clear();
+        getMapByName(KEY_MAP_NAME).clear();
+        getMapByName(MISCELLANEOUS_MAP_NAME).clear();
+        getMapByName(PATIENT_MAP_NAME).clear();
+    }
+
+    public static void getAlert(String header, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

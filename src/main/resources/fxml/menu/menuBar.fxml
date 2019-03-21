@@ -23,6 +23,7 @@
                 </Menu>
             </items>
         </Menu>
+        <Menu mnemonicParsing="false" text="Quick diagnostic" onAction="#quickDiagnostic"/>
         <Menu mnemonicParsing="false" text="Help">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#about" text="About"/>

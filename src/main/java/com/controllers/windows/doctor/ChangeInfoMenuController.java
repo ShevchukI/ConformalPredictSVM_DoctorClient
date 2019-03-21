@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
@@ -60,6 +61,10 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltip_Name;
     @FXML
     private Tooltip tooltip_Surname;
+    @FXML
+    private Button button_Ok;
+    @FXML
+    private Button button_Cancel;
 
     @FXML
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
@@ -68,6 +73,8 @@ public class ChangeInfoMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
+        button_Ok.setGraphic(new ImageView("/img/icons/ok.png"));
+        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
         if (change) {
             specializations.add(new Specialization(-1, "None"));
             response = specializationController.getAllSpecialization();
@@ -108,6 +115,7 @@ public class ChangeInfoMenuController extends MenuController {
             comboBox_Specialization.getSelectionModel().select(Integer.parseInt(Constant.getMapByName("user").get("specId").toString()));
             textField_Name.setText(Constant.getMapByName("user").get("name").toString());
             textField_Surname.setText(Constant.getMapByName("user").get("surname").toString());
+
         }
     }
 

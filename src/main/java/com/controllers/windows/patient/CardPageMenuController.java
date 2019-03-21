@@ -15,12 +15,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,19 +53,23 @@ public class CardPageMenuController extends MenuController {
     private LocalDate localDate = LocalDate.now();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private int statusCode;
+    private int pageId;
+    private Page page;
 
     @FXML
     private MenuBarController menuBarController;
     @FXML
     private Label label_PatientName;
     @FXML
-    private Label label_DoctorName;
+    private Label label_Doctor;
     @FXML
-    private TextField textField_Theme;
+    private TextArea textArea_Symptoms;
     @FXML
     private TextArea textArea_Description;
     @FXML
     private Label label_CurrentDate;
+    @FXML
+    private Label label_NameResult;
     @FXML
     private Label label_Result;
     @FXML
@@ -76,7 +83,14 @@ public class CardPageMenuController extends MenuController {
     @FXML
     private Button button_Change;
     @FXML
+    private Button button_Back;
+    @FXML
     private ComboBox<Dataset> comboBox_Illness;
+
+
+    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+
 
     public void initialize(ArrayList<Page> pages, int row, Stage stage, String action) throws IOException {
         menuBarController.init(this);
@@ -90,18 +104,25 @@ public class CardPageMenuController extends MenuController {
         label_PatientName.setText(Constant.getMapByName("patient").get("name") + " " + Constant.getMapByName("patient").get("surname"));
         textArea_Description.setWrapText(true);
         if (action.equals("view")) {
-            oldTheme = textField_Theme.getText();
+            oldTheme = textArea_Symptoms.getText();
             oldDescription = textArea_Description.getText();
-            textField_Theme.setText(pages.get(row).getTheme());
-            textField_Theme.setEditable(false);
+            textArea_Symptoms.setText(pages.get(row).getTheme());
+            textArea_Symptoms.setEditable(false);
             textArea_Description.setText(pages.get(row).getDescription());
             textArea_Description.setEditable(false);
-            label_CurrentDate.setText(pages.get(row).getDate());
-            label_Result.setText(pages.get(row).getAnswer());
+
+            label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
+            if (pages.get(row).getAnswer() != null) {
+                String[] result = pages.get(row).getAnswer().split(":");
+                if (result.length == 2) {
+                    label_NameResult.setText(result[0]);
+                    label_Result.setText(result[1]);
+                }
+            }
             button_Save.setDisable(true);
             comboBox_Illness.setDisable(true);
             button_Diagnostic.setDisable(true);
-            label_DoctorName.setText(pages.get(row).getDoctor().getSurname() + " " + pages.get(row).getDoctor().getName());
+            label_Doctor.setText(pages.get(row).getDoctor().getName() + " " + pages.get(row).getDoctor().getSurname() + " / " + pages.get(row).getDoctor().getSpecialization().getName());
             if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
@@ -109,19 +130,34 @@ public class CardPageMenuController extends MenuController {
             }
         } else if (action.equals("new")) {
             label_CurrentDate.setText(localDate.format(formatter));
+            Page page1 = new Page();
+            try {
+                page1.setDate(formatter2.parse(label_CurrentDate.getText()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            response = pageController.createPage(Constant.getAuth(), page1,
+                    Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
+            statusCode = response.getStatusLine().getStatusCode();
+            pageId = Integer.parseInt(Constant.responseToString(response));
+            if (checkStatusCode(statusCode)) {
+                Constant.getMapByName("misc").put("pageId", pageId);
+            }
+            label_CurrentDate.setText(localDate.format(formatter));
             button_Previous.setDisable(true);
             button_Next.setDisable(true);
             button_Change.setDisable(true);
-            label_DoctorName.setText(Constant.getMapByName("user").get("name").toString() + " " + Constant.getMapByName("user").get("surname").toString());
+            label_Doctor.setText(Constant.getMapByName("user").get("name").toString() + " " +
+                    Constant.getMapByName("user").get("surname").toString() + " / " + Constant.getMapByName("user").get("specName").toString());
             BooleanBinding checkEmptyField = new BooleanBinding() {
                 {
-                    super.bind(textField_Theme.textProperty(),
+                    super.bind(textArea_Symptoms.textProperty(),
                             textArea_Description.textProperty());
                 }
 
                 @Override
                 protected boolean computeValue() {
-                    return (textField_Theme.getText().isEmpty()
+                    return (textArea_Symptoms.getText().isEmpty()
                             && textArea_Description.getText().isEmpty());
                 }
             };
@@ -135,7 +171,7 @@ public class CardPageMenuController extends MenuController {
         }
         response = illnessController.getAllActiveDataSet(Constant.getAuth());
         statusCode = response.getStatusLine().getStatusCode();
-        if(checkStatusCode(statusCode)) {
+        if (checkStatusCode(statusCode)) {
             datasets.addAll(new Dataset().getListFromResponse(response));
         }
         comboBox_Illness.setItems(datasets);
@@ -168,19 +204,23 @@ public class CardPageMenuController extends MenuController {
             }
         });
         comboBox_Illness.setVisibleRowCount(5);
+        button_Back.setGraphic(new ImageView("/img/icons/return.png"));
     }
 
     public void previousPage(ActionEvent event) {
         row--;
         oldDescription = textArea_Description.getText();
         changeText();
-        textField_Theme.setText(pages.get(row).getTheme());
+        textArea_Symptoms.setText(pages.get(row).getTheme());
         textArea_Description.setText(pages.get(row).getDescription());
-        label_CurrentDate.setText(pages.get(row).getDate());
+        label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
+//        label_CurrentDate.setText(pages.get(row).getDate());
         label_Result.setText(pages.get(row).getAnswer());
         if (action.equals("view")) {
-            textField_Theme.setEditable(false);
+            textArea_Symptoms.setEditable(false);
             textArea_Description.setEditable(false);
+            label_Doctor.setText(pages.get(row).getDoctor().getName() + " " +pages.get(row).getDoctor().getSurname() + " / " + pages.get(row).getDoctor().getSpecialization().getName());
+
         }
         if (row == 0) {
             button_Previous.setDisable(true);
@@ -193,26 +233,31 @@ public class CardPageMenuController extends MenuController {
         } else {
             button_Change.setDisable(true);
         }
+
     }
 
     public void nextPage(ActionEvent event) {
         if (action.equals("new")) {
             Date date = new Date();
             label_CurrentDate.setText(localDate.format(formatter));
-            textField_Theme.setText("");
+            textArea_Symptoms.setText("");
             textArea_Description.setText("");
             button_Next.setDisable(true);
+
         } else {
             row++;
             oldDescription = textArea_Description.getText();
             changeText();
-            textField_Theme.setText(pages.get(row).getTheme());
+            textArea_Symptoms.setText(pages.get(row).getTheme());
             textArea_Description.setText(pages.get(row).getDescription());
-            label_CurrentDate.setText(pages.get(row).getDate());
+            label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
+//            label_CurrentDate.setText(pages.get(row).getDate());
             label_Result.setText(pages.get(row).getAnswer());
             if (action.equals("view")) {
-                textField_Theme.setEditable(false);
+                textArea_Symptoms.setEditable(false);
                 textArea_Description.setEditable(false);
+                label_Doctor.setText(pages.get(row).getDoctor().getName() + " " + pages.get(row).getDoctor().getSurname() + " / " + pages.get(row).getDoctor().getSpecialization().getName());
+
             }
             if (row == pages.size() - 1) {
                 button_Next.setDisable(true);
@@ -228,65 +273,62 @@ public class CardPageMenuController extends MenuController {
         }
     }
 
-    public void savePage(ActionEvent event) throws IOException {
-//        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-//        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-//        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to save the changes?", ok, cancel);
-//        questionOfCancellation.setHeaderText(null);
-//        Optional<ButtonType> result = questionOfCancellation.showAndWait();
-        boolean result = questionOkCancel("Do you really want to save the changes?");
-        Page page = null;
+    public void savePage(ActionEvent event) throws IOException, ParseException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
-        if (result) {
-            if (action.equals("view")) {
-                page = new Page(textField_Theme.getText(), textArea_Description.getText(), pages.get(row).getParameters(), pages.get(row).getAnswer(), pages.get(row).getDate());
+        if (action.equals("view")) {
+            boolean result = questionOkCancel("Do you really want to save the changes?");
+            if (result) {
+                page = new Page(textArea_Symptoms.getText(), textArea_Description.getText(), pages.get(row).getParameters(), pages.get(row).getAnswer(), pages.get(row).getDate());
                 response = pageController.changePage(Constant.getAuth(), page, pages.get(row).getId());
                 statusCode = response.getStatusLine().getStatusCode();
+            }
+        } else if (action.equals("new")) {
+            page = new Page(textArea_Symptoms.getText(), textArea_Description.getText(),
+                    "placeholderParam", label_Result.getText(), formatter2.parse(label_CurrentDate.getText()));
+            response = pageController.changePage(Constant.getAuth(), page, pageId);
+            statusCode = response.getStatusLine().getStatusCode();
+        }
+        if (checkStatusCode(statusCode)) {
+            if (action.equals("view")) {
+                pages.get(row).setPage(page);
+                alert.setContentText("Changed!");
+                alert.showAndWait();
             } else if (action.equals("new")) {
-                page = new Page(textField_Theme.getText(), textArea_Description.getText(), "placeholderParam", label_Result.getText(), label_CurrentDate.getText());
-                page.setDate(label_CurrentDate.getText());
-                response = pageController.createPage(Constant.getAuth(), page, Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
-                statusCode = response.getStatusLine().getStatusCode();
+                alert.setContentText("Saved!");
+                alert.showAndWait();
+                button_Next.setDisable(false);
+                windowsController.openWindowResizable("patient/cardMenu", getStage(),
+                        cardMenuController, "Card", 600, 680);
             }
-            if (checkStatusCode(statusCode)) {
-                if(action.equals("view")) {
-                    pages.get(row).setPage(page);
-                    alert.setContentText("Changed!");
-                    alert.showAndWait();
-                } else if(action.equals("new")){
-                    alert.setContentText("Saved!");
-                    alert.showAndWait();
-                    button_Next.setDisable(false);
-                }
-            }
-//            else if (checkStatusCode(statusCode)) {
-//                alert.setContentText("Saved!");
-//                alert.showAndWait();
-//                button_Next.setDisable(false);
-//            }
-//            else {
-//                alert.setHeaderText("Status code:" + statusCode);
-//                alert.setContentText("You can not save this entry!");
-//                alert.showAndWait();
-//                textArea_Description.setText(pages.get(row).getDescription());
-//            }
         }
     }
 
     public void backToCardMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("patient/cardMenu", getStage(),
-                cardMenuController, "Card", 600, 640);
+        if (action.equals("new")) {
+            boolean result = questionOkCancel("Do you really want to leave without save?");
+            if (result) {
+                response = pageController.deletePage(Constant.getAuth(), pageId);
+                statusCode = response.getStatusLine().getStatusCode();
+                if (checkStatusCode(statusCode)) {
+                    windowsController.openWindowResizable("patient/cardMenu", getStage(),
+                            cardMenuController, "Card", 600, 680);
+                }
+            }
+        } else {
+            windowsController.openWindowResizable("patient/cardMenu", getStage(),
+                    cardMenuController, "Card", 600, 680);
+        }
     }
 
     public void backToMainMenu(ActionEvent event) throws IOException {
         windowsController.openWindowResizable("menu/mainMenu", getStage(),
-                mainMenuController, "Main menu", 600, 640);
+                mainMenuController, "Main menu", 600, 680);
     }
 
     public void changeText() {
         if (action.equals("view")) {
-            if (oldDescription.equals(textArea_Description.getText()) || oldTheme.equals(textField_Theme.getText())) {
+            if (oldDescription.equals(textArea_Description.getText()) || oldTheme.equals(textArea_Symptoms.getText())) {
                 button_Save.setDisable(true);
             }
 //            else if (!oldDescription.equals(textArea_Description.getText()) || !oldTheme.equals(textField_Theme.getText())) {
@@ -299,20 +341,26 @@ public class CardPageMenuController extends MenuController {
 
     public void changePage(ActionEvent event) {
         button_Save.setDisable(false);
-        textField_Theme.setEditable(true);
+        textArea_Symptoms.setEditable(true);
         textArea_Description.setEditable(true);
         comboBox_Illness.setDisable(false);
         button_Diagnostic.setDisable(false);
     }
 
     public void diagnostic(ActionEvent event) throws IOException {
-        Constant.getMapByName("dataset").put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
-        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
-        if(comboBox_Illness.getSelectionModel().getSelectedItem()!=null) {
+//        try {
+//
+//            Constant.getMapByName("dataset").put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
+//        }catch (NullPointerException e){
+//            getAlert(null, "Choice illness!", Alert.AlertType.WARNING);
+//        }
+//        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
+        if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
             Constant.getMapByName("dataset").put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
             Constant.getMapByName("dataset").put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
+            Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
             windowsController.openNewModalWindow("patient/diagnosticMenu", getStage(),
-                    diagnosticMenuController, "Main menu", 600, 400);
+                    diagnosticMenuController, "Main menu", 600, 440);
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
         }

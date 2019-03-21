@@ -9,8 +9,10 @@ import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,14 +39,20 @@ public class LoginMenuController extends MenuController {
     private TextField textField_Login;
     @FXML
     private PasswordField passwordField_Password;
+    @FXML
+    private Button button_SignIn;
+    @FXML
+    private Button button_SignUp;
 
-//    public void initialize(Stage stage) {
-//        stage.setOnHidden(event -> {
-//            Constant.getInstance().getLifecycleService().shutdown();
-//        });
-//        setStage(stage);
-//        Constant.getInstance().clear();
-//    }
+    public void initialize(Stage stage) {
+        stage.setOnHidden(event -> {
+            Constant.getInstance().getLifecycleService().shutdown();
+        });
+        setStage(stage);
+        Constant.clearInstance();
+//        button_SignIn.setGraphic(new ImageView("/img/icons/SISmall.png"));
+//        button_SignUp.setGraphic(new ImageView("/img/icons/SUSmall.png"));
+    }
 
     public void signIn(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -64,13 +72,13 @@ public class LoginMenuController extends MenuController {
             if(checkStatusCode(statusCode)){
                 Constant.fillMap(new Doctor().fromJson(response), authorization);
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),  mainMenuController,
-                        "Main menu", 600, 640);
+                        "Main menu", 700, 680);
             }
         }
     }
 
     public void signUp(ActionEvent event) throws IOException {
         windowsController.openWindow("doctor/registrationMenu", getStage(), registrationMenuController,
-                "Registration", 408, 460);
+                "Registration", 408, 520);
     }
 }

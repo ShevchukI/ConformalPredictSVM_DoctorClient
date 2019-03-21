@@ -10,7 +10,6 @@ import com.models.Page;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import com.tools.Encryptor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -19,11 +18,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +37,7 @@ public class CardMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private Encryptor encryptor = new Encryptor();
+
     private WindowsController windowsController = new WindowsController();
     private RecordController recordController = new RecordController();
     private PageController pageController = new PageController();
@@ -61,9 +62,13 @@ public class CardMenuController extends MenuController {
     @FXML
     private Label label_Count;
     @FXML
+    private Button button_New;
+    @FXML
     private Button button_View;
     @FXML
     private Button button_Delete;
+    @FXML
+    private Button button_Back;
     @FXML
     private TableColumn<Page, Number> tableColumn_Number = new TableColumn<Page, Number>("#");
     @FXML
@@ -73,7 +78,16 @@ public class CardMenuController extends MenuController {
     @FXML
     private TableColumn tableColumn_Date;
     @FXML
+    private TableColumn tableColumn_DoctorName;
+    @FXML
+    private TableColumn tableColumn_Specialization;
+    @FXML
     private ObservableList<Page> pageObservableList;
+    @FXML
+    private
+
+    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+
 
     public void initialize(Stage stage) throws IOException {
         menuBarController.init(this);
@@ -87,7 +101,7 @@ public class CardMenuController extends MenuController {
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             Record record = new Record().fromJson(response);
-            label_BirthDate.setText(record.getBirthday());
+            label_BirthDate.setText(formatter1.format(record.getBirthday()));
             label_BloodGroup.setText(record.getBloodGroup());
             if (record.isSex()) {
                 label_Sex.setText("Male");
@@ -112,7 +126,31 @@ public class CardMenuController extends MenuController {
             tableColumn_Number.setSortable(false);
             tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PageTable.getItems().indexOf(column.getValue()) + 1));
             tableColumn_Theme.setCellValueFactory(new PropertyValueFactory<Page, String>("theme"));
-            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("date"));
+            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("dateFormatted"));
+            tableColumn_DoctorName.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorInfo"));
+            tableColumn_Specialization.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorSpecialization"));
+
+//            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, Date>("date"));
+//            tableColumn_Date.setCellFactory(column -> {
+//                TableCell<Page, Date> cell = new TableCell<Page, Date>() {
+//                    private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+//
+//                    @Override
+//                    protected void updateItem(Date item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if(empty) {
+//                            setText(null);
+//                        }
+//                        else {
+//                            System.out.println(format.format(item));
+//                            setText("data");
+////                            setText(format.format(item));
+//                        }
+//                    }
+//                };
+//
+//                return cell;
+//            });
             tableView_PageTable.setItems(pageObservableList);
             label_Count.setText(String.valueOf(pageObservableList.size()));
         }
@@ -131,6 +169,11 @@ public class CardMenuController extends MenuController {
             });
             return row;
         });
+
+        button_New.setGraphic(new ImageView("/img/icons/add.png"));
+        button_Delete.setGraphic(new ImageView("/img/icons/delete.png"));
+        button_View.setGraphic(new ImageView("/img/icons/info.png"));
+        button_Back.setGraphic(new ImageView("/img/icons/return.png"));
     }
 
     public void viewPage(ActionEvent event) throws IOException {
@@ -143,19 +186,19 @@ public class CardMenuController extends MenuController {
     public void viewPage() throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
-               pages, row, "view", "Page", 800, 640);
+                pages, row, "view", "Page", 800, 680);
     }
 
     public void newPage(ActionEvent event) throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
-                 pages, row, "new", "Page", 800, 640);
+                pages, row, "new", "Page", 800, 800);
     }
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {
         windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController,
-                "Main menu", 600, 640);
+                "Main menu", 600, 800);
     }
 
     public void deletePage(ActionEvent event) throws IOException {
@@ -191,6 +234,30 @@ public class CardMenuController extends MenuController {
         } else {
             alert.setContentText("You can`t change this page!");
             alert.showAndWait();
+        }
+    }
+
+    public void test(){
+        for (Page page : pages) {
+            String pattern = "MM-dd-yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//            Date convertedCurrentDate = null;
+//            Date convertedCurrentDate1 = null;
+//            Date date = null;
+//            try {
+//                convertedCurrentDate = sdf.parse(page.getDate());
+//                convertedCurrentDate1 = sdf1.parse(page.getDate());
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                date = sdf.parse(page.getDate());
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println(page.getDate() + " : " + convertedCurrentDate + " : " + convertedCurrentDate1 + " :: "+ date +":"+simpleDateFormat.format(date));
         }
     }
 }

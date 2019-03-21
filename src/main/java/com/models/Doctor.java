@@ -91,4 +91,5 @@ public class Doctor {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,10 @@ public class MainMenuController extends MenuController {
     private RadioButton radio_All;
     @FXML
     private TextField textField_Search;
+    @FXML
+    private Button button_Add;
+    @FXML
+    private Button button_Search;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
@@ -128,24 +133,19 @@ public class MainMenuController extends MenuController {
             return row;
         });
         pagination_Patient.setPageFactory(this::createPage);
+        button_Add.setGraphic(new ImageView("/img/icons/add.png"));
+        button_View.setGraphic(new ImageView("/img/icons/info.png"));
+        button_Search.setGraphic(new ImageView("/img/icons/search.png"));
     }
 
     public void addPatient(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", getStage(),
                 addPatientAndCardMenuController, patientObservableList, tableView_PatientTable,
-                "Add new patient", 740, 500);
+                "Add new patient", 740, 540);
     }
 
     public void viewPatient(ActionEvent event) throws IOException {
         viewPatient();
-//        if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
-//            System.out.println("ERROR!");
-//        } else {
-//            Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
-//            Constant.getMapByName("misc").put("pageIndex", String.valueOf(pageIndx));
-//            windowsController.openWindowResizable("patient/cardMenu", getStage(), cardMenuController, patient,
-//                    "Card", 600, 640);
-//        }
     }
 
     public void viewPatient() throws IOException {
@@ -156,9 +156,9 @@ public class MainMenuController extends MenuController {
             Constant.getMapByName("misc").put("pageIndex", String.valueOf(pageIndx));
             Constant.getMapByName("patient").put("name", patient.getName());
             Constant.getMapByName("patient").put("id", patient.getId());
-            Constant.getMapByName("patient").put("surname", patient.getId());
+            Constant.getMapByName("patient").put("surname", patient.getSurname());
             windowsController.openWindowResizable("patient/cardMenu", getStage(), cardMenuController,
-                    "Card", 600, 640);
+                    "Card", 600, 680);
         }
     }
 

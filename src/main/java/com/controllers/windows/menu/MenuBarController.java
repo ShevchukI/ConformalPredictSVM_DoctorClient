@@ -33,17 +33,17 @@ public class MenuBarController extends MenuController {
 
     public void signOut(ActionEvent event) throws IOException {
         windowsController.openWindow("doctor/loginMenu", menuController.getStage(), loginMenuController,
-                "Login menu", 350, 190);
+                "Login menu", 400, 250);
     }
 
     public void changeName(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow("doctor/changeName", menuController.getStage(),
-                changeInfoMenuController, "Change name and surname", true, 400, 200);
+                changeInfoMenuController, "Change name and surname", true, 400, 240);
     }
 
     public void changePassword(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow("doctor/changePassword", menuController.getStage(),
-                changeInfoMenuController, "Change password", false, 400, 200);
+                changeInfoMenuController, "Change password", false, 400, 240);
     }
 
     public void about(ActionEvent event){
@@ -54,4 +54,7 @@ public class MenuBarController extends MenuController {
     }
 
 
+    public void quickDiagnostic(ActionEvent event) {
+
+    }
 }

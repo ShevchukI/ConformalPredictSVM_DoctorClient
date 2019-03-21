@@ -1,11 +1,13 @@
 package com.models;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 /**
  * Created by Admin on 26.01.2019.
@@ -15,25 +17,33 @@ public class Record {
     private double height;
     private String bloodGroup;
     private boolean sex;
-    private String birthday;
+    private Date birthday;
+//    private String birthday;
 
     public Record() {
     }
 
-    public Record(double weight, double height, String bloodGroup, boolean sex, String birthday) {
+//    public Record(double weight, double height, String bloodGroup, boolean sex, String birthday) {
+//        this.weight = weight;
+//        this.height = height;
+//        this.bloodGroup = bloodGroup;
+//        this.sex = sex;
+//        this.birthday = birthday;
+//    }
+
+    public Record(double weight, double height, String bloodGroup, Date birthday) {
         this.weight = weight;
         this.height = height;
         this.bloodGroup = bloodGroup;
-        this.sex = sex;
         this.birthday = birthday;
     }
 
-    public Record(double weight, double height, String bloodGroup, String birthday) {
-        this.weight = weight;
-        this.height = height;
-        this.bloodGroup = bloodGroup;
-        this.birthday = birthday;
-    }
+//    public Record(double weight, double height, String bloodGroup, String birthday) {
+//        this.weight = weight;
+//        this.height = height;
+//        this.bloodGroup = bloodGroup;
+//        this.birthday = birthday;
+//    }
 
     public double getWeight() {
         return weight;
@@ -67,17 +77,27 @@ public class Record {
         this.sex = sex;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
+
+//    public String getBirthday() {
+//        return birthday;
+//    }
+//
+//    public void setBirthday(String birthday) {
+//        this.birthday = birthday;
+//    }
 
     public Record fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
-        return new Gson().fromJson(json, Record.class);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        return gson.fromJson(json, Record.class);
+//        return new Gson().fromJson(json, Record.class);
     }
 }

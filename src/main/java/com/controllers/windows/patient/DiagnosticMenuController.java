@@ -18,6 +18,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -76,6 +77,8 @@ public class DiagnosticMenuController extends MenuController {
     private Button button_Run;
     @FXML
     private Button button_Save;
+    @FXML
+    private Button button_Cancel;
 
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
@@ -111,6 +114,9 @@ public class DiagnosticMenuController extends MenuController {
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         configurationId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
         createFields(Constant.getMapByName("dataset").get("columns").toString());
+        button_Run.setGraphic(new ImageView("/img/icons/run.png"));
+        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
+        button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
     }
 
 
@@ -136,7 +142,7 @@ public class DiagnosticMenuController extends MenuController {
         if (checkBox_Significance.isSelected()) {
             parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
         } else {
-            parameterSingleObject.setSignificance(100);
+            parameterSingleObject.setSignificance(null);
         }
         System.out.println(parameterSingleObject.toString());
         response = illnessController.startSingleTest(Constant.getAuth(), configurationId, parameterSingleObject);
@@ -160,7 +166,7 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
                                 if (predict.getPredictClass() != 0) {
-                                    if (predict.getRealClass() == predict.getPredictClass()) {
+                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
                                         switch (predict.getPredictClass()) {
                                             case 1:
                                                 predict.setVisibleClass("Positive");
@@ -185,8 +191,7 @@ public class DiagnosticMenuController extends MenuController {
 //                                    stackPane_Table.setVisible(true);
                                     stackPane_Progress.setVisible(false);
                                     tableView_Result.setOpacity(100);
-                                    button_Run.setDisable(false);
-                                    button_Save.setDisable(false);
+
                                 }
                                 Thread.sleep(1000 * 1);
                             } else {
@@ -199,26 +204,11 @@ public class DiagnosticMenuController extends MenuController {
                         }
 //                        button_Run.setDisable(false);
                     }
+                    button_Run.setDisable(false);
+                    button_Save.setDisable(false);
                 }
             });
             calculation.start();
-//            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
-//            statusCode = response.getStatusLine().getStatusCode();
-//            System.out.println("Second request: " + statusCode);
-//            if (checkStatusCode(statusCode)) {
-//                Predict predict = new Predict().fromJson(response);
-//                if (predict.getRealClass() == predict.getPredictClass()) {
-//                    predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-//                    predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
-//                } else {
-//                    predict.setVisibleClass("Uncertain");
-//                    predict.setVisibleCredibility("");
-//                }
-//                predictList.clear();
-//                predictList.add(predict);
-//                predicts = FXCollections.observableArrayList(predictList);
-//                tableView_Result.setItems(predicts);
-//                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
         }
     }
 
@@ -240,6 +230,7 @@ public class DiagnosticMenuController extends MenuController {
         this.columns = columns.split(",");
         for (int i = 2; i < this.columns.length; i++) {
             Label label = new Label(this.columns[i]);
+            label.setId("column" + i);
             TextField textField = new TextField();
             textField.setId("parameter" + i);
             textField.setMaxWidth(100.0);
@@ -256,15 +247,27 @@ public class DiagnosticMenuController extends MenuController {
         response = pageController.getPage(Constant.getAuth(),
                 Integer.parseInt(Constant.getMapByName("misc").get("pageId").toString()));
         statusCode = response.getStatusLine().getStatusCode();
-        if(checkStatusCode(statusCode)){
+        System.out.println(statusCode + "_1");
+        if (checkStatusCode(statusCode)) {
             Page page = new Page().fromResponse(response);
-            page.setAnswer(Constant.getMapByName("dataset").get("name").toString() + ":\n" + predict.getVisibleClass());
+            page.setParameters("");
+            for (int i = 2; i < this.columns.length; i++) {
+                Label label = (Label) gridPane_Data.lookup("#column" + i);
+                TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
+                page.setParameters(page.getParameters() + label.getText() + ":" + textField.getText());
+                if (i < columns.length - 1) {
+                    page.setParameters(page.getParameters() + ",");
+                }
+            }
+            page.setAnswer(Constant.getMapByName("dataset").get("name").toString() + ":" + predict.getVisibleClass());
             response = pageController.changePage(Constant.getAuth(), page, page.getId());
             statusCode = response.getStatusLine().getStatusCode();
-            if(checkStatusCode(statusCode)){
-               Label label = (Label)getStage().getScene().lookup("#label_Result");
-//               Label label = (Label)getStage().getScene().lookup("#label_Result");
-               label.setText(Constant.getMapByName("dataset").get("name").toString() + ": " + predict.getVisibleClass());
+            System.out.println(statusCode + "_2");
+            if (checkStatusCode(statusCode)) {
+                Label label = (Label) getStage().getScene().lookup("#label_NameResult");
+                Label label1 = (Label) getStage().getScene().lookup("#label_Result");
+                label.setText(Constant.getMapByName("dataset").get("name").toString());
+                label1.setText(predict.getVisibleClass());
             }
         }
     }

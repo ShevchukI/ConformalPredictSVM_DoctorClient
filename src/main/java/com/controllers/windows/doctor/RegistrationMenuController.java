@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
@@ -66,6 +67,10 @@ public class RegistrationMenuController extends MenuController {
     private Tooltip tooltip_Password;
     @FXML
     private Tooltip tooltip_ConfirmPassword;
+    @FXML
+    private Button button_Cancel;
+    @FXML
+    private Button button_Register;
 
     @FXML
     public void initialize(Stage stage) throws IOException {
@@ -110,6 +115,13 @@ public class RegistrationMenuController extends MenuController {
         });
         comboBox_Specialization.setVisibleRowCount(5);
         comboBox_Specialization.getSelectionModel().select(0);
+
+
+//        Image image = new Image(getClass().getResourceAsStream("/img/icons/cancelButton.png"));
+//        ImageView imageView = new ImageView(image);
+        button_Register.setGraphic(new ImageView("/img/icons/ok.png"));
+        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
+//        button_Cancel.setGraphic(new ImageView("img/icons/cancelButton.png"));
     }
 
     public void register(ActionEvent event) throws IOException {
@@ -122,8 +134,11 @@ public class RegistrationMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
+//                windowsController.start(getStage());
                 windowsController.openWindow("doctor/loginMenu", getStage(),
-                        loginMenuController, "Login menu", 350, 190);
+                        loginMenuController, "Login menu", 400, 230);
+            } else if(statusCode == 400){
+                Constant.getAlert(null, "Login already exist!", Alert.AlertType.ERROR);
             }
         }
     }
@@ -138,8 +153,8 @@ public class RegistrationMenuController extends MenuController {
         alert.setHeaderText(null);
         if (result.orElse(cancel) == ok) {
             try {
-                windowsController.openWindow("doctor/loginMenu.fxml", getStage(), loginMenuController,
-                        "Login menu", 350, 190);
+                windowsController.openWindow("doctor/loginMenu", getStage(), loginMenuController,
+                        "Login menu", 400, 250);
             } catch (IOException e) {
                 e.printStackTrace();
             }

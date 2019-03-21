@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
@@ -23,17 +24,17 @@
         </VBox>
     </top>
     <center>
-        <AnchorPane prefHeight="395.0" prefWidth="558.0" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="537.0" prefWidth="726.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="14.0" prefWidth="100.0" text="Doctor:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <Label fx:id="label_Name" layoutX="119.0" layoutY="15.0" prefHeight="14.0" prefWidth="421.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <Label layoutX="14.0" layoutY="53.0" prefHeight="14.0" prefWidth="100.0" text="Specialization:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="42.0" />
-            <Label fx:id="label_Specialization" layoutX="119.0" layoutY="52.0" prefHeight="14.0" prefWidth="422.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="42.0" />
-            <Button layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#addPatient" prefHeight="26.0" prefWidth="49.0" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="button_View" layoutX="84.0" layoutY="70.0" mnemonicParsing="false" onAction="#viewPatient" prefHeight="26.0" prefWidth="70.0" text="View" AnchorPane.leftAnchor="84.0" AnchorPane.topAnchor="70.0" />
-            <TextField fx:id="textField_Search" layoutX="161.0" layoutY="93.0" prefHeight="31.0" prefWidth="220.0" promptText="Name Surname" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="button_Search" layoutX="474.0" layoutY="93.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="70.0" text="Search" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
-            <TableView fx:id="tableView_PatientTable" layoutX="15.0" layoutY="108.0" prefHeight="207.0" prefWidth="529.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="108.0">
+            <Label layoutX="14.0" layoutY="53.0" prefHeight="14.0" prefWidth="100.0" text="Doctor:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="53.0" />
+            <Label fx:id="label_Name" layoutX="120.0" layoutY="53.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="53.0" />
+            <Label layoutX="14.0" layoutY="81.0" prefHeight="14.0" prefWidth="100.0" text="Specialization:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="81.0" />
+            <Label fx:id="label_Specialization" layoutX="120.0" layoutY="81.0" prefHeight="14.0" prefWidth="422.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
+            <Button fx:id="button_Add" layoutX="14.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#addPatient" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0" />
+            <Button fx:id="button_View" layoutX="114.0" layoutY="116.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewPatient" text="View" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="115.0" />
+            <TextField fx:id="textField_Search" layoutX="206.0" layoutY="116.0" prefHeight="31.0" prefWidth="370.0" promptText="Name Surname" AnchorPane.leftAnchor="206.0" AnchorPane.rightAnchor="303.0" AnchorPane.topAnchor="115.0" />
+            <Button fx:id="button_Search" layoutX="647.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="115.0" />
+            <TableView fx:id="tableView_PatientTable" layoutX="15.0" layoutY="159.0" prefHeight="330.0" prefWidth="698.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0">
               <columns>
                 <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
                 <TableColumn fx:id="tableColumn_Surname" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Surname" />
@@ -51,7 +52,7 @@
             </TableView>
             <Label layoutX="14.0" layoutY="369.0" prefHeight="21.0" prefWidth="25.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
             <Label fx:id="label_Count" layoutX="39.0" layoutY="341.0" prefHeight="18.0" prefWidth="80.0" text="placeholder" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
-            <Group layoutX="388.0" layoutY="70.0" AnchorPane.rightAnchor="222.19775390625" AnchorPane.topAnchor="70.0">
+            <Group layoutX="434.0" layoutY="112.0" AnchorPane.rightAnchor="232.19775390625" AnchorPane.topAnchor="112.0">
                <children>
                   <RadioButton fx:id="radio_Name" layoutX="16.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="11.0">
                      <toggleGroup>
@@ -61,19 +62,24 @@
                   <Label layoutY="17.0" text="by Name" />
                </children>
             </Group>
-            <Group layoutX="456.0" layoutY="70.0" AnchorPane.rightAnchor="135.25732421875" AnchorPane.topAnchor="70.0">
+            <Group layoutX="501.0" layoutY="112.0" AnchorPane.rightAnchor="146.25732421875" AnchorPane.topAnchor="112.0">
                <children>
                   <RadioButton fx:id="radio_Surname" layoutX="24.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" toggleGroup="$bySearch" />
                   <Label layoutY="17.0" text="by Surname" />
                </children>
             </Group>
-            <Group layoutX="438.0" layoutY="70.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="70.0">
+            <Group layoutX="585.0" layoutY="112.0" AnchorPane.rightAnchor="103.87353515625" AnchorPane.topAnchor="112.0">
                <children>
                   <RadioButton fx:id="radio_All" layoutX="7.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="4.0" selected="true" toggleGroup="$bySearch" />
                   <Label layoutY="17.0" text="by All" />
                </children>
             </Group>
-            <Pagination fx:id="pagination_Patient" layoutX="14.0" layoutY="107.0" prefHeight="310.0" prefWidth="530.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="108.0" />
+            <Pagination fx:id="pagination_Patient" layoutX="14.0" layoutY="159.0" prefHeight="390.0" prefWidth="698.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0" />
+            <Label alignment="CENTER" layoutX="373.0" layoutY="14.0" prefHeight="35.0" prefWidth="133.0" text="Main menu" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
 
          </children></AnchorPane>
     </center>

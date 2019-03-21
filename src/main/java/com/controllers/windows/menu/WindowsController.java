@@ -87,6 +87,8 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
     stage.setScene(scene);
     stage.setMinWidth(width);
     stage.setMinHeight(height);
+    stage.setWidth(stage.getWidth());
+    stage.setHeight(stage.getHeight());
     stage.setMaxWidth(width);
     stage.setMaxHeight(height);
     stage.setResizable(false);
@@ -94,7 +96,7 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
     stage.getIcons().add(new Image("img/icons/icon.png"));
     controller = (MenuController) loader.getController();
     controller.initialize(stage);
-    if (rootName.equals("loginMenu.fxml")) {
+    if (rootName.equals("doctor/loginMenu")) {
         stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
         stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
     }
@@ -108,6 +110,8 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
         stage.setScene(scene);
         stage.setMinWidth(minWidth);
         stage.setMinHeight(minHeight);
+        stage.setWidth(stage.getWidth());
+        stage.setHeight(stage.getHeight());
         stage.setMaxWidth(sSize.getWidth());
         stage.setMaxHeight(sSize.getHeight());
         stage.setResizable(true);

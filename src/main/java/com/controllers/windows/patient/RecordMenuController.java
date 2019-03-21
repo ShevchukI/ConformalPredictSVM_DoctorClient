@@ -4,10 +4,11 @@ import com.controllers.windows.menu.MenuController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.util.Callback;
+
+import java.time.LocalDate;
+import java.time.Month;
 
 /**
  * Created by Admin on 16.01.2019.
@@ -15,9 +16,9 @@ import javafx.scene.control.Tooltip;
 public class RecordMenuController extends MenuController {
 
     private MenuController menuController;
-    private ObservableList<String> sex  = FXCollections.observableArrayList("Male", "Female");
-    private ObservableList<String> bloodGroup  = FXCollections.observableArrayList("O", "A", "B", "AB");
-    private ObservableList<String> bloodType  = FXCollections.observableArrayList("+", "-");
+    private ObservableList<String> sex = FXCollections.observableArrayList("Male", "Female");
+    private ObservableList<String> bloodGroup = FXCollections.observableArrayList("O", "A", "B", "AB");
+    private ObservableList<String> bloodType = FXCollections.observableArrayList("+", "-");
     private Tooltip tooltipError_Birthday = new Tooltip();
     private Tooltip tooltipError_Sex = new Tooltip();
     private Tooltip tooltipError_BloodGroup = new Tooltip();
@@ -50,14 +51,31 @@ public class RecordMenuController extends MenuController {
     @FXML
     private Tooltip tooltip_Height;
 
-    public void init(MenuController menuController){
+    public void init(MenuController menuController) {
         this.menuController = menuController;
     }
 
-    public void initialize(){
+    public void initialize() {
         choiceBox_Sex.setItems(sex);
         choiceBox_BloodGroup.setItems(bloodGroup);
         choiceBox_BloodType.setItems(bloodType);
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(LocalDate.of(1900, Month.JANUARY, 1))) {
+                            setDisable(true);
+                        } else if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                        }
+                    }
+                };
+            }
+        };
+        datePicker_Birthday.setDayCellFactory(dayCellFactory);
     }
 
     public DatePicker getDatePicker_Birthday() {

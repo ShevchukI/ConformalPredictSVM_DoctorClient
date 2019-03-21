@@ -7,12 +7,13 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.doctor.RegistrationMenuController">
+<AnchorPane prefHeight="505.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.doctor.RegistrationMenuController">
    <children>
-      <FlowPane prefHeight="43.0" prefWidth="600.0">
+      <FlowPane layoutY="70.0" prefHeight="43.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Name:">
                <FlowPane.margin>
@@ -26,7 +27,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="16.0" prefWidth="600.0">
+      <FlowPane layoutY="131.0" prefHeight="16.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Surname:">
                <FlowPane.margin>
@@ -40,7 +41,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="31.0" prefWidth="408.0">
+      <FlowPane layoutY="192.0" prefHeight="31.0" prefWidth="408.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Specialization:">
                <FlowPane.margin>
@@ -54,7 +55,7 @@
             </ComboBox>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="1.0" prefWidth="600.0">
+      <FlowPane layoutY="253.0" prefHeight="1.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Login:">
                <FlowPane.margin>
@@ -68,7 +69,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="0.0" prefWidth="600.0">
+      <FlowPane layoutY="314.0" prefHeight="0.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Password:">
                <FlowPane.margin>
@@ -82,7 +83,7 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="0.0" prefWidth="600.0">
+      <FlowPane layoutY="375.0" prefHeight="0.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Confirm password:">
                <FlowPane.margin>
@@ -96,25 +97,20 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="40.0" prefWidth="408.0">
-         <children>
-            <Button fx:id="button_Register" mnemonicParsing="false" onAction="#register" text="Register">
-               <FlowPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Click to register" />
-               </tooltip>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel">
-               <FlowPane.margin>
-                  <Insets bottom="20.0" left="210.0" top="20.0" />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Click to cancel and return to login menu" />
-               </tooltip>
-            </Button>
-         </children>
-      </FlowPane>
+      <Button fx:id="button_Register" layoutX="20.0" layoutY="386.0" minWidth="80.0" mnemonicParsing="false" onAction="#register" text="Register" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+         <tooltip>
+            <Tooltip text="Click to register" />
+         </tooltip>
+      </Button>
+      <Button fx:id="button_Cancel" layoutX="314.0" layoutY="386.0" minWidth="80.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+         <tooltip>
+            <Tooltip text="Click to cancel and return to login menu" />
+         </tooltip>
+      </Button>
+      <Label layoutX="136.0" layoutY="14.0" text="Registration" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="135.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
-</VBox>
+</AnchorPane>

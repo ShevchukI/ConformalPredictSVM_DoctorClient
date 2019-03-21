@@ -1,11 +1,14 @@
 package com.models;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.http.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Admin on 26.01.2019.
@@ -17,29 +20,36 @@ public class Page {
     private String description;
     private String parameters;
     private String answer;
-    private String date;
+    private Date date;
     private Doctor doctor;
 
     public Page() {
     }
 
-    public Page(int id, String theme, String description, String parameters, String answer, String date, Doctor doctor) {
-        this.id = id;
-        this.theme = theme;
-        this.description = description;
-        this.parameters = parameters;
-        this.answer = answer;
-        this.date = date;
-        this.doctor = doctor;
-    }
+//    public Page(int id, String theme, String description, String parameters, String answer, String date, Doctor doctor) {
+//        this.id = id;
+//        this.theme = theme;
+//        this.description = description;
+//        this.parameters = parameters;
+//        this.answer = answer;
+//        this.date = date;
+//        this.doctor = doctor;
+//    }
 
-    public Page(String theme, String description, String parameters, String answer, String date) {
+    public Page(String theme, String description, String parameters, String answer, Date date) {
         this.theme = theme;
         this.description = description;
         this.parameters = parameters;
         this.answer = answer;
         this.date = date;
     }
+//    public Page(String theme, String description, String parameters, String answer, String date) {
+//        this.theme = theme;
+//        this.description = description;
+//        this.parameters = parameters;
+//        this.answer = answer;
+//        this.date = date;
+//    }
 
     public int getId() {
         return id;
@@ -81,11 +91,19 @@ public class Page {
         this.answer = answer;
     }
 
-    public String getDate() {
+//    public String getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(String date) {
+//        this.date = date;
+//    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -97,18 +115,18 @@ public class Page {
         this.doctor = doctor;
     }
 
-    @Override
-    public String toString() {
-        return "Page{" +
-                "id=" + id +
-                ", theme='" + theme + '\'' +
-                ", description='" + description + '\'' +
-                ", parameters='" + parameters + '\'' +
-                ", answer='" + answer + '\'' +
-                ", date='" + date + '\'' +
-                ", doctor='" + doctor.getName() + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Page{" +
+//                "id=" + id +
+//                ", theme='" + theme + '\'' +
+//                ", description='" + description + '\'' +
+//                ", parameters='" + parameters + '\'' +
+//                ", answer='" + answer + '\'' +
+//                ", date='" + date + '\'' +
+//                ", doctor='" + doctor.getName() + '\'' +
+//                '}';
+//    }
 
     public void setPage(Page page) {
         this.theme = page.getTheme();
@@ -118,10 +136,33 @@ public class Page {
         this.date = page.getDate();
     }
 
+//    public Page fromResponse(HttpResponse response) throws IOException {
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+//        String json = reader.readLine();
+//        return new Gson().fromJson(json, Page.class);
+//    }
+
     public Page fromResponse(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        return gson.fromJson(json, Page.class);
+    }
 
-        return new Gson().fromJson(json, Page.class);
+    public String getDoctorName(){
+        return doctor.getName();
+    }
+
+    public String getDoctorSpecialization(){
+        return doctor.getSpecialization().getName();
+    }
+
+    public String getDateFormatted(){
+        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter1.format(date);
+    }
+
+    public String getDoctorInfo(){
+        return doctor.getName() + " " + doctor.getSurname();
     }
 }

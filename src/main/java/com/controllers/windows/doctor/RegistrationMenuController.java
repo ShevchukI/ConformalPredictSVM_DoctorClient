@@ -31,16 +31,15 @@ public class RegistrationMenuController extends MenuController {
     @Autowired
     LoginMenuController loginMenuController;
 
-    private WindowsController windowsController = new WindowsController();
-    private DoctorController doctorController = new DoctorController();
-    private SpecializationController specializationController = new SpecializationController();
-    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-    private Tooltip tooltipError_Specialization = new Tooltip();
-    private Tooltip tooltipError_Login = new Tooltip();
-    private Tooltip tooltipError_Password = new Tooltip();
-    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
+    private WindowsController windowsController;
+    private DoctorController doctorController;
+    private ObservableList<Specialization> specializations ;
+    private Tooltip tooltipError_Name;
+    private Tooltip tooltipError_Surname;
+    private Tooltip tooltipError_Specialization;
+    private Tooltip tooltipError_Login;
+    private Tooltip tooltipError_Password;
+    private Tooltip tooltipError_ConfirmPassword;
     private int statusCode;
 
     @FXML
@@ -78,8 +77,9 @@ public class RegistrationMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        specializations = FXCollections.observableArrayList();
         specializations.add(new Specialization(-1, "None"));
-        response = specializationController.getAllSpecialization();
+        response = SpecializationController.getAllSpecialization();
         statusCode = response.getStatusLine().getStatusCode();
         if(checkStatusCode(statusCode)) {
             specializations.addAll(new Specialization().getListFromResponse(response));
@@ -116,9 +116,16 @@ public class RegistrationMenuController extends MenuController {
         comboBox_Specialization.setVisibleRowCount(5);
         comboBox_Specialization.getSelectionModel().select(0);
 
-
+        tooltipError_Name = new Tooltip();
+        tooltipError_Surname = new Tooltip();
+        tooltipError_Specialization = new Tooltip();
+        tooltipError_Login = new Tooltip();
+        tooltipError_Password = new Tooltip();
+        tooltipError_ConfirmPassword = new Tooltip();
+        windowsController = new WindowsController();
 //        Image image = new Image(getClass().getResourceAsStream("/img/icons/cancelButton.png"));
 //        ImageView imageView = new ImageView(image);
+
         button_Register.setGraphic(new ImageView("/img/icons/ok.png"));
         button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
 //        button_Cancel.setGraphic(new ImageView("img/icons/cancelButton.png"));

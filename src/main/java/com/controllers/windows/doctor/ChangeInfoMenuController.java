@@ -29,14 +29,14 @@ public class ChangeInfoMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private SpecializationController specializationController = new SpecializationController();
-    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
-    private Tooltip tooltipError_CurrentPassword = new Tooltip();
-    private Tooltip tooltipError_NewPassword = new Tooltip();
-    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-    private DoctorController doctorController = new DoctorController();
+    private SpecializationController specializationController;
+    private ObservableList<Specialization> specializations;
+    private Tooltip tooltipError_CurrentPassword;
+    private Tooltip tooltipError_NewPassword;
+    private Tooltip tooltipError_ConfirmPassword;
+    private Tooltip tooltipError_Name;
+    private Tooltip tooltipError_Surname;
+    private DoctorController doctorController;
     private int statusCode;
 
     @FXML
@@ -73,6 +73,14 @@ public class ChangeInfoMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
+        specializationController = new SpecializationController();
+        specializations = FXCollections.observableArrayList();
+        tooltipError_CurrentPassword = new Tooltip();
+        tooltipError_NewPassword = new Tooltip();
+        tooltipError_ConfirmPassword = new Tooltip();
+        tooltipError_Name = new Tooltip();
+        tooltipError_Surname = new Tooltip();
+        doctorController = new DoctorController();
         button_Ok.setGraphic(new ImageView("/img/icons/ok.png"));
         button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
         if (change) {
@@ -112,9 +120,9 @@ public class ChangeInfoMenuController extends MenuController {
                 }
             });
             comboBox_Specialization.setVisibleRowCount(5);
-            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(Constant.getMapByName("user").get("specId").toString()));
-            textField_Name.setText(Constant.getMapByName("user").get("name").toString());
-            textField_Surname.setText(Constant.getMapByName("user").get("surname").toString());
+            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("specId").toString()));
+            textField_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
+            textField_Surname.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
 
         }
     }
@@ -128,8 +136,8 @@ public class ChangeInfoMenuController extends MenuController {
                     response = doctorController.changePassword(Constant.getAuth(), passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
-                        Constant.getMapByName("user").put("password", new Encryptor().encrypt(Constant.getMapByName("key").get("key").toString(),
-                                Constant.getMapByName("key").get("vector").toString(),
+                        Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
+                                Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();

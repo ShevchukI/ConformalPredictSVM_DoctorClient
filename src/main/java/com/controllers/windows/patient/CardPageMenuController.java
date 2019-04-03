@@ -2,6 +2,7 @@ package com.controllers.windows.patient;
 
 import com.controllers.requests.IllnessController;
 import com.controllers.requests.PageController;
+import com.controllers.windows.diagnostic.DiagnosticMenuController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -37,11 +38,11 @@ public class CardPageMenuController extends MenuController {
     @Autowired
     CardMenuController cardMenuController;
 
-    private WindowsController windowsController = new WindowsController();
-    private MainMenuController mainMenuController = new MainMenuController();
-    private DiagnosticMenuController diagnosticMenuController = new DiagnosticMenuController();
-    private IllnessController illnessController = new IllnessController();
-    private ObservableList<Dataset> datasets = FXCollections.observableArrayList();
+    private WindowsController windowsController;
+    private MainMenuController mainMenuController;
+    private DiagnosticMenuController diagnosticMenuController;
+    private IllnessController illnessController;
+    private ObservableList<Dataset> datasets;
 
     private String action;
     private int row;
@@ -49,9 +50,9 @@ public class CardPageMenuController extends MenuController {
     private String oldDescription;
     private String oldTheme;
     private HttpResponse response;
-    private PageController pageController = new PageController();
-    private LocalDate localDate = LocalDate.now();
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private PageController pageController;
+    private LocalDate localDate;
+    private DateTimeFormatter formatter;
     private int statusCode;
     private int pageId;
     private Page page;
@@ -88,8 +89,8 @@ public class CardPageMenuController extends MenuController {
     private ComboBox<Dataset> comboBox_Illness;
 
 
-    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
-    SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat formatter1;
+    private SimpleDateFormat formatter2;
 
 
     public void initialize(ArrayList<Page> pages, int row, Stage stage, String action) throws IOException {
@@ -98,10 +99,21 @@ public class CardPageMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        windowsController = new WindowsController();
+        mainMenuController = new MainMenuController();
+        diagnosticMenuController = new DiagnosticMenuController();
+        illnessController = new IllnessController();
+        datasets = FXCollections.observableArrayList();
+        pageController = new PageController();
+        localDate = LocalDate.now();
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+        formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+
         this.pages = pages;
         this.row = row;
         this.action = action;
-        label_PatientName.setText(Constant.getMapByName("patient").get("name") + " " + Constant.getMapByName("patient").get("surname"));
+        label_PatientName.setText(Constant.getMapByName(Constant.getPatientMapName()).get("name") + " " + Constant.getMapByName(Constant.getPatientMapName()).get("surname"));
         textArea_Description.setWrapText(true);
         if (action.equals("view")) {
             oldTheme = textArea_Symptoms.getText();
@@ -123,7 +135,7 @@ public class CardPageMenuController extends MenuController {
             comboBox_Illness.setDisable(true);
             button_Diagnostic.setDisable(true);
             label_Doctor.setText(pages.get(row).getDoctor().getName() + " " + pages.get(row).getDoctor().getSurname() + " / " + pages.get(row).getDoctor().getSpecialization().getName());
-            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
+            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
                 button_Change.setDisable(true);
@@ -137,18 +149,18 @@ public class CardPageMenuController extends MenuController {
                 e.printStackTrace();
             }
             response = pageController.createPage(Constant.getAuth(), page1,
-                    Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
+                    Integer.parseInt(Constant.getMapByName(Constant.getPatientMapName()).get("id").toString()));
             statusCode = response.getStatusLine().getStatusCode();
             pageId = Integer.parseInt(Constant.responseToString(response));
             if (checkStatusCode(statusCode)) {
-                Constant.getMapByName("misc").put("pageId", pageId);
+                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageId", pageId);
             }
             label_CurrentDate.setText(localDate.format(formatter));
             button_Previous.setDisable(true);
             button_Next.setDisable(true);
             button_Change.setDisable(true);
-            label_Doctor.setText(Constant.getMapByName("user").get("name").toString() + " " +
-                    Constant.getMapByName("user").get("surname").toString() + " / " + Constant.getMapByName("user").get("specName").toString());
+            label_Doctor.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString() + " " +
+                    Constant.getMapByName(Constant.getUserMapName()).get("surname").toString() + " / " + Constant.getMapByName(Constant.getUserMapName()).get("specName").toString());
             BooleanBinding checkEmptyField = new BooleanBinding() {
                 {
                     super.bind(textArea_Symptoms.textProperty(),
@@ -228,7 +240,7 @@ public class CardPageMenuController extends MenuController {
         if (row != pages.size() - 1) {
             button_Next.setDisable(false);
         }
-        if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
+        if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())) {
             button_Change.setDisable(false);
         } else {
             button_Change.setDisable(true);
@@ -265,7 +277,7 @@ public class CardPageMenuController extends MenuController {
             if (row != 0) {
                 button_Previous.setDisable(false);
             }
-            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
+            if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())) {
                 button_Change.setDisable(false);
             } else {
                 button_Change.setDisable(true);
@@ -356,11 +368,11 @@ public class CardPageMenuController extends MenuController {
 //        }
 //        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
-            Constant.getMapByName("dataset").put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
-            Constant.getMapByName("dataset").put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
-            Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
-            windowsController.openNewModalWindow("patient/diagnosticMenu", getStage(),
-                    diagnosticMenuController, "Main menu", 600, 440);
+            Constant.getMapByName(Constant.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName(Constant.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageId", pages.get(row).getId());
+            windowsController.openNewModalWindow("diagnostic/diagnosticMenu", getStage(),
+                    diagnosticMenuController, "Main menu", false, 600, 440);
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
         }

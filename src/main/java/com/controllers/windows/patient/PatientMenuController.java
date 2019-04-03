@@ -10,11 +10,11 @@ import javafx.scene.control.Tooltip;
  */
 public class PatientMenuController extends MenuController {
 
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-    private Tooltip tooltipError_Telephone = new Tooltip();
-    private Tooltip tooltipError_Address = new Tooltip();
-    private Tooltip tooltipError_Email = new Tooltip();
+    private Tooltip tooltipError_Name;
+    private Tooltip tooltipError_Surname;
+    private Tooltip tooltipError_Telephone;
+    private Tooltip tooltipError_Address;
+    private Tooltip tooltipError_Email;
     private MenuController menuController;
 
     @FXML
@@ -40,6 +40,11 @@ public class PatientMenuController extends MenuController {
 
     public void init(MenuController menuController){
         this.menuController = menuController;
+        tooltipError_Name = new Tooltip();
+        tooltipError_Surname = new Tooltip();
+        tooltipError_Telephone = new Tooltip();
+        tooltipError_Address = new Tooltip();
+        tooltipError_Email = new Tooltip();
     }
 
     public TextField getTextField_Name() {

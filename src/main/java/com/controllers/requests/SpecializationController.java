@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class SpecializationController extends MainController {
 
-    public HttpResponse getAllSpecialization() throws IOException {
+    public static HttpResponse getAllSpecialization() throws IOException {
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/specializations");
         HttpResponse response = null;

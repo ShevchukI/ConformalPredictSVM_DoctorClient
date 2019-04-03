@@ -33,13 +33,13 @@ public class AddPatientAndCardMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private final static String PHONEREG = "[+][3][8][0][0-9]{9}";
-    private final static String EMAILREG = "[a-zA-Z0-9]+[@][a-z]+[.]{0,1}[a-z]{1,3}";
-    private final static String WHEIGHT = "[0-9]{1,3}[.]{0,1}[0-9]{1,3}";
+//    private final static String PHONEREG = "[+][3][8][0][0-9]{9}";
+//    private final static String EMAILREG = "[a-zA-Z0-9]+[@][a-z]+[.]{0,1}[a-z]{1,3}";
+//    private final static String WHEIGHT = "[0-9]{1,3}[.]{0,1}[0-9]{1,3}";
 
-    private WindowsController windowsController = new WindowsController();
-    private PatientController patientControleller = new PatientController();
-    private RecordController recordController = new RecordController();
+    private WindowsController windowsController;
+    private PatientController patientController;
+    private RecordController recordController;
     private ObservableList<Patient> patientObservableList;
     private TableView<Patient> tableView_PatientTable;
     private int statusCode;
@@ -64,6 +64,9 @@ public class AddPatientAndCardMenuController extends MenuController {
         setStage(stage);
         patientMenuController.init(this);
         recordMenuController.init(this);
+        windowsController = new WindowsController();
+        patientController = new PatientController();
+        recordController = new RecordController();
     }
 
 
@@ -102,7 +105,7 @@ public class AddPatientAndCardMenuController extends MenuController {
             } else {
                 record.setSex(false);
             }
-            response = patientControleller.createPatient(Constant.getAuth(), patient);
+            response = patientController.createPatient(Constant.getAuth(), patient);
             statusCode = response.getStatusLine().getStatusCode();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
@@ -157,7 +160,7 @@ public class AddPatientAndCardMenuController extends MenuController {
             patientMenuController.getTooltipError_Telephone().setText("You telephone is empty!");
             patientMenuController.getTextField_Telephone().setTooltip(patientMenuController.getTooltipError_Telephone());
             patientMenuController.getTextField_Telephone().setStyle("-fx-border-color: red");
-        } else if (!patientMenuController.getTextField_Telephone().getText().matches(PHONEREG)) {
+        } else if (!patientMenuController.getTextField_Telephone().getText().matches(Constant.getPHONEREG())) {
             patientMenuController.getTooltipError_Telephone().setText("Your telephone must have the  format: +380XXXXXXXXX");
             patientMenuController.getTextField_Telephone().setTooltip(patientMenuController.getTooltipError_Telephone());
             patientMenuController.getTextField_Telephone().setStyle("-fx-border-color: red");
@@ -177,7 +180,7 @@ public class AddPatientAndCardMenuController extends MenuController {
             patientMenuController.getTooltipError_Email().setText("You email is empty!");
             patientMenuController.getTextField_Email().setTooltip(patientMenuController.getTooltipError_Email());
             patientMenuController.getTextField_Email().setStyle("-fx-border-color: red");
-        } else if (!patientMenuController.getTextField_Email().getText().matches(EMAILREG)) {
+        } else if (!patientMenuController.getTextField_Email().getText().matches(Constant.getEMAILREG())) {
             patientMenuController.getTooltipError_Email().setText("Your email must have the  format: example@example.com");
             patientMenuController.getTextField_Email().setTooltip(patientMenuController.getTooltipError_Email());
             patientMenuController.getTextField_Email().setStyle("-fx-border-color: red");
@@ -233,7 +236,7 @@ public class AddPatientAndCardMenuController extends MenuController {
             recordMenuController.getTooltipError_Weight().setText("Patient weight is empty!");
             recordMenuController.getTextField_Weight().setTooltip(recordMenuController.getTooltipError_Weight());
             recordMenuController.getTextField_Weight().setStyle("-fx-border-color: red");
-        } else if (!recordMenuController.getTextField_Weight().getText().matches(WHEIGHT)) {
+        } else if (!recordMenuController.getTextField_Weight().getText().matches(Constant.getWHEIGHT())) {
             recordMenuController.getTooltipError_Weight().setText("Weight must have the  format: xx,xx");
             recordMenuController.getTextField_Weight().setTooltip(recordMenuController.getTooltipError_Weight());
             recordMenuController.getTextField_Weight().setStyle("-fx-border-color: red");
@@ -245,7 +248,7 @@ public class AddPatientAndCardMenuController extends MenuController {
             recordMenuController.getTooltipError_Height().setText("Patient height is empty!");
             recordMenuController.getTextField_Height().setTooltip(recordMenuController.getTooltipError_Height());
             recordMenuController.getTextField_Height().setStyle("-fx-border-color: red");
-        } else if (!recordMenuController.getTextField_Height().getText().matches(WHEIGHT)) {
+        } else if (!recordMenuController.getTextField_Height().getText().matches(Constant.getWHEIGHT())) {
             recordMenuController.getTooltipError_Height().setText("Height must have the  format: xx,xx");
             recordMenuController.getTextField_Height().setTooltip(recordMenuController.getTooltipError_Height());
             recordMenuController.getTextField_Height().setStyle("-fx-border-color: red");

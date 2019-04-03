@@ -1,4 +1,4 @@
-package com.controllers.windows.patient;
+package com.controllers.windows.diagnostic;
 
 import com.controllers.requests.IllnessController;
 import com.controllers.requests.PageController;
@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
@@ -47,11 +48,12 @@ public class DiagnosticMenuController extends MenuController {
     private String[] columns;
     //    private DataSetController dataSetController = new DataSetController();
 //    private ConfigurationController configurationController = new ConfigurationController();
-    private IllnessController illnessController = new IllnessController();
-    private List<Predict> predictList = new ArrayList<>();
+    private IllnessController illnessController;
+    private List<Predict> predictList;
     private ObservableList<Predict> predicts;
-    private PageController pageController = new PageController();
+    private PageController pageController;
     private Predict predict;
+    private boolean quick;
 
     @FXML
     private CheckBox checkBox_Significance;
@@ -81,18 +83,27 @@ public class DiagnosticMenuController extends MenuController {
     private Button button_Cancel;
 
     @FXML
-    public void initialize(Stage stage, Stage newWindow) throws IOException {
+    public void initialize(Stage stage, Stage newWindow, boolean quick) throws IOException {
         newWindow.setOnHidden(event -> {
-            Constant.getMapByName("dataset").remove("id");
-            Constant.getMapByName("dataset").remove("columns");
-            Constant.getMapByName("dataset").remove("name");
-            Constant.getMapByName("misc").remove("pageId");
+            Constant.getMapByName(Constant.getDatasetMapName()).remove("id");
+            Constant.getMapByName(Constant.getDatasetMapName()).remove("columns");
+            Constant.getMapByName(Constant.getDatasetMapName()).remove("name");
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).remove("pageId");
         });
         stage.setOnHidden(event -> {
             Constant.getInstance().getLifecycleService().shutdown();
         });
+        illnessController = new IllnessController();
+        predictList = new ArrayList<>();
+        pageController = new PageController();
         setStage(stage);
         setNewWindow(newWindow);
+        this.quick = quick;
+        if(quick){
+            button_Save.setText("Ok");
+        } else {
+            button_Save.setText("Save");
+        }
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
         button_Save.setDisable(true);
@@ -112,8 +123,8 @@ public class DiagnosticMenuController extends MenuController {
         textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        configurationId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
-        createFields(Constant.getMapByName("dataset").get("columns").toString());
+        configurationId = Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString());
+        createFields(Constant.getMapByName(Constant.getDatasetMapName()).get("columns").toString());
         button_Run.setGraphic(new ImageView("/img/icons/run.png"));
         button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
         button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
@@ -229,46 +240,54 @@ public class DiagnosticMenuController extends MenuController {
     private void createFields(String columns) throws IOException {
         this.columns = columns.split(",");
         for (int i = 2; i < this.columns.length; i++) {
+            Tooltip tooltip = new Tooltip(this.columns[i]);
             Label label = new Label(this.columns[i]);
             label.setId("column" + i);
+            label.setMinWidth(Region.USE_COMPUTED_SIZE);
+            label.setTooltip(tooltip);
             TextField textField = new TextField();
             textField.setId("parameter" + i);
+            textField.setMinWidth(100.0);
             textField.setMaxWidth(100.0);
             gridPane_Data.add(label, 0, i);
             gridPane_Data.setHalignment(label, HPos.LEFT);
             gridPane_Data.add(textField, 1, i);
             gridPane_Data.setHalignment(textField, HPos.RIGHT);
-            gridPane_Data.setMargin(label, new Insets(14, 5, 10, 14));
-            gridPane_Data.setMargin(textField, new Insets(14, 14, 10, 5));
+            gridPane_Data.setMargin(label, new Insets(14, 10, 10, 14));
+            gridPane_Data.setMargin(textField, new Insets(14, 14, 10, 0));
         }
     }
 
     public void save(ActionEvent event) throws IOException {
-        response = pageController.getPage(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName("misc").get("pageId").toString()));
-        statusCode = response.getStatusLine().getStatusCode();
-        System.out.println(statusCode + "_1");
-        if (checkStatusCode(statusCode)) {
-            Page page = new Page().fromResponse(response);
-            page.setParameters("");
-            for (int i = 2; i < this.columns.length; i++) {
-                Label label = (Label) gridPane_Data.lookup("#column" + i);
-                TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
-                page.setParameters(page.getParameters() + label.getText() + ":" + textField.getText());
-                if (i < columns.length - 1) {
-                    page.setParameters(page.getParameters() + ",");
+        if (!quick) {
+            response = pageController.getPage(Constant.getAuth(),
+                    Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageId").toString()));
+            statusCode = response.getStatusLine().getStatusCode();
+            System.out.println(statusCode + "_1");
+            if (checkStatusCode(statusCode)) {
+                Page page = new Page().fromResponse(response);
+                page.setParameters("");
+                for (int i = 2; i < this.columns.length; i++) {
+                    Label label = (Label) gridPane_Data.lookup("#column" + i);
+                    TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
+                    page.setParameters(page.getParameters() + label.getText() + ":" + textField.getText());
+                    if (i < columns.length - 1) {
+                        page.setParameters(page.getParameters() + ",");
+                    }
+                }
+                page.setAnswer(Constant.getMapByName(Constant.getDatasetMapName()).get("name").toString() + ":" + predict.getVisibleClass());
+                response = pageController.changePage(Constant.getAuth(), page, page.getId());
+                statusCode = response.getStatusLine().getStatusCode();
+                System.out.println(statusCode + "_2");
+                if (checkStatusCode(statusCode)) {
+                    Label label = (Label) getStage().getScene().lookup("#label_NameResult");
+                    Label label1 = (Label) getStage().getScene().lookup("#label_Result");
+                    label.setText(Constant.getMapByName(Constant.getDatasetMapName()).get("name").toString());
+                    label1.setText(predict.getVisibleClass());
                 }
             }
-            page.setAnswer(Constant.getMapByName("dataset").get("name").toString() + ":" + predict.getVisibleClass());
-            response = pageController.changePage(Constant.getAuth(), page, page.getId());
-            statusCode = response.getStatusLine().getStatusCode();
-            System.out.println(statusCode + "_2");
-            if (checkStatusCode(statusCode)) {
-                Label label = (Label) getStage().getScene().lookup("#label_NameResult");
-                Label label1 = (Label) getStage().getScene().lookup("#label_Result");
-                label.setText(Constant.getMapByName("dataset").get("name").toString());
-                label1.setText(predict.getVisibleClass());
-            }
+        } else {
+            getNewWindow().close();
         }
     }
 }

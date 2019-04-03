@@ -38,10 +38,10 @@ public class CardMenuController extends MenuController {
     HttpResponse response;
 
 
-    private WindowsController windowsController = new WindowsController();
-    private RecordController recordController = new RecordController();
-    private PageController pageController = new PageController();
-    private CardPageMenuController cardPageMenuController = new CardPageMenuController();
+    private WindowsController windowsController;
+    private RecordController recordController;
+    private PageController pageController;
+    private CardPageMenuController cardPageMenuController;
     private int statusCode;
     private ArrayList<Page> pages;
 
@@ -70,7 +70,7 @@ public class CardMenuController extends MenuController {
     @FXML
     private Button button_Back;
     @FXML
-    private TableColumn<Page, Number> tableColumn_Number = new TableColumn<Page, Number>("#");
+    private TableColumn<Page, Number> tableColumn_Number;
     @FXML
     private TableView tableView_PageTable;
     @FXML
@@ -83,10 +83,8 @@ public class CardMenuController extends MenuController {
     private TableColumn tableColumn_Specialization;
     @FXML
     private ObservableList<Page> pageObservableList;
-    @FXML
-    private
 
-    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+    private SimpleDateFormat formatter1;
 
 
     public void initialize(Stage stage) throws IOException {
@@ -95,9 +93,15 @@ public class CardMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        label_Name.setText(Constant.getMapByName("patient").get("name") + " " + Constant.getMapByName("patient").get("surname"));
+        windowsController = new WindowsController();
+        recordController = new RecordController();
+        pageController = new PageController();
+        cardPageMenuController = new CardPageMenuController();
+        formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+        tableColumn_Number = new TableColumn<Page, Number>("#");
+        label_Name.setText(Constant.getMapByName(Constant.getPatientMapName()).get("name") + " " + Constant.getMapByName(Constant.getPatientMapName()).get("surname"));
         response = recordController.getRecordByPatientId(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
+                Integer.parseInt(Constant.getMapByName(Constant.getPatientMapName()).get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             Record record = new Record().fromJson(response);
@@ -118,7 +122,7 @@ public class CardMenuController extends MenuController {
 //            alert.showAndWait();
 //        }
         response = pageController.getAllPageByPatientId(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName("patient").get("id").toString()));
+                Integer.parseInt(Constant.getMapByName(Constant.getPatientMapName()).get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             pages = pageController.getAllPage(response);
@@ -186,7 +190,7 @@ public class CardMenuController extends MenuController {
     public void viewPage() throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
-                pages, row, "view", "Page", 800, 680);
+                pages, row, "view", "Page", 800, 800);
     }
 
     public void newPage(ActionEvent event) throws IOException {
@@ -237,27 +241,27 @@ public class CardMenuController extends MenuController {
         }
     }
 
-    public void test(){
-        for (Page page : pages) {
-            String pattern = "MM-dd-yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//            Date convertedCurrentDate = null;
-//            Date convertedCurrentDate1 = null;
-//            Date date = null;
-//            try {
-//                convertedCurrentDate = sdf.parse(page.getDate());
-//                convertedCurrentDate1 = sdf1.parse(page.getDate());
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                date = sdf.parse(page.getDate());
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println(page.getDate() + " : " + convertedCurrentDate + " : " + convertedCurrentDate1 + " :: "+ date +":"+simpleDateFormat.format(date));
-        }
-    }
+//    public void test(){
+//        for (Page page : pages) {
+//            String pattern = "MM-dd-yyyy";
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//            SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+////            Date convertedCurrentDate = null;
+////            Date convertedCurrentDate1 = null;
+////            Date date = null;
+////            try {
+////                convertedCurrentDate = sdf.parse(page.getDate());
+////                convertedCurrentDate1 = sdf1.parse(page.getDate());
+////            } catch (ParseException e) {
+////                e.printStackTrace();
+////            }
+////            try {
+////                date = sdf.parse(page.getDate());
+////            } catch (ParseException e) {
+////                e.printStackTrace();
+////            }
+////            System.out.println(page.getDate() + " : " + convertedCurrentDate + " : " + convertedCurrentDate1 + " :: "+ date +":"+simpleDateFormat.format(date));
+//        }
+//    }
 }

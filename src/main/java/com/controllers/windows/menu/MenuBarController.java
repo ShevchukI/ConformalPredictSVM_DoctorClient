@@ -1,5 +1,6 @@
 package com.controllers.windows.menu;
 
+import com.controllers.windows.diagnostic.QuickDiagnosticChoiceController;
 import com.controllers.windows.doctor.ChangeInfoMenuController;
 import com.controllers.windows.doctor.LoginMenuController;
 import javafx.event.ActionEvent;
@@ -18,12 +19,16 @@ public class MenuBarController extends MenuController {
     @Autowired
     ChangeInfoMenuController changeInfoMenuController;
 
-    private WindowsController windowsController = new WindowsController();
+    private QuickDiagnosticChoiceController quickDiagnosticChoiceController;
+
+    private WindowsController windowsController;
     private MenuController menuController;
 
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
+        quickDiagnosticChoiceController = new QuickDiagnosticChoiceController();
+        windowsController = new WindowsController();
     }
 
     public void closeApplication(ActionEvent event) {
@@ -54,7 +59,8 @@ public class MenuBarController extends MenuController {
     }
 
 
-    public void quickDiagnostic(ActionEvent event) {
-
+    public void quickDiagnostic(ActionEvent event) throws IOException {
+        windowsController.openNewModalWindow("diagnostic/quickDiagnosticChoice", menuController.getStage(),
+                quickDiagnosticChoiceController, menuController.getStage().getTitle(), 500,200);
     }
 }

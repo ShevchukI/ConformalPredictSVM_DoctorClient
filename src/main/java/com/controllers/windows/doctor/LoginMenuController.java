@@ -31,9 +31,9 @@ public class LoginMenuController extends MenuController {
     HttpResponse response;
 
 
-    private DoctorController doctorController = new DoctorController();
+    private DoctorController doctorController;
     private int statusCode;
-    private WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController;
 
     @FXML
     private TextField textField_Login;
@@ -50,19 +50,17 @@ public class LoginMenuController extends MenuController {
         });
         setStage(stage);
         Constant.clearInstance();
+        doctorController = new DoctorController();
+        windowsController = new WindowsController();
 //        button_SignIn.setGraphic(new ImageView("/img/icons/SISmall.png"));
 //        button_SignUp.setGraphic(new ImageView("/img/icons/SUSmall.png"));
     }
 
     public void signIn(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
         if (textField_Login.getText().equals("")) {
-            alert.setContentText("Login is empty!");
-            alert.showAndWait();
+            Constant.getAlert(null, "Login is empty!", Alert.AlertType.ERROR);
         } else if (passwordField_Password.getText().equals("")) {
-            alert.setContentText("Password is empty!");
-            alert.showAndWait();
+            Constant.getAlert(null, "Password is empty!", Alert.AlertType.ERROR);
         } else {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();

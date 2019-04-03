@@ -24,8 +24,13 @@ import java.util.ArrayList;
  */
 public class WindowsController {
 
-    private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    private Dimension sSize;
+    private Rectangle2D screenBounds;
+
+    public WindowsController(){
+        sSize = Toolkit.getDefaultToolkit().getScreenSize();
+        screenBounds = Screen.getPrimary().getVisualBounds();
+    }
 
     public void start(Stage stage) throws IOException {
 //        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
@@ -193,8 +198,11 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
         newWindow.setScene(scene);
         newWindow.setMinWidth(minWidth);
         newWindow.setMinHeight(minHeight);
-        newWindow.setMaxWidth(sSize.getWidth());
-        newWindow.setMaxHeight(sSize.getHeight());
+        newWindow.setMaxWidth(minWidth);
+        newWindow.setMaxHeight(minHeight);
+
+//        newWindow.setMaxWidth(sSize.getWidth());
+//        newWindow.setMaxHeight(sSize.getHeight());
         newWindow.setResizable(false);
         newWindow.setTitle(title);
         newWindow.getIcons().add(new Image("img/icons/icon.png"));

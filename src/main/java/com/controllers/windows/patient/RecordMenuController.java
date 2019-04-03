@@ -16,15 +16,15 @@ import java.time.Month;
 public class RecordMenuController extends MenuController {
 
     private MenuController menuController;
-    private ObservableList<String> sex = FXCollections.observableArrayList("Male", "Female");
-    private ObservableList<String> bloodGroup = FXCollections.observableArrayList("O", "A", "B", "AB");
-    private ObservableList<String> bloodType = FXCollections.observableArrayList("+", "-");
-    private Tooltip tooltipError_Birthday = new Tooltip();
-    private Tooltip tooltipError_Sex = new Tooltip();
-    private Tooltip tooltipError_BloodGroup = new Tooltip();
-    private Tooltip tooltipError_BloodType = new Tooltip();
-    private Tooltip tooltipError_Weight = new Tooltip();
-    private Tooltip tooltipError_Height = new Tooltip();
+    private ObservableList<String> sex;
+    private ObservableList<String> bloodGroup;
+    private ObservableList<String> bloodType;
+    private Tooltip tooltipError_Birthday;
+    private Tooltip tooltipError_Sex;
+    private Tooltip tooltipError_BloodGroup;
+    private Tooltip tooltipError_BloodType;
+    private Tooltip tooltipError_Weight;
+    private Tooltip tooltipError_Height;
 
     @FXML
     private DatePicker datePicker_Birthday;
@@ -56,9 +56,18 @@ public class RecordMenuController extends MenuController {
     }
 
     public void initialize() {
+        sex = FXCollections.observableArrayList("Male", "Female");
+        bloodGroup = FXCollections.observableArrayList("O", "A", "B", "AB");
         choiceBox_Sex.setItems(sex);
         choiceBox_BloodGroup.setItems(bloodGroup);
         choiceBox_BloodType.setItems(bloodType);
+        bloodType = FXCollections.observableArrayList("+", "-");
+        tooltipError_Birthday = new Tooltip();
+        tooltipError_Sex = new Tooltip();
+        tooltipError_BloodGroup = new Tooltip();
+        tooltipError_BloodType = new Tooltip();
+        tooltipError_Weight = new Tooltip();
+        tooltipError_Height = new Tooltip();
         final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
             @Override
             public DateCell call(final DatePicker datePicker) {

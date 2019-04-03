@@ -1,11 +1,8 @@
 package com.controllers.windows.menu;
 
-import com.controllers.requests.SpecializationController;
 import com.models.Page;
 import com.models.Patient;
-import com.models.Specialization;
 import com.tools.Constant;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -30,8 +27,8 @@ public abstract class MenuController {
 //    private Placeholder placeholder = new Placeholder();
     private Stage stage;
     private Stage newWindow;
-    private SpecializationController specializationController = new SpecializationController();
-    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
+//    private SpecializationController specializationController = new SpecializationController();
+//    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
 
     public void setStage(Stage stage) {
         this.stage = stage;

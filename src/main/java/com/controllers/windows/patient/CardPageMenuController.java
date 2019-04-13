@@ -216,6 +216,8 @@ public class CardPageMenuController extends MenuController {
             }
         });
         comboBox_Illness.setVisibleRowCount(5);
+//        label_NameResult.setText(pages.get(row).getAnswer().substring(0, pages.get(row).getAnswer().length()-9));
+//        label_Result.setText(pages.get(row).getAnswer().substring(pages.get(row).getAnswer().length()-9, pages.get(row).getAnswer().length()));
         button_Back.setGraphic(new ImageView("/img/icons/return.png"));
     }
 
@@ -369,6 +371,7 @@ public class CardPageMenuController extends MenuController {
 //        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
             Constant.getMapByName(Constant.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName(Constant.getDatasetMapName()).put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
             Constant.getMapByName(Constant.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageId", pages.get(row).getId());
             windowsController.openNewModalWindow("diagnostic/diagnosticMenu", getStage(),

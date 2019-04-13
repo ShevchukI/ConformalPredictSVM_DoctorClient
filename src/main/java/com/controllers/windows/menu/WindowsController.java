@@ -145,6 +145,8 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
     }
 
 
+
+
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    ObservableList<Patient> patientObservableList,
                                    TableView<Patient> tableView_PatientTable,
@@ -164,7 +166,8 @@ public void openWindow(String rootName, Stage stage, MenuController controller, 
         newWindow.initModality(Modality.WINDOW_MODAL);
         newWindow.initOwner(stage);
         controller = (MenuController) loader.getController();
-        controller.initialize(stage, newWindow, patientObservableList, tableView_PatientTable);
+        controller.initialize(stage, newWindow);
+//        controller.initialize(stage, newWindow, patientObservableList, tableView_PatientTable);
         newWindow.show();
     }
 

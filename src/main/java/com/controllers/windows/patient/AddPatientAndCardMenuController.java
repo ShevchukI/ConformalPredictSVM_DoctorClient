@@ -8,6 +8,7 @@ import com.controllers.windows.menu.WindowsController;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,16 +58,19 @@ public class AddPatientAndCardMenuController extends MenuController {
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
 
 
-    public void initialize(Stage stage) throws IOException {
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
         stage.setOnHidden(event -> {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        setNewWindow(newWindow);
         patientMenuController.init(this);
         recordMenuController.init(this);
         windowsController = new WindowsController();
         patientController = new PatientController();
         recordController = new RecordController();
+        patientObservableList = FXCollections.observableArrayList();
+        tableView_PatientTable = new TableView<>();
     }
 
 
@@ -77,10 +81,14 @@ public class AddPatientAndCardMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
-        this.patientObservableList = patientObservableList;
-        this.tableView_PatientTable = tableView_PatientTable;
+        windowsController = new WindowsController();
+        patientController = new PatientController();
+        recordController = new RecordController();
+
         patientMenuController.init(this);
         recordMenuController.init(this);
+        this.patientObservableList = patientObservableList;
+        this.tableView_PatientTable = tableView_PatientTable;
         button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
         button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
     }

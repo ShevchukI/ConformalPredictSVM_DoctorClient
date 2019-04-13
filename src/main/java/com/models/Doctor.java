@@ -12,10 +12,12 @@ import java.io.InputStreamReader;
  */
 public class Doctor {
 
+    private int id;
     private String name;
     private String surname;
     private String login;
     private String password;
+    private Specialization specialization;
 
     public Doctor(String name, String surname, String login, String password) {
         this.name = name;
@@ -26,6 +28,11 @@ public class Doctor {
 
     public Doctor() {
 
+    }
+
+    public Doctor(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
     }
 
     public Doctor fromJson(HttpResponse response) throws IOException {
@@ -66,5 +73,21 @@ public class Doctor {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Specialization getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(Specialization specialization) {
+        this.specialization = specialization;
     }
 }

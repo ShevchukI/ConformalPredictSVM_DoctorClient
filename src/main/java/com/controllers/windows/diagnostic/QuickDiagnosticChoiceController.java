@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class QuickDiagnosticChoiceController extends MenuController{
+public class QuickDiagnosticChoiceController extends MenuController {
     @Autowired
     HttpResponse response;
 

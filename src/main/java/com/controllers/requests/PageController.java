@@ -33,7 +33,7 @@ import java.util.Locale;
 /**
  * Created by Admin on 26.01.2019.
  */
-public class PageController extends MainController{
+public class PageController extends MainController {
 
     public HttpResponse getAllPageByPatientId(String[] authorization, int id) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());

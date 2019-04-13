@@ -58,10 +58,11 @@ public class RecordMenuController extends MenuController {
     public void initialize() {
         sex = FXCollections.observableArrayList("Male", "Female");
         bloodGroup = FXCollections.observableArrayList("O", "A", "B", "AB");
+        bloodType = FXCollections.observableArrayList("+", "-");
+
         choiceBox_Sex.setItems(sex);
         choiceBox_BloodGroup.setItems(bloodGroup);
         choiceBox_BloodType.setItems(bloodType);
-        bloodType = FXCollections.observableArrayList("+", "-");
         tooltipError_Birthday = new Tooltip();
         tooltipError_Sex = new Tooltip();
         tooltipError_BloodGroup = new Tooltip();

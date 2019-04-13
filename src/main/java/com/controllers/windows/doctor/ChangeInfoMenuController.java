@@ -131,7 +131,7 @@ public class ChangeInfoMenuController extends MenuController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         if (checkPasswords()) {
-            if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
+            if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[1])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
                     response = doctorController.changePassword(Constant.getAuth(), passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();

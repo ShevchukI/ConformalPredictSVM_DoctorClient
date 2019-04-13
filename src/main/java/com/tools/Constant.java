@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class Constant {
     private static final String INSTANCE_NAME = "mainDoctorInstance";
-    private static final String USER_MAP_NAME = "modelDeveloper";
+    private static final String USER_MAP_NAME = "doctor";
     private static final String DATASET_MAP_NAME = "dataset";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";
@@ -30,7 +30,7 @@ public class Constant {
         Config config = new Config();
         config.setInstanceName(INSTANCE_NAME);
         NetworkConfig networkConfig = config.getNetworkConfig();
-        networkConfig.setPort(1918);
+        networkConfig.setPort(1919);
         config.addMapConfig(createMapWithName(USER_MAP_NAME));
         config.addMapConfig(createMapWithName(DATASET_MAP_NAME));
         config.addMapConfig(createMapWithName(KEY_MAP_NAME));
@@ -142,4 +142,6 @@ public class Constant {
     public static String getWHEIGHT() {
         return WHEIGHT;
     }
+
+
 }

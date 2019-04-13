@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * Created by Admin on 26.01.2019.
  */
-public class RecordController extends MainController{
+public class RecordController extends MainController {
 
     public HttpResponse changeRecord(String[] authorization, Record record, int id) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());

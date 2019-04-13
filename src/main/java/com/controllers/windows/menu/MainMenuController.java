@@ -31,13 +31,14 @@ public class MainMenuController extends MenuController {
 
     @Autowired
     RegistrationMenuController registrationMenuController;
+//    @Autowired
+//    AddPatientAndCardMenuController addPatientAndCardMenuController;
     @Autowired
-    AddPatientAndCardMenuController addPatientAndCardMenuController;
-    @Autowired
-    CardMenuController cardMenuController;
+CardMenuController cardMenuController;
     @Autowired
     HttpResponse response;
 
+    private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private ObservableList<Patient> patientObservableList;
     private PatientController patientController;
     private WindowsController windowsController;
@@ -99,6 +100,8 @@ public class MainMenuController extends MenuController {
         });
         setStage(stage);
         menuBarController.init(this);
+        patientObservableList = FXCollections.observableArrayList();
+        addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         patientController = new PatientController();
         windowsController = new WindowsController();
         tableColumn_Number = new TableColumn<Patient, Number>("#");
@@ -142,7 +145,10 @@ public class MainMenuController extends MenuController {
     }
 
     public void addPatient(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", getStage(),
+//        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", getStage(),
+//                addPatientAndCardMenuController,
+//                "Add new patient", 740, 540);
+        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", this.getStage(),
                 addPatientAndCardMenuController, patientObservableList, tableView_PatientTable,
                 "Add new patient", 740, 540);
     }
@@ -218,10 +224,17 @@ public class MainMenuController extends MenuController {
             patientPage = new PatientPage().fromJson(response);
             patientObservableList = FXCollections.observableList(patientPage.getPatientEntities());
         }
-        pagination_Patient.setPageCount(patientPage.getNumberOfPages());
-        pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+//        pagination_Patient.setPageCount(patientPage.getNumberOfPages());
+//        pagination_Patient.setCurrentPageIndex(pageIndex - 1);
         tableView_PatientTable.setItems(patientObservableList);
         label_Count.setText(String.valueOf(patientObservableList.size()));
+        if (patientObservableList.isEmpty()) {
+            pagination_Patient.setPageCount(1);
+            pagination_Patient.setCurrentPageIndex(1);
+        } else {
+            pagination_Patient.setPageCount(patientPage.getNumberOfPages());
+            pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+        }
     }
 
     public void searchPage(int pageIndex, int objectOnPage, String search, int searchType) throws IOException {
@@ -232,8 +245,13 @@ public class MainMenuController extends MenuController {
             patientPage = new PatientPage().fromJson(response);
             patientObservableList = FXCollections.observableList(patientPage.getPatientEntities());
             tableView_PatientTable.setItems(patientObservableList);
-            pagination_Patient.setPageCount(patientPage.getNumberOfPages());
-            pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+            if (patientObservableList.isEmpty()) {
+                pagination_Patient.setPageCount(1);
+                pagination_Patient.setCurrentPageIndex(1);
+            } else {
+                pagination_Patient.setPageCount(patientPage.getNumberOfPages());
+                pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+            }
             label_Count.setText(String.valueOf(patientObservableList.size()));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);

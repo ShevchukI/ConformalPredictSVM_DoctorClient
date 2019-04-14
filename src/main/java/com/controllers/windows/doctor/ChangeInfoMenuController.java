@@ -6,7 +6,7 @@ import com.controllers.windows.menu.MenuController;
 import com.models.Doctor;
 import com.models.Specialization;
 import com.tools.Constant;
-import com.tools.Encryptor;
+import com.tools.HazelCastMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,8 +36,8 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_ConfirmPassword;
     private Tooltip tooltipError_Name;
     private Tooltip tooltipError_Surname;
-    private DoctorController doctorController;
-    private int statusCode;
+//    private DoctorController doctorController;
+//    private int statusCode;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -69,7 +69,7 @@ public class ChangeInfoMenuController extends MenuController {
     @FXML
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         setNewWindow(newWindow);
@@ -80,14 +80,14 @@ public class ChangeInfoMenuController extends MenuController {
         tooltipError_ConfirmPassword = new Tooltip();
         tooltipError_Name = new Tooltip();
         tooltipError_Surname = new Tooltip();
-        doctorController = new DoctorController();
-        button_Ok.setGraphic(new ImageView("/img/icons/ok.png"));
-        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
+//        doctorController = new DoctorController();
+        button_Ok.setGraphic(new ImageView(Constant.getOkIcon()));
+        button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
         if (change) {
             specializations.add(new Specialization(-1, "None"));
             response = specializationController.getAllSpecialization();
-            statusCode = response.getStatusLine().getStatusCode();
-            if(checkStatusCode(statusCode)) {
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 specializations.addAll(new Specialization().getListFromResponse(response));
             }
             comboBox_Specialization.setItems(specializations);
@@ -120,34 +120,34 @@ public class ChangeInfoMenuController extends MenuController {
                 }
             });
             comboBox_Specialization.setVisibleRowCount(5);
-            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("specId").toString()));
-            textField_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
-            textField_Surname.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
+//            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("specId").toString()));
+            comboBox_Specialization.getSelectionModel().select(HazelCastMap.getDoctorMap().get(1).getSpecialization().getId());
+//            textField_Name.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("name").toString());
+//            textField_Surname.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("surname").toString());
+            textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
+            textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
 
         }
     }
 
     public void savePassword(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
+
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[1])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = doctorController.changePassword(Constant.getAuth(), passwordField_ConfirmPassword.getText());
-                    statusCode = response.getStatusLine().getStatusCode();
-                    if (checkStatusCode(statusCode)) {
-                        Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
-                                Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
-                                passwordField_ConfirmPassword.getText().toString()));
-                        alert.setContentText("Password changed!");
-                        alert.showAndWait();
+                    response = DoctorController.changePassword(passwordField_ConfirmPassword.getText());
+                    setStatusCode(response.getStatusLine().getStatusCode());
+                    if (checkStatusCode(getStatusCode())) {
+                        HazelCastMap.changePassword(passwordField_ConfirmPassword.getText().toString());
+//                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
+//                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
+//                                passwordField_ConfirmPassword.getText().toString()));
+                        getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();
                     }
                 }
             } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setContentText("Error! Current password incorrect, please try again.");
-                alert.showAndWait();
+                getAlert(null, "Error! Current password incorrect, please try again.", Alert.AlertType.ERROR);
             }
         }
     }
@@ -158,32 +158,32 @@ public class ChangeInfoMenuController extends MenuController {
 
     public boolean checkPasswords() {
         if (passwordField_CurrentPassword.getText().equals("")) {
-            tooltipError_CurrentPassword.setText("You name is empty!");
+            tooltipError_CurrentPassword.setText("Current password is empty!");
             passwordField_CurrentPassword.setTooltip(tooltipError_CurrentPassword);
-            passwordField_CurrentPassword.setStyle("-fx-border-color: red");
+            passwordField_CurrentPassword.setStyle(Constant.getBorderColorRed());
         } else {
             passwordField_CurrentPassword.setTooltip(tooltip_CurrentPassword);
-            passwordField_CurrentPassword.setStyle("-fx-border-color: inherit");
+            passwordField_CurrentPassword.setStyle(Constant.getBorderColorInherit());
         }
         if (passwordField_NewPassword.getText().equals("")) {
-            tooltipError_NewPassword.setText("You surname is empty!");
+            tooltipError_NewPassword.setText("New password is empty!");
             passwordField_NewPassword.setTooltip(tooltipError_NewPassword);
-            passwordField_NewPassword.setStyle("-fx-border-color: red");
+            passwordField_NewPassword.setStyle(Constant.getBorderColorRed());
         } else {
             passwordField_NewPassword.setTooltip(tooltip_NewPassword);
-            passwordField_NewPassword.setStyle("-fx-border-color: inherit");
+            passwordField_NewPassword.setStyle(Constant.getBorderColorInherit());
         }
         if (passwordField_ConfirmPassword.getText().equals("")) {
-            tooltipError_ConfirmPassword.setText("You login is empty!");
+            tooltipError_ConfirmPassword.setText("Confirm password is empty!");
             passwordField_ConfirmPassword.setTooltip(tooltipError_ConfirmPassword);
-            passwordField_ConfirmPassword.setStyle("-fx-border-color: red");
+            passwordField_ConfirmPassword.setStyle(Constant.getBorderColorRed());
         } else {
             passwordField_ConfirmPassword.setTooltip(tooltip_ConfirmPassword);
-            passwordField_ConfirmPassword.setStyle("-fx-border-color: inherit");
+            passwordField_ConfirmPassword.setStyle(Constant.getBorderColorInherit());
         }
-        if (passwordField_CurrentPassword.getStyle().equals("-fx-border-color: inherit")
-                && passwordField_NewPassword.getStyle().equals("-fx-border-color: inherit")
-                && passwordField_ConfirmPassword.getStyle().equals("-fx-border-color: inherit")) {
+        if (passwordField_CurrentPassword.getStyle().equals(Constant.getBorderColorInherit())
+                && passwordField_NewPassword.getStyle().equals(Constant.getBorderColorInherit())
+                && passwordField_ConfirmPassword.getStyle().equals(Constant.getBorderColorInherit())) {
             return true;
         } else {
             return false;
@@ -194,21 +194,21 @@ public class ChangeInfoMenuController extends MenuController {
         if (textField_Name.getText().equals("")) {
             tooltipError_Name.setText("You name is empty!");
             textField_Name.setTooltip(tooltipError_Name);
-            textField_Name.setStyle("-fx-border-color: red");
+            textField_Name.setStyle(Constant.getBorderColorRed());
         } else {
             textField_Name.setTooltip(tooltip_Name);
-            textField_Name.setStyle("-fx-border-color: inherit");
+            textField_Name.setStyle(Constant.getBorderColorInherit());
         }
         if (textField_Surname.getText().equals("")) {
             tooltipError_Surname.setText("You surname is empty!");
             textField_Surname.setTooltip(tooltipError_Surname);
-            textField_Surname.setStyle("-fx-border-color: red");
+            textField_Surname.setStyle(Constant.getBorderColorRed());
         } else {
             textField_Surname.setTooltip(tooltip_Surname);
-            textField_Surname.setStyle("-fx-border-color: inherit");
+            textField_Surname.setStyle(Constant.getBorderColorInherit());
         }
-        if (textField_Name.getStyle().equals("-fx-border-color: inherit")
-                && textField_Surname.getStyle().equals("-fx-border-color: inherit")) {
+        if (textField_Name.getStyle().equals(Constant.getBorderColorInherit())
+                && textField_Surname.getStyle().equals(Constant.getBorderColorInherit())) {
             return true;
         } else {
             return false;
@@ -216,25 +216,23 @@ public class ChangeInfoMenuController extends MenuController {
     }
 
     public void saveName(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
         if (checkNames()) {
             Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText());
-            response = doctorController.changeName(Constant.getAuth(), doctor,
-                    comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
-                alert.setContentText("Information changed!");
-                alert.showAndWait();
-                Constant.getMapByName("user").put("name", doctor.getName());
-                Constant.getMapByName("user").put("surname", doctor.getSurname());
-                Constant.getMapByName("user").put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-                Constant.getMapByName("user").put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
-                Label label_Name = (Label)getStage().getScene().lookup("#label_Name");
-                label_Name.setText(Constant.getMapByName("user").get("name").toString() + " "
-                        + Constant.getMapByName("user").get("surname").toString());
-                Label label_Specialization = (Label)getStage().getScene().lookup("#label_Specialization");
-                label_Specialization.setText(Constant.getMapByName("user").get("specName").toString());
+            response = DoctorController.changeName(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
+                doctor.setSpecialization(comboBox_Specialization.getSelectionModel().getSelectedItem());
+                HazelCastMap.changeUserInformation(doctor);
+                getAlert(null, "Information changed!", Alert.AlertType.INFORMATION);
+//                HazelCastMap.changeUserInformation(doctor);
+//                HazelCastMap.getMapByName("user").put("name", doctor.getName());
+//                HazelCastMap.getMapByName("user").put("surname", doctor.getSurname());
+//                HazelCastMap.getMapByName("user").put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+//                HazelCastMap.getMapByName("user").put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
+                Label label_Name = (Label) getStage().getScene().lookup("#label_Name");
+                label_Name.setText(doctor.getSurname() + " " + doctor.getName());
+                Label label_Specialization = (Label) getStage().getScene().lookup("#label_Specialization");
+                label_Specialization.setText(doctor.getSpecialization().getName());
                 getNewWindow().close();
             }
         }

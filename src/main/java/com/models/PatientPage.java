@@ -23,7 +23,7 @@ public class PatientPage {
     }
 
 
-    public PatientPage fromJson(HttpResponse response) throws IOException {
+    public static PatientPage fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
         return new Gson().fromJson(json, PatientPage.class);

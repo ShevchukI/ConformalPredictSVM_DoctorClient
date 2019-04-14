@@ -5,6 +5,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Dataset;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,9 +22,9 @@ public class QuickDiagnosticChoiceController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private DiagnosticMenuController diagnosticMenuController;
-    private IllnessController illnessController;
-    private int statusCode;
+//    private DiagnosticMenuController diagnosticMenuController;
+//    private IllnessController illnessController;
+//    private int statusCode;
     private ObservableList<Dataset> datasets;
     private WindowsController windowsController;
 
@@ -37,13 +38,13 @@ public class QuickDiagnosticChoiceController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-        diagnosticMenuController = new DiagnosticMenuController();
-        illnessController = new IllnessController();
+//        diagnosticMenuController = new DiagnosticMenuController();
+//        illnessController = new IllnessController();
         datasets = FXCollections.observableArrayList();
         windowsController = new WindowsController();
-        response = illnessController.getAllActiveDataSet(Constant.getAuth());
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = IllnessController.getAllActiveDataSet();
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             datasets.addAll(new Dataset().getListFromResponse(response));
         }
         comboBox_Illness.setItems(datasets);
@@ -84,10 +85,12 @@ public class QuickDiagnosticChoiceController extends MenuController {
 
     public void ok(ActionEvent event) throws IOException {
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
-            Constant.getMapByName(Constant.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
-            Constant.getMapByName(Constant.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
-            windowsController.openNewModalWindow("diagnostic/diagnosticMenu", getStage(),
-                    diagnosticMenuController, "Main menu", true, 600, 440);
+//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
+//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
+            Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(), comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
+            HazelCastMap.getDataSetMap().put(1, dataset);
+            windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
+                    new DiagnosticMenuController(), "Main menu", true, 600, 440);
             getNewWindow().close();
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);

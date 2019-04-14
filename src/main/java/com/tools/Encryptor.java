@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class Encryptor {
 
-    public String encrypt(String key, String initVector, String value) {
+    public static String encrypt(String key, String initVector, String value) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -24,7 +24,7 @@ public class Encryptor {
         return null;
     }
 
-    public String decrypt(String key, String initVector, String encrypted) {
+    public static String decrypt(String key, String initVector, String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -38,7 +38,7 @@ public class Encryptor {
         return null;
     }
 
-    public String genRandString(){
+    public static String genRandString(){
         String uuid = UUID.randomUUID().toString();
         Random rng = new Random();
         int length = 16;

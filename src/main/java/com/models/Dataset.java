@@ -4,17 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
  * Created by Admin on 03.02.2019.
  */
-public class Dataset {
+public class Dataset implements Serializable{
     private int id;
     private String name;
     private String description;
@@ -23,10 +20,10 @@ public class Dataset {
 
     public Dataset() {
     }
-    public Dataset(int id, String name, String description) {
+    public Dataset(int id, String name, String columns) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.columns = columns;
     }
 
     public Dataset(int id, String name, String description, String columns) {
@@ -39,6 +36,11 @@ public class Dataset {
     public Dataset(String name, String description, String columns) {
         this.name = name;
         this.description = description;
+        this.columns = columns;
+    }
+
+    public Dataset(int id, String columns) {
+        this.id = id;
         this.columns = columns;
     }
 

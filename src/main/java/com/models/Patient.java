@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by Admin on 14.01.2019.
  */
-public class Patient {
+public class Patient implements Serializable{
 
     private int id;
     private String name;

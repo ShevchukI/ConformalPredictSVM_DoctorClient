@@ -3,9 +3,9 @@ package com.controllers.windows.menu;
 import com.controllers.windows.diagnostic.QuickDiagnosticChoiceController;
 import com.controllers.windows.doctor.ChangeInfoMenuController;
 import com.controllers.windows.doctor.LoginMenuController;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -14,12 +14,12 @@ import java.io.IOException;
  */
 public class MenuBarController extends MenuController {
 
-    @Autowired
-    LoginMenuController loginMenuController;
-    @Autowired
-    ChangeInfoMenuController changeInfoMenuController;
+//    @Autowired
+//    LoginMenuController loginMenuController;
+//    @Autowired
+//    ChangeInfoMenuController changeInfoMenuController;
 
-    private QuickDiagnosticChoiceController quickDiagnosticChoiceController;
+//    private QuickDiagnosticChoiceController quickDiagnosticChoiceController;
 
     private WindowsController windowsController;
     private MenuController menuController;
@@ -27,7 +27,7 @@ public class MenuBarController extends MenuController {
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
-        quickDiagnosticChoiceController = new QuickDiagnosticChoiceController();
+//        quickDiagnosticChoiceController = new QuickDiagnosticChoiceController();
         windowsController = new WindowsController();
     }
 
@@ -37,18 +37,19 @@ public class MenuBarController extends MenuController {
 
 
     public void signOut(ActionEvent event) throws IOException {
-        windowsController.openWindow("doctor/loginMenu", menuController.getStage(), loginMenuController,
-                "Login menu", 400, 250);
+        windowsController.openWindow(Constant.getLoginMenuRoot(),
+                menuController.getStage(), new LoginMenuController(),
+                "Login menu", false, 400, 250);
     }
 
     public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("doctor/changeName", menuController.getStage(),
-                changeInfoMenuController, "Change name and surname", true, 400, 240);
+        windowsController.openNewModalWindow(Constant.getChangeNameRoot(), menuController.getStage(),
+                new ChangeInfoMenuController(), "Change name and surname", true, 400, 240);
     }
 
     public void changePassword(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("doctor/changePassword", menuController.getStage(),
-                changeInfoMenuController, "Change password", false, 400, 240);
+        windowsController.openNewModalWindow(Constant.getChangePasswordRoot(), menuController.getStage(),
+                new ChangeInfoMenuController(), "Change password", false, 400, 240);
     }
 
     public void about(ActionEvent event){
@@ -60,7 +61,7 @@ public class MenuBarController extends MenuController {
 
 
     public void quickDiagnostic(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("diagnostic/quickDiagnosticChoice", menuController.getStage(),
-                quickDiagnosticChoiceController, menuController.getStage().getTitle(), 500,200);
+        windowsController.openNewModalWindow(Constant.getQuickDiagnositcChoiceRoot(), menuController.getStage(),
+                new QuickDiagnosticChoiceController(), menuController.getStage().getTitle(), 500,200);
     }
 }

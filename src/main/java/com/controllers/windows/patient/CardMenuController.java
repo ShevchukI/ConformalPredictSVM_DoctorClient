@@ -10,6 +10,7 @@ import com.models.Page;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -32,8 +33,8 @@ import java.util.ArrayList;
  */
 public class CardMenuController extends MenuController {
 
-    @Autowired
-    MainMenuController mainMenuController;
+//    @Autowired
+//    MainMenuController mainMenuController;
     @Autowired
     HttpResponse response;
 
@@ -41,9 +42,11 @@ public class CardMenuController extends MenuController {
     private WindowsController windowsController;
     private RecordController recordController;
     private PageController pageController;
-    private CardPageMenuController cardPageMenuController;
-    private int statusCode;
+//    private CardPageMenuController cardPageMenuController;
+//    private int statusCode;
     private ArrayList<Page> pages;
+    private Patient patient;
+    private Record record;
 
     @FXML
     private MenuBarController menuBarController;
@@ -90,21 +93,23 @@ public class CardMenuController extends MenuController {
     public void initialize(Stage stage) throws IOException {
         menuBarController.init(this);
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         windowsController = new WindowsController();
         recordController = new RecordController();
         pageController = new PageController();
-        cardPageMenuController = new CardPageMenuController();
         formatter1 = new SimpleDateFormat("dd-MM-yyyy");
-        tableColumn_Number = new TableColumn<Page, Number>("#");
-        label_Name.setText(Constant.getMapByName(Constant.getPatientMapName()).get("name") + " " + Constant.getMapByName(Constant.getPatientMapName()).get("surname"));
-        response = recordController.getRecordByPatientId(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName(Constant.getPatientMapName()).get("id").toString()));
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
-            Record record = new Record().fromJson(response);
+
+//        cardPageMenuController = new CardPageMenuController();
+        patient = HazelCastMap.getPatientMap().get(1);
+        label_Name.setText(patient.getSurname() + " " + patient.getName());
+
+
+        response = recordController.getRecordByPatientId(patient.getId());
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
+            record = new Record().fromJson(response);
             label_BirthDate.setText(formatter1.format(record.getBirthday()));
             label_BloodGroup.setText(record.getBloodGroup());
             if (record.isSex()) {
@@ -121,12 +126,12 @@ public class CardMenuController extends MenuController {
 //            alert.setContentText("ERROR!");
 //            alert.showAndWait();
 //        }
-        response = pageController.getAllPageByPatientId(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName(Constant.getPatientMapName()).get("id").toString()));
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = pageController.getAllPageByPatientId(patient.getId());
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             pages = pageController.getAllPage(response);
             pageObservableList = FXCollections.observableList(pages);
+            tableColumn_Number = new TableColumn<Page, Number>("#");
             tableColumn_Number.setSortable(false);
             tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PageTable.getItems().indexOf(column.getValue()) + 1));
             tableColumn_Theme.setCellValueFactory(new PropertyValueFactory<Page, String>("theme"));
@@ -174,10 +179,10 @@ public class CardMenuController extends MenuController {
             return row;
         });
 
-        button_New.setGraphic(new ImageView("/img/icons/add.png"));
-        button_Delete.setGraphic(new ImageView("/img/icons/delete.png"));
-        button_View.setGraphic(new ImageView("/img/icons/info.png"));
-        button_Back.setGraphic(new ImageView("/img/icons/return.png"));
+        button_New.setGraphic(new ImageView(Constant.getAddIcon()));
+        button_Delete.setGraphic(new ImageView(Constant.getDeleteIcon()));
+        button_View.setGraphic(new ImageView(Constant.getInfoIcon()));
+        button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
     public void viewPage(ActionEvent event) throws IOException {
@@ -189,27 +194,26 @@ public class CardMenuController extends MenuController {
 
     public void viewPage() throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
-                pages, row, "view", "Page", 800, 800);
+        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
+                new CardPageMenuController(), pages, row, "view", "Page", 800, 800);
     }
 
     public void newPage(ActionEvent event) throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable("patient/cardPageMenu", getStage(), cardPageMenuController,
-                pages, row, "new", "Page", 800, 800);
+        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
+                new CardPageMenuController(), pages, row, "new", "Page", 800, 800);
     }
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController,
-                "Main menu", 600, 800);
+        windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
+               new MainMenuController(), "Main menu", 600, 800);
     }
 
     public void deletePage(ActionEvent event) throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        if (pages.get(row).getDoctor().getId() == Integer.parseInt(Constant.getMapByName("user").get("id").toString())) {
+//        if (pages.get(row).getDoctor().getId() == Integer.parseInt(HazelCastMap.getMapByName("user").get("id").toString())) {
+        if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
 //            ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
 //            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 //            Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to delete this page?", ok, cancel);
@@ -220,48 +224,20 @@ public class CardMenuController extends MenuController {
                 try {
                     row = tableView_PageTable.getSelectionModel().getFocusedIndex();
                     int id = pageObservableList.get(row).getId();
-                    response = pageController.deletePage(Constant.getAuth(), id);
-                    statusCode = response.getStatusLine().getStatusCode();
-                    if (checkStatusCode(statusCode)) {
-                        alert.setContentText("Page deleted!");
+                    response = pageController.deletePage(id);
+                    setStatusCode(response.getStatusLine().getStatusCode());
+                    if (checkStatusCode(getStatusCode())) {
+                        getAlert(null, "Page deleted!", Alert.AlertType.INFORMATION);
                         pageObservableList.remove(row);
                         tableView_PageTable.refresh();
                     }
-//                    else {
-//                        alert.setContentText("Error! Status code: " + statusCode);
-//                    }
-                    alert.showAndWait();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            alert.setContentText("You can`t change this page!");
-            alert.showAndWait();
+            getAlert(null, "You can`t change this page!", Alert.AlertType.ERROR);
         }
     }
 
-//    public void test(){
-//        for (Page page : pages) {
-//            String pattern = "MM-dd-yyyy";
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-////            Date convertedCurrentDate = null;
-////            Date convertedCurrentDate1 = null;
-////            Date date = null;
-////            try {
-////                convertedCurrentDate = sdf.parse(page.getDate());
-////                convertedCurrentDate1 = sdf1.parse(page.getDate());
-////            } catch (ParseException e) {
-////                e.printStackTrace();
-////            }
-////            try {
-////                date = sdf.parse(page.getDate());
-////            } catch (ParseException e) {
-////                e.printStackTrace();
-////            }
-////            System.out.println(page.getDate() + " : " + convertedCurrentDate + " : " + convertedCurrentDate1 + " :: "+ date +":"+simpleDateFormat.format(date));
-//        }
-//    }
 }

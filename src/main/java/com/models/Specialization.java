@@ -6,13 +6,14 @@ import org.apache.http.HttpResponse;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
  * Created by Admin on 13.01.2019.
  */
-public class Specialization {
+public class Specialization implements Serializable{
 
     private int id;
     private String name;

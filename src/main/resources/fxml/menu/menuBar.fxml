@@ -16,7 +16,7 @@
             <items>
                 <Menu mnemonicParsing="false" text="Change">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#changeName" text="Name/Surname" />
+                        <!--<MenuItem mnemonicParsing="false" onAction="#changeName" text="Name/Surname" />-->
                         <MenuItem mnemonicParsing="false" onAction="#changePassword" text="Password" />
                     </items>
                 </Menu>

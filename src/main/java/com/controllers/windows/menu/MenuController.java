@@ -2,8 +2,7 @@ package com.controllers.windows.menu;
 
 import com.models.Page;
 import com.models.Patient;
-import com.tools.Constant;
-import javafx.collections.ObservableList;
+import com.tools.HazelCastMap;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -27,6 +26,7 @@ public abstract class MenuController {
 //    private Placeholder placeholder = new Placeholder();
     private Stage stage;
     private Stage newWindow;
+    private int statusCode;
 //    private SpecializationController specializationController = new SpecializationController();
 //    private ObservableList<Specialization> specializations = FXCollections.observableArrayList();
 
@@ -45,7 +45,7 @@ public abstract class MenuController {
     public void initialize(Stage stage) throws IOException {
 //        userMap = Hazelcast.getHazelcastInstanceByName("mainInstance").getMap("userMap");
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
 //            Hazelcast.getHazelcastInstanceByName("mainDoctorInstance").getLifecycleService().shutdown();
         });
         setStage(stage);
@@ -72,7 +72,7 @@ public abstract class MenuController {
         return newWindow;
     }
 
-    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
+    public void initialize(Stage stage, Stage newWindow,
                            TableView<Patient> tableView_PatientTable) throws IOException {
 
     }
@@ -145,5 +145,13 @@ public abstract class MenuController {
         } else {
             return false;
         }
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }

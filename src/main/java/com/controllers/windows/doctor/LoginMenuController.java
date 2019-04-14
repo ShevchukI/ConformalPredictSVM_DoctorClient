@@ -6,12 +6,14 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Doctor;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,15 @@ import java.io.IOException;
  */
 public class LoginMenuController extends MenuController {
 
-    @Autowired
-    RegistrationMenuController registrationMenuController;
-    @Autowired
-    MainMenuController mainMenuController;
+//    @Autowired
+//    MainMenuController mainMenuController;
     @Autowired
     HttpResponse response;
 
 
-    private DoctorController doctorController;
     private int statusCode;
     private WindowsController windowsController;
+//    private MainMenuController mainMenuController;
 
     @FXML
     private TextField textField_Login;
@@ -41,19 +41,16 @@ public class LoginMenuController extends MenuController {
     private PasswordField passwordField_Password;
     @FXML
     private Button button_SignIn;
-    @FXML
-    private Button button_SignUp;
 
     public void initialize(Stage stage) {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        Constant.clearInstance();
-        doctorController = new DoctorController();
+        HazelCastMap.clearInstance();
+//        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
-//        button_SignIn.setGraphic(new ImageView("/img/icons/SISmall.png"));
-//        button_SignUp.setGraphic(new ImageView("/img/icons/SUSmall.png"));
+        button_SignIn.setGraphic(new ImageView(Constant.getSignInButtonIcon()));
     }
 
     public void signIn(ActionEvent event) throws IOException {
@@ -65,18 +62,15 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            response = doctorController.getDoctorAuth(authorization);
+            response = DoctorController.getDoctorAuth(authorization);
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
-                Constant.fillMap(new Doctor().fromJson(response), authorization);
-                windowsController.openWindowResizable("menu/mainMenu", getStage(),  mainMenuController,
-                        "Main menu", 700, 680);
+                HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);
+//                windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),  mainMenuController,
+//                        "Main menu", 700, 680);
+                windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
+                        new MainMenuController(), null, true, 900, 680);
             }
         }
-    }
-
-    public void signUp(ActionEvent event) throws IOException {
-        windowsController.openWindow("doctor/registrationMenu", getStage(), registrationMenuController,
-                "Registration", 408, 520);
     }
 }

@@ -7,7 +7,6 @@ import org.apache.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -42,6 +41,13 @@ public class Page {
         this.parameters = parameters;
         this.answer = answer;
         this.date = date;
+    }
+
+    public Page(String theme, String description, String parameters, String answer) {
+        this.theme = theme;
+        this.description = description;
+        this.parameters = parameters;
+        this.answer = answer;
     }
 //    public Page(String theme, String description, String parameters, String answer, String date) {
 //        this.theme = theme;
@@ -157,10 +163,10 @@ public class Page {
         return doctor.getSpecialization().getName();
     }
 
-    public String getDateFormatted(){
-        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
-        return formatter1.format(date);
-    }
+//    public String getDateFormatted(){
+//        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+//        return formatter1.format(date);
+//    }
 
     public String getDoctorInfo(){
         return doctor.getName() + " " + doctor.getSurname();

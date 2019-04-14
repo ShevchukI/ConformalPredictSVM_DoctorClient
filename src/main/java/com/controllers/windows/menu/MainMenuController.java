@@ -1,12 +1,13 @@
 package com.controllers.windows.menu;
 
 import com.controllers.requests.PatientController;
-import com.controllers.windows.doctor.RegistrationMenuController;
 import com.controllers.windows.patient.AddPatientAndCardMenuController;
 import com.controllers.windows.patient.CardMenuController;
+import com.models.Doctor;
 import com.models.Patient;
 import com.models.PatientPage;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -22,43 +23,41 @@ import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Admin on 07.01.2019.
  */
 public class MainMenuController extends MenuController {
 
-    @Autowired
-    RegistrationMenuController registrationMenuController;
+    //    @Autowired
+//    RegistrationMenuController registrationMenuController;
 //    @Autowired
 //    AddPatientAndCardMenuController addPatientAndCardMenuController;
-    @Autowired
-CardMenuController cardMenuController;
+//    @Autowired
+//    CardMenuController cardMenuController;
     @Autowired
     HttpResponse response;
 
+//    private CardMenuController cardMenuController;
     private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private ObservableList<Patient> patientObservableList;
-    private PatientController patientController;
+    //    private PatientController patientController;
     private WindowsController windowsController;
-    private int statusCode;
-    private Stage stage;
-    private List<Patient> patientList;
-    private MenuController menuController;
+    //    private Stage stage;
+//    private List<Patient> patientList;
+//    private MenuController menuController;
     private PatientPage patientPage;
     private int searchType;
-    private MainMenuController mainMenuController;
-    private int objectOnPage;
+    //    private MainMenuController mainMenuController;
     private int pageIndex;
     private boolean checkSearch;
+    //    private IMap<Integer, Doctor> doctorMap;
+    private Doctor doctor;
 
     @FXML
     private MenuBarController menuBarController;
     @FXML
     private Pagination pagination_Patient;
-
-
     @FXML
     private TableView<Patient> tableView_PatientTable;
     @FXML
@@ -77,8 +76,8 @@ CardMenuController cardMenuController;
     private Label label_Name;
     @FXML
     private Label label_Specialization;
-    @FXML
-    private Label label_Count;
+    //    @FXML
+//    private Label label_Count;
     @FXML
     private Button button_View;
     @FXML
@@ -96,24 +95,31 @@ CardMenuController cardMenuController;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         menuBarController.init(this);
+        doctor = HazelCastMap.getDoctorMap().get(1);
         patientObservableList = FXCollections.observableArrayList();
         addPatientAndCardMenuController = new AddPatientAndCardMenuController();
-        patientController = new PatientController();
+//        cardMenuController = new CardMenuController();
         windowsController = new WindowsController();
+        label_Name.setText(doctor.getSurname() + " " + doctor.getName());
+        label_Specialization.setText(doctor.getSpecialization().getName());
+
         tableColumn_Number = new TableColumn<Patient, Number>("#");
-        objectOnPage = 30;
         checkSearch = false;
-        label_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString() + " "
-                + Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
-        label_Specialization.setText(Constant.getMapByName(Constant.getUserMapName()).get("specName").toString());
-        this.pageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndex").toString());
+//        label_Name.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("surname").toString() + " "
+//                + HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("name").toString());
+
+//        label_Specialization.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("specName").toString());
+//        this.pageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndex").toString());
+
+        pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
+
         tableColumn_Number.setSortable(false);
         tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_PatientTable.getItems().
-                indexOf(column.getValue()) + 1) + (pageIndex - 1) * objectOnPage));
+                indexOf(column.getValue()) + 1) + (pageIndex - 1) * Constant.getObjectOnPage()));
         tableColumn_Name.setCellValueFactory(new PropertyValueFactory<Patient, String>("name"));
         tableColumn_Name.setSortable(false);
         tableColumn_Surname.setCellValueFactory(new PropertyValueFactory<Patient, String>("surname"));
@@ -139,18 +145,17 @@ CardMenuController cardMenuController;
             return row;
         });
         pagination_Patient.setPageFactory(this::createPage);
-        button_Add.setGraphic(new ImageView("/img/icons/add.png"));
-        button_View.setGraphic(new ImageView("/img/icons/info.png"));
-        button_Search.setGraphic(new ImageView("/img/icons/search.png"));
+        button_Add.setGraphic(new ImageView(Constant.getAddIcon()));
+        button_View.setGraphic(new ImageView(Constant.getInfoIcon()));
+        button_Search.setGraphic(new ImageView(Constant.getSearchIcon()));
     }
 
     public void addPatient(ActionEvent event) throws IOException {
 //        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", getStage(),
 //                addPatientAndCardMenuController,
 //                "Add new patient", 740, 540);
-        windowsController.openNewModalWindow("patient/addPatientAndRecordMenu", this.getStage(),
-                addPatientAndCardMenuController, patientObservableList, tableView_PatientTable,
-                "Add new patient", 740, 540);
+        windowsController.openNewModalWindow(Constant.getAddPatientAndRecordMenuRoot(), this.getStage(),
+                addPatientAndCardMenuController, tableView_PatientTable,"Add new patient", 740, 540);
     }
 
     public void viewPatient(ActionEvent event) throws IOException {
@@ -159,56 +164,74 @@ CardMenuController cardMenuController;
 
     public void viewPatient() throws IOException {
         if (tableView_PatientTable.getSelectionModel().getSelectedItem() == null) {
-            System.out.println("ERROR!");
+            getAlert(null, "Please, choose patient!", Alert.AlertType.ERROR);
         } else {
             Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
-            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndex", String.valueOf(this.pageIndex));
-            Constant.getMapByName(Constant.getPatientMapName()).put("name", patient.getName());
-            Constant.getMapByName(Constant.getPatientMapName()).put("id", patient.getId());
-            Constant.getMapByName(Constant.getPatientMapName()).put("surname", patient.getSurname());
-            windowsController.openWindowResizable("patient/cardMenu", getStage(), cardMenuController,
-                    "Card", 600, 680);
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("pageIndex", this.pageIndex);
+            HazelCastMap.getMiscellaneousMap().put("pageIndex", pageIndex);
+
+//            HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).put("name", patient.getName());
+//            HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).put("id", patient.getId());
+//            HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).put("surname", patient.getSurname());
+
+            HazelCastMap.getPatientMap().put(1, patient);
+
+//            windowsController.openWindowResizable(Constant.getCardMenuRoot(), getStage(), cardMenuController,
+//                    "Card", 600, 680);
+            windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
+                    new CardMenuController(), null, true, 600, 680);
         }
     }
 
     public void search(ActionEvent event) throws IOException {
         if (textField_Search.getText().equals("")) {
             checkSearch = false;
-            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndex", "1");
-            pageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndex").toString());
-            getPage(this.pageIndex, objectOnPage);
+            HazelCastMap.getMiscellaneousMap().put("pageIndex", 1);
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("pageIndex", "1");
+//            pageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndex").toString());
+            pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
+            getPage(pageIndex);
         } else {
             if (radio_All.isSelected()) {
                 searchType = 0;
-                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("searchType", "0");
+//                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("searchType", "0");
+                HazelCastMap.getMiscellaneousMap().put("searchType", 0);
             } else if (radio_Name.isSelected()) {
                 searchType = 1;
-                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("searchType", "1");
+//                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("searchType", "1");
+                HazelCastMap.getMiscellaneousMap().put("searchType", 1);
             } else if (radio_Surname.isSelected()) {
                 searchType = 2;
-                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("searchType", "2");
+//                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("searchType", "2");
+                HazelCastMap.getMiscellaneousMap().put("searchType", 2);
             }
             checkSearch = true;
-            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndex", "1");
-            pageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndex").toString());
-            searchPage(this.pageIndex, objectOnPage, textField_Search.getText(),
-                    Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("searchType").toString()));
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("pageIndex", "1");
+            HazelCastMap.getMiscellaneousMap().put("pageIndex", 1);
+//            pageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndex").toString());
+            pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
+//            searchPage(pageIndex, Constant.getObjectOnPage(), textField_Search.getText(),
+//                    Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("searchType").toString()));
+            searchPage(pageIndex, textField_Search.getText(),
+                    HazelCastMap.getMiscellaneousMap().get("searchType"));
         }
     }
-
 
     private Node createPage(int pageIndex) {
         if (!checkSearch) {
             try {
                 this.pageIndex = pageIndex + 1;
-                getPage(this.pageIndex, objectOnPage);
+                getPage(this.pageIndex);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 this.pageIndex = pageIndex + 1;
-                searchPage(this.pageIndex, objectOnPage, textField_Search.getText(), Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("searchType").toString()));
+//                searchPage(this.pageIndex, Constant.getObjectOnPage(), textField_Search.getText(),
+//                        Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("searchType").toString()));
+                searchPage(this.pageIndex, textField_Search.getText(),
+                        HazelCastMap.getMiscellaneousMap().get("searchType"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -216,48 +239,55 @@ CardMenuController cardMenuController;
         return tableView_PatientTable;
     }
 
-    public void getPage(int pageIndex, int objectOnPage) throws IOException {
-        response = patientController.getPatientPage(Constant.getAuth(),
-                pageIndex, objectOnPage);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
-            patientPage = new PatientPage().fromJson(response);
+    public void getPage(int pageIndex) throws IOException {
+        response = PatientController.getPatientPage(pageIndex);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
+            patientPage = PatientPage.fromJson(response);
             patientObservableList = FXCollections.observableList(patientPage.getPatientEntities());
         }
 //        pagination_Patient.setPageCount(patientPage.getNumberOfPages());
 //        pagination_Patient.setCurrentPageIndex(pageIndex - 1);
         tableView_PatientTable.setItems(patientObservableList);
-        label_Count.setText(String.valueOf(patientObservableList.size()));
+//        label_Count.setText(String.valueOf(patientObservableList.size()));
+        paginationSetPage();
+//        if (patientObservableList.isEmpty()) {
+//            pagination_Patient.setPageCount(1);
+//            pagination_Patient.setCurrentPageIndex(1);
+//        } else {
+//            pagination_Patient.setPageCount(patientPage.getNumberOfPages());
+//            pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+//        }
+    }
+
+    public void searchPage(int pageIndex, String search, int searchType) throws IOException {
+        response = PatientController.findPatientPage(search, searchType, pageIndex);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (getStatusCode() == 200) {
+            patientPage = new PatientPage().fromJson(response);
+            patientObservableList = FXCollections.observableList(patientPage.getPatientEntities());
+            tableView_PatientTable.setItems(patientObservableList);
+            paginationSetPage();
+//            if (patientObservableList.isEmpty()) {
+//                pagination_Patient.setPageCount(1);
+//                pagination_Patient.setCurrentPageIndex(1);
+//            } else {
+//                pagination_Patient.setPageCount(patientPage.getNumberOfPages());
+//                pagination_Patient.setCurrentPageIndex(pageIndex - 1);
+//            }
+//            label_Count.setText(String.valueOf(patientObservableList.size()));
+        } else {
+            getAlert(null, "Oops! Status code: " + getStatusCode(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void paginationSetPage(){
         if (patientObservableList.isEmpty()) {
             pagination_Patient.setPageCount(1);
             pagination_Patient.setCurrentPageIndex(1);
         } else {
             pagination_Patient.setPageCount(patientPage.getNumberOfPages());
             pagination_Patient.setCurrentPageIndex(pageIndex - 1);
-        }
-    }
-
-    public void searchPage(int pageIndex, int objectOnPage, String search, int searchType) throws IOException {
-        response = patientController.findPatientPage(Constant.getAuth(),
-                search, searchType, pageIndex, objectOnPage);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 200) {
-            patientPage = new PatientPage().fromJson(response);
-            patientObservableList = FXCollections.observableList(patientPage.getPatientEntities());
-            tableView_PatientTable.setItems(patientObservableList);
-            if (patientObservableList.isEmpty()) {
-                pagination_Patient.setPageCount(1);
-                pagination_Patient.setCurrentPageIndex(1);
-            } else {
-                pagination_Patient.setPageCount(patientPage.getNumberOfPages());
-                pagination_Patient.setCurrentPageIndex(pageIndex - 1);
-            }
-            label_Count.setText(String.valueOf(patientObservableList.size()));
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Oops! Status code: " + statusCode);
-            alert.showAndWait();
         }
     }
 

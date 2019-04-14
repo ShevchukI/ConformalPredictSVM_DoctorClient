@@ -8,14 +8,12 @@ import com.controllers.windows.menu.WindowsController;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +39,9 @@ public class AddPatientAndCardMenuController extends MenuController {
     private WindowsController windowsController;
     private PatientController patientController;
     private RecordController recordController;
-    private ObservableList<Patient> patientObservableList;
+    //    private ObservableList<Patient> patientObservableList;
     private TableView<Patient> tableView_PatientTable;
-    private int statusCode;
+//    private int statusCode;
 
     @FXML
     private PatientMenuController patientMenuController;
@@ -58,9 +56,9 @@ public class AddPatientAndCardMenuController extends MenuController {
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
 
 
-    public void initialize(Stage stage, Stage newWindow) throws IOException {
+    public void initialize(Stage stage, Stage newWindow, TableView<Patient> tableView_PatientTable) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         setNewWindow(newWindow);
@@ -69,29 +67,30 @@ public class AddPatientAndCardMenuController extends MenuController {
         windowsController = new WindowsController();
         patientController = new PatientController();
         recordController = new RecordController();
-        patientObservableList = FXCollections.observableArrayList();
-        tableView_PatientTable = new TableView<>();
-    }
-
-
-    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
-                           TableView<Patient> tableView_PatientTable) throws IOException {
-        stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
-        });
-        setStage(stage);
-        setNewWindow(newWindow);
-        windowsController = new WindowsController();
-        patientController = new PatientController();
-        recordController = new RecordController();
-
-        patientMenuController.init(this);
-        recordMenuController.init(this);
-        this.patientObservableList = patientObservableList;
         this.tableView_PatientTable = tableView_PatientTable;
-        button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
-        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
+//        patientObservableList = FXCollections.observableArrayList();
+//        tableView_PatientTable = new TableView<>();
     }
+
+
+//    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
+//                           TableView<Patient> tableView_PatientTable) throws IOException {
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
+//        setStage(stage);
+//        setNewWindow(newWindow);
+//        windowsController = new WindowsController();
+//        patientController = new PatientController();
+//        recordController = new RecordController();
+//
+//        patientMenuController.init(this);
+//        recordMenuController.init(this);
+//        this.patientObservableList = patientObservableList;
+//        this.tableView_PatientTable = tableView_PatientTable;
+//        button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
+//        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
+//    }
 
     public void savePatient(ActionEvent event) throws IOException, ParseException {
         if (checkPatientFields() && checkCardFields()) {
@@ -113,22 +112,27 @@ public class AddPatientAndCardMenuController extends MenuController {
             } else {
                 record.setSex(false);
             }
-            response = patientController.createPatient(Constant.getAuth(), patient);
-            statusCode = response.getStatusLine().getStatusCode();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            if (checkStatusCode(statusCode)) {
+            response = patientController.createPatient(patient);
+            setStatusCode(response.getStatusLine().getStatusCode());
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setHeaderText(null);
+            if (checkStatusCode(getStatusCode())) {
                 int id = new Patient().getIdFromJson(response);
-                response = recordController.changeRecord(Constant.getAuth(),
-                        record, id);
-                statusCode = response.getStatusLine().getStatusCode();
-                if (checkStatusCode(statusCode)) {
-                    alert.setContentText("Congratulations, patient is registered!");
-                    alert.showAndWait();
+                patient.setId(id);
+                response = recordController.changeRecord(record, id);
+                setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(getStatusCode())) {
+                    getAlert(null, "Patient is registered!", Alert.AlertType.INFORMATION);
+//                    alert.setContentText("Patient is registered!");
+//                    alert.showAndWait();
 //                    TableView tableView = (TableView)getStage().getScene().lookup("#tableView_PatientTable");
-//                    tableView.refresh();
-                    windowsController.openWindowResizable("menu/mainMenu", getStage(),
-                            mainMenuController, "Main menu", 600, 680);
+//                    tableView.getItems().add(patient);
+                    if (tableView_PatientTable.getItems().size() < Constant.getObjectOnPage()) {
+                        tableView_PatientTable.getItems().add(patient);
+                    }
+                    tableView_PatientTable.refresh();
+//                    windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
+//                            mainMenuController, "Main menu", 600, 680);
                     getNewWindow().close();
                 }
             }

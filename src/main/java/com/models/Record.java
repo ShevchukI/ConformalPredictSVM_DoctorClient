@@ -18,18 +18,10 @@ public class Record {
     private String bloodGroup;
     private boolean sex;
     private Date birthday;
-//    private String birthday;
 
     public Record() {
     }
 
-//    public Record(double weight, double height, String bloodGroup, boolean sex, String birthday) {
-//        this.weight = weight;
-//        this.height = height;
-//        this.bloodGroup = bloodGroup;
-//        this.sex = sex;
-//        this.birthday = birthday;
-//    }
 
     public Record(double weight, double height, String bloodGroup, Date birthday) {
         this.weight = weight;
@@ -37,13 +29,6 @@ public class Record {
         this.bloodGroup = bloodGroup;
         this.birthday = birthday;
     }
-
-//    public Record(double weight, double height, String bloodGroup, String birthday) {
-//        this.weight = weight;
-//        this.height = height;
-//        this.bloodGroup = bloodGroup;
-//        this.birthday = birthday;
-//    }
 
     public double getWeight() {
         return weight;
@@ -85,19 +70,11 @@ public class Record {
         this.birthday = birthday;
     }
 
-//    public String getBirthday() {
-//        return birthday;
-//    }
-//
-//    public void setBirthday(String birthday) {
-//        this.birthday = birthday;
-//    }
 
     public Record fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         return gson.fromJson(json, Record.class);
-//        return new Gson().fromJson(json, Record.class);
     }
 }

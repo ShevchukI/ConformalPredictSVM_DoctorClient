@@ -3,7 +3,6 @@ package com.controllers.windows.diagnostic;
 import com.controllers.requests.IllnessController;
 import com.controllers.requests.PageController;
 import com.controllers.windows.menu.MenuController;
-import com.models.Dataset;
 import com.models.Page;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
@@ -25,7 +24,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -38,21 +36,11 @@ import java.util.List;
  */
 public class DiagnosticMenuController extends MenuController {
 
-    @Autowired
-    HttpResponse response;
-
-    private Dataset dataset;
-    //    private ConfigurationEntity configurationEntity;
-//    private int statusCode;
-//    private int datasetId;
     private int configurationId;
     private String[] columns;
-    //    private DataSetController dataSetController = new DataSetController();
-//    private ConfigurationController configurationController = new ConfigurationController();
     private IllnessController illnessController;
     private List<Predict> predictList;
     private ObservableList<Predict> predicts;
-    //    private PageController pageController;
     private Predict predict;
     private boolean quick;
 
@@ -86,19 +74,14 @@ public class DiagnosticMenuController extends MenuController {
     @FXML
     public void initialize(Stage stage, Stage newWindow, boolean quick) throws IOException {
         newWindow.setOnHidden(event -> {
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).remove("id");
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).remove("columns");
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).remove("name");
             HazelCastMap.getDataSetMap().clear();
             HazelCastMap.getMiscellaneousMap().remove("pageId");
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).remove("pageId");
         });
         stage.setOnHidden(event -> {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         illnessController = new IllnessController();
         predictList = new ArrayList<>();
-//        pageController = new PageController();
         setStage(stage);
         setNewWindow(newWindow);
         this.quick = quick;
@@ -127,8 +110,6 @@ public class DiagnosticMenuController extends MenuController {
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         configurationId = HazelCastMap.getDataSetMap().get(1).getId();
-//        configurationId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).get("id").toString());
-//        createFields(HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).get("columns").toString());
         createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
         button_Run.setGraphic(new ImageView(Constant.getRunIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
@@ -137,8 +118,6 @@ public class DiagnosticMenuController extends MenuController {
 
 
     public void runDiagnostic(ActionEvent event) throws IOException {
-//        stackPane_Table.setVisible(false);
-//        stackPane_Progress.setVisible(true);
         tableView_Result.setOpacity(0);
         stackPane_Progress.setVisible(true);
         button_Run.setDisable(true);
@@ -160,24 +139,19 @@ public class DiagnosticMenuController extends MenuController {
         } else {
             parameterSingleObject.setSignificance(null);
         }
-//        System.out.println(parameterSingleObject.toString());
-        response = illnessController.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
-//        System.out.println("First request: " + statusCode);
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
             Thread calculation = new Thread(new Runnable() {
                 @Override
                 public void run() {
-//                    button_Run.setDisable(true);
                     predict = new Predict();
                     predict.setPredictClass(0);
-//                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
-                            response = illnessController.resultSingleTest(processId);
+                            HttpResponse response = illnessController.resultSingleTest(processId);
                             setStatusCode(response.getStatusLine().getStatusCode());
-//                            System.out.println("Second request: " + statusCode);
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
@@ -193,8 +167,6 @@ public class DiagnosticMenuController extends MenuController {
                                             default:
                                                 break;
                                         }
-//                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-//                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
                                         predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
                                     } else {
                                         predict.setVisibleClass("Uncertain");
@@ -218,7 +190,6 @@ public class DiagnosticMenuController extends MenuController {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        button_Run.setDisable(false);
                     }
                     button_Run.setDisable(false);
                     button_Save.setDisable(false);
@@ -265,10 +236,8 @@ public class DiagnosticMenuController extends MenuController {
 
     public void save(ActionEvent event) throws IOException {
         if (!quick) {
-//            response = PageController.getPage(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageId").toString()));
-            response = PageController.getPage(HazelCastMap.getMiscellaneousMap().get("pageId"));
+            HttpResponse response = PageController.getPage(HazelCastMap.getMiscellaneousMap().get("pageId"));
             setStatusCode(response.getStatusLine().getStatusCode());
-//            System.out.println(statusCode + "_1");
             if (checkStatusCode(getStatusCode())) {
                 Page page = new Page().fromResponse(response);
                 page.setParameters("");
@@ -280,15 +249,12 @@ public class DiagnosticMenuController extends MenuController {
                         page.setParameters(page.getParameters() + ",");
                     }
                 }
-//                page.setAnswer(HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).get("name").toString() + ":" + predict.getVisibleClass());
                 page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass());
                 response = PageController.changePage(page, page.getId());
                 setStatusCode(response.getStatusLine().getStatusCode());
-//                System.out.println(statusCode + "_2");
                 if (checkStatusCode(getStatusCode())) {
                     Label label = (Label) getStage().getScene().lookup("#label_NameResult");
                     Label label1 = (Label) getStage().getScene().lookup("#label_Result");
-//                    label.setText(HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).get("name").toString());
                     label.setText(HazelCastMap.getDataSetMap().get(1).getName());
                     label1.setText(predict.getVisibleClass());
                     getNewWindow().close();

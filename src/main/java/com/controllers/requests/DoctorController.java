@@ -48,19 +48,6 @@ public class DoctorController extends MainController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPut request = new HttpPut(getUrl() + "/psw");
-//        request.setHeader("Authorization", basicAuthPayload);
-//        request.setEntity(new StringEntity(newPassword));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -74,20 +61,6 @@ public class DoctorController extends MainController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-//        String json = new Gson().toJson(doctor);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPut request = new HttpPut(getUrl() + "/" + specialization);
-//        request.setHeader("Authorization", basicAuthPayload);
-//        request.setHeader("Content-Type", "application/json");
-//        request.setEntity(new StringEntity(json));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 }

@@ -35,13 +35,7 @@ import java.util.Date;
  */
 public class CardPageMenuController extends MenuController {
 
-//    @Autowired
-//    CardMenuController cardMenuController;
-
     private WindowsController windowsController;
-    //    private MainMenuController mainMenuController;
-//    private DiagnosticMenuController diagnosticMenuController;
-//    private IllnessController illnessController;
     private ObservableList<Dataset> datasets;
 
     private static final String NEW = "new";
@@ -56,7 +50,6 @@ public class CardPageMenuController extends MenuController {
     private PageController pageController;
     private LocalDate localDate;
     private DateTimeFormatter formatter;
-    //    private int statusCode;
     private int pageId;
     private Page page;
 
@@ -91,10 +84,8 @@ public class CardPageMenuController extends MenuController {
     @FXML
     private ComboBox<Dataset> comboBox_Illness;
 
-
     private SimpleDateFormat formatter1;
     private SimpleDateFormat formatter2;
-
 
     public void initialize(ArrayList<Page> pages, int row, Stage stage, String action) throws IOException {
         menuBarController.init(this);
@@ -103,9 +94,6 @@ public class CardPageMenuController extends MenuController {
         });
         setStage(stage);
         windowsController = new WindowsController();
-//        mainMenuController = new MainMenuController();
-//        diagnosticMenuController = new DiagnosticMenuController();
-//        illnessController = new IllnessController();
         datasets = FXCollections.observableArrayList();
         pageController = new PageController();
         localDate = LocalDate.now();
@@ -116,7 +104,6 @@ public class CardPageMenuController extends MenuController {
         this.pages = pages;
         this.row = row;
         this.action = action;
-//        label_PatientName.setText(HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).get("name") + " " + HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).get("surname"));
         label_PatientName.setText(HazelCastMap.getPatientMap().get(1).getSurname() + " " + HazelCastMap.getPatientMap().get(1).getName());
         textArea_Description.setWrapText(true);
         if (action.equals(VIEW)) {
@@ -128,7 +115,6 @@ public class CardPageMenuController extends MenuController {
             textArea_Description.setEditable(false);
 
             label_CurrentDate.setText(formatter2.format(pages.get(row).getDate()));
-//            label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
             if (pages.get(row).getAnswer() != null) {
                 String[] result = pages.get(row).getAnswer().split(":");
                 if (result.length == 2) {
@@ -140,7 +126,6 @@ public class CardPageMenuController extends MenuController {
             comboBox_Illness.setDisable(true);
             button_Diagnostic.setDisable(true);
             label_Doctor.setText(pages.get(row).getDoctor().getName() + " " + pages.get(row).getDoctor().getSurname() + " / " + pages.get(row).getDoctor().getSpecialization().getName());
-//            if (pages.get(row).getDoctor().getId() == Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("id").toString())) {
             if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
                 button_Change.setDisable(false);
             } else {
@@ -151,17 +136,13 @@ public class CardPageMenuController extends MenuController {
             Page page1 = new Page();
             try {
                 page1.setDate(formatter2.parse(label_CurrentDate.getText()));
-//                page1.setDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").parse(localDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-//            response = pageController.createPage(page1,
-//                    Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getPatientMapName()).get("id").toString()));
             response = pageController.createPage(page1, HazelCastMap.getPatientMap().get(1).getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             pageId = Integer.parseInt(Constant.responseToString(response));
             if (checkStatusCode(getStatusCode())) {
-//                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("pageId", pageId);
                 pages.add(page1);
                 HazelCastMap.getMiscellaneousMap().put("pageId", pageId);
             }
@@ -170,8 +151,6 @@ public class CardPageMenuController extends MenuController {
             button_Previous.setDisable(true);
             button_Next.setDisable(true);
             button_Change.setDisable(true);
-//            label_Doctor.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("name").toString() + " " +
-//                    HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("surname").toString() + " / " + HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("specName").toString());
             label_Doctor.setText(HazelCastMap.getDoctorMap().get(1).getSurname() + " " +
                     HazelCastMap.getDoctorMap().get(1).getName() + " / " + HazelCastMap.getDoctorMap().get(1).getSpecialization().getName());
             BooleanBinding checkEmptyField = new BooleanBinding() {
@@ -229,22 +208,16 @@ public class CardPageMenuController extends MenuController {
             }
         });
         comboBox_Illness.setVisibleRowCount(5);
-//        if(pages.get(row).getAnswer()!=null && !pages.get(row).getAnswer().equals("")) {
-//            label_NameResult.setText(pages.get(row).getAnswer().substring(0, pages.get(row).getAnswer().length() - 9));
-//            label_Result.setText(pages.get(row).getAnswer().substring(pages.get(row).getAnswer().length()-8, pages.get(row).getAnswer().length()));
-//        }
+
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
     public void previousPage(ActionEvent event) {
         row--;
-//        oldDescription = textArea_Description.getText();
-//        changeText();
         textArea_Symptoms.setText(pages.get(row).getTheme());
         textArea_Description.setText(pages.get(row).getDescription());
         label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
-//        label_CurrentDate.setText(pages.get(row).getDate());
-//        label_Result.setText(pages.get(row).getAnswer());
+
         if (pages.get(row).getAnswer() != null && !pages.get(row).getAnswer().equals("")) {
             label_NameResult.setText(pages.get(row).getAnswer().substring(0, pages.get(row).getAnswer().length() - 9));
             label_Result.setText(pages.get(row).getAnswer().substring(pages.get(row).getAnswer().length() - 8, pages.get(row).getAnswer().length()));
@@ -261,7 +234,6 @@ public class CardPageMenuController extends MenuController {
         if (row != pages.size() - 1) {
             button_Next.setDisable(false);
         }
-//        if (pages.get(row).getDoctor().getId() == Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("id").toString())) {
         if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
             button_Change.setDisable(false);
         } else {
@@ -286,16 +258,11 @@ public class CardPageMenuController extends MenuController {
             }
         } else {
             row++;
-//            oldDescription = textArea_Description.getText();
-//            changeText();
-//            oldDescription = textArea_Description.getText();
-//            oldSymptoms = textArea_Symptoms.getText();
-//            changeText();
+
             textArea_Symptoms.setText(pages.get(row).getTheme());
             textArea_Description.setText(pages.get(row).getDescription());
             label_CurrentDate.setText(formatter1.format(pages.get(row).getDate()));
-//            label_CurrentDate.setText(pages.get(row).getDate());
-//            label_Result.setText(pages.get(row).getAnswer());
+
             if (pages.get(row).getAnswer() != null && !pages.get(row).getAnswer().equals("")) {
                 label_NameResult.setText(pages.get(row).getAnswer().substring(0, pages.get(row).getAnswer().length() - 9));
                 label_Result.setText(pages.get(row).getAnswer().substring(pages.get(row).getAnswer().length() - 8, pages.get(row).getAnswer().length()));
@@ -322,7 +289,6 @@ public class CardPageMenuController extends MenuController {
             if (row != 0) {
                 button_Previous.setDisable(false);
             }
-//            if (pages.get(row).getDoctor().getId() == Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("id").toString())) {
             if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
                 button_Change.setDisable(false);
             } else {
@@ -362,8 +328,7 @@ public class CardPageMenuController extends MenuController {
                 button_Next.setDisable(false);
                 windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
                         new CardMenuController(), null, true, 600, 680);
-//                windowsController.openWindowResizable(Constant.getCardMenuRoot(), getStage(),
-//                        new CardMenuController(), "Card", 600, 680);
+
             }
         }
     }
@@ -377,23 +342,20 @@ public class CardPageMenuController extends MenuController {
                 if (checkStatusCode(getStatusCode())) {
                     windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
                             new CardMenuController(), null, true, 600, 680);
-//                    windowsController.openWindowResizable("patient/cardMenu", getStage(),
-//                            cardMenuController, "Card", 600, 680);
+
                 }
             }
         } else {
             windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
                     new CardMenuController(), null, true, 600, 680);
-//            windowsController.openWindowResizable("patient/cardMenu", getStage(),
-//                    cardMenuController, "Card", 600, 680);
+
         }
     }
 
     public void backToMainMenu(ActionEvent event) throws IOException {
         windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
                 new MainMenuController(), null, true, 600, 680);
-//        windowsController.openWindowResizable("menu/mainMenu", getStage(),
-//                mainMenuController, "Main menu", 600, 680);
+
     }
 
     public void changeText() {
@@ -401,11 +363,8 @@ public class CardPageMenuController extends MenuController {
             if (oldDescription.equals(textArea_Description.getText()) || oldSymptoms.equals(textArea_Symptoms.getText())) {
                 button_Save.setDisable(true);
             }
-//            else if (!oldDescription.equals(textArea_Description.getText()) || !oldSymptoms.equals(textField_Theme.getText())) {
-//                button_Save.setDisable(false);
-//            }
+
         } else if (action.equals(NEW)) {
-//            button_Save.setDisable(false);
         }
     }
 
@@ -418,25 +377,15 @@ public class CardPageMenuController extends MenuController {
     }
 
     public void diagnostic(ActionEvent event) throws IOException {
-//        try {
-//
-//            Constant.getMapByName("dataset").put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
-//        }catch (NullPointerException e){
-//            getAlert(null, "Choice illness!", Alert.AlertType.WARNING);
-//        }
-//        Constant.getMapByName("misc").put("pageId", pages.get(row).getId());
+
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
             Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(),
                     comboBox_Illness.getSelectionModel().getSelectedItem().getName(),
                     comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             HazelCastMap.getDataSetMap().put(1, dataset);
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("name", comboBox_Illness.getSelectionModel().getSelectedItem().getName());
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             if(action.equals(VIEW)) {
                 HazelCastMap.getMiscellaneousMap().put("pageId", pages.get(row).getId());
             }
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("pageId", pages.get(row).getId());
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
                     new DiagnosticMenuController(), "Main menu", false, 600, 440);
         } else {

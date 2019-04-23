@@ -56,20 +56,8 @@ public class HazelCastMap {
         getMapByName(USER_MAP_NAME).put("login", Encryptor.encrypt(key, vector, authorization[0]));
         getMapByName(USER_MAP_NAME).put("password", Encryptor.encrypt(key, vector, authorization[1]));
 
-//        userMap = getMapByName(USER_MAP_NAME);
         getDoctorMap().put(1, doctor);
 
-//        getMapByName(USER_MAP_NAME).put("id", doctor.getId());
-//        getMapByName(USER_MAP_NAME).put("name", doctor.getName());
-//        getMapByName(USER_MAP_NAME).put("surname", doctor.getSurname());
-//        if (doctor.getSpecialization() != null) {
-//            getMapByName(USER_MAP_NAME).put("specId", doctor.getSpecialization().getId());
-//            getMapByName(USER_MAP_NAME).put("specName", doctor.getSpecialization().getName());
-//        } else {
-//            getMapByName(USER_MAP_NAME).put("specId", "-2");
-//            getMapByName(USER_MAP_NAME).put("specName", "Empty");
-//        }
-//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndex", "1 ");
         getMiscellaneousMap().put("pageIndex", 1);
     }
 

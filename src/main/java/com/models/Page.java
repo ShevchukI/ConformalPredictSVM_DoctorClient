@@ -25,16 +25,6 @@ public class Page {
     public Page() {
     }
 
-//    public Page(int id, String theme, String description, String parameters, String answer, String date, Doctor doctor) {
-//        this.id = id;
-//        this.theme = theme;
-//        this.description = description;
-//        this.parameters = parameters;
-//        this.answer = answer;
-//        this.date = date;
-//        this.doctor = doctor;
-//    }
-
     public Page(String theme, String description, String parameters, String answer, Date date) {
         this.theme = theme;
         this.description = description;
@@ -49,13 +39,6 @@ public class Page {
         this.parameters = parameters;
         this.answer = answer;
     }
-//    public Page(String theme, String description, String parameters, String answer, String date) {
-//        this.theme = theme;
-//        this.description = description;
-//        this.parameters = parameters;
-//        this.answer = answer;
-//        this.date = date;
-//    }
 
     public int getId() {
         return id;
@@ -97,14 +80,6 @@ public class Page {
         this.answer = answer;
     }
 
-//    public String getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(String date) {
-//        this.date = date;
-//    }
-
     public Date getDate() {
         return date;
     }
@@ -121,19 +96,6 @@ public class Page {
         this.doctor = doctor;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Page{" +
-//                "id=" + id +
-//                ", theme='" + theme + '\'' +
-//                ", description='" + description + '\'' +
-//                ", parameters='" + parameters + '\'' +
-//                ", answer='" + answer + '\'' +
-//                ", date='" + date + '\'' +
-//                ", doctor='" + doctor.getName() + '\'' +
-//                '}';
-//    }
-
     public void setPage(Page page) {
         this.theme = page.getTheme();
         this.description = page.getDescription();
@@ -141,12 +103,6 @@ public class Page {
         this.answer = page.getAnswer();
         this.date = page.getDate();
     }
-
-//    public Page fromResponse(HttpResponse response) throws IOException {
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-//        String json = reader.readLine();
-//        return new Gson().fromJson(json, Page.class);
-//    }
 
     public Page fromResponse(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -163,10 +119,6 @@ public class Page {
         return doctor.getSpecialization().getName();
     }
 
-//    public String getDateFormatted(){
-//        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
-//        return formatter1.format(date);
-//    }
 
     public String getDoctorInfo(){
         return doctor.getName() + " " + doctor.getSurname();

@@ -19,27 +19,14 @@ public class PatientController extends MainController {
     public static HttpResponse createPatient(Patient patient) {
         String json = new Gson().toJson(patient);
         String url = getUrl() + "/patient";
-        HttpPost request = new HttpPost(getUrl() + "/patient");
+        HttpPost request = new HttpPost(url);
         HttpResponse response = null;
         try {
             response = crudEntity(new StringEntity(json), request, null, null, null);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        String json = new Gson().toJson(patient);
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPost request = new HttpPost(getUrl()+"/patient");
-//        request.setHeader("Content-Type", "application/json");
-//        request.setHeader("Authorization", basicAuthPayload);
-//        request.setEntity(new StringEntity(json));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
+
         return response;
     }
 
@@ -47,17 +34,6 @@ public class PatientController extends MainController {
         String url = getUrl() + "/patient/all";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/patient/all");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -68,17 +44,6 @@ public class PatientController extends MainController {
         String url = getUrl() + "/patient/params?name=" + searchName + "&surname=" + searchSurname;
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/patient/params?name=" + searchName + "&surname=" + searchSurname);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -86,17 +51,6 @@ public class PatientController extends MainController {
         String url = getUrl() + "/patient/all/" + page + "/" + Constant.getObjectOnPage();
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/patient/all/" + page + "/" + objectOnPage);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -107,17 +61,6 @@ public class PatientController extends MainController {
         String url = getUrl() + "/patient/params/" + page + "/" + Constant.getObjectOnPage() + "?name=" + searchName + "&surname=" + searchSurname;
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/patient/params/" + page + "/" + objectOnPage + "?name=" + searchName + "&surname=" + searchSurname);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 

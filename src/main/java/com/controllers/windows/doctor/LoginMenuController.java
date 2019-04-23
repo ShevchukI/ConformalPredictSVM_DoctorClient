@@ -16,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -25,15 +24,8 @@ import java.io.IOException;
  */
 public class LoginMenuController extends MenuController {
 
-//    @Autowired
-//    MainMenuController mainMenuController;
-    @Autowired
-    HttpResponse response;
-
-
     private int statusCode;
     private WindowsController windowsController;
-//    private MainMenuController mainMenuController;
 
     @FXML
     private TextField textField_Login;
@@ -62,12 +54,10 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            response = DoctorController.getDoctorAuth(authorization);
+            HttpResponse response = DoctorController.getDoctorAuth(authorization);
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
                 HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);
-//                windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),  mainMenuController,
-//                        "Main menu", 700, 680);
                 windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
                         new MainMenuController(), null, true, 900, 680);
             }

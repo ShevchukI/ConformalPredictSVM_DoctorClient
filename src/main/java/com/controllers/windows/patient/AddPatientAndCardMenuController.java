@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -27,21 +26,11 @@ import java.text.SimpleDateFormat;
  */
 public class AddPatientAndCardMenuController extends MenuController {
 
-    @Autowired
-    MainMenuController mainMenuController;
-    @Autowired
-    HttpResponse response;
-
-//    private final static String PHONEREG = "[+][3][8][0][0-9]{9}";
-//    private final static String EMAILREG = "[a-zA-Z0-9]+[@][a-z]+[.]{0,1}[a-z]{1,3}";
-//    private final static String WHEIGHT = "[0-9]{1,3}[.]{0,1}[0-9]{1,3}";
-
+    private MainMenuController mainMenuController;
     private WindowsController windowsController;
     private PatientController patientController;
     private RecordController recordController;
-    //    private ObservableList<Patient> patientObservableList;
     private TableView<Patient> tableView_PatientTable;
-//    private int statusCode;
 
     @FXML
     private PatientMenuController patientMenuController;
@@ -64,44 +53,20 @@ public class AddPatientAndCardMenuController extends MenuController {
         setNewWindow(newWindow);
         patientMenuController.init(this);
         recordMenuController.init(this);
+        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
         patientController = new PatientController();
         recordController = new RecordController();
         this.tableView_PatientTable = tableView_PatientTable;
-//        patientObservableList = FXCollections.observableArrayList();
-//        tableView_PatientTable = new TableView<>();
     }
 
 
-//    public void initialize(Stage stage, Stage newWindow, ObservableList<Patient> patientObservableList,
-//                           TableView<Patient> tableView_PatientTable) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
-//        setStage(stage);
-//        setNewWindow(newWindow);
-//        windowsController = new WindowsController();
-//        patientController = new PatientController();
-//        recordController = new RecordController();
-//
-//        patientMenuController.init(this);
-//        recordMenuController.init(this);
-//        this.patientObservableList = patientObservableList;
-//        this.tableView_PatientTable = tableView_PatientTable;
-//        button_Save.setGraphic(new ImageView("/img/icons/ok.png"));
-//        button_Cancel.setGraphic(new ImageView("/img/icons/cancel.png"));
-//    }
 
     public void savePatient(ActionEvent event) throws IOException, ParseException {
         if (checkPatientFields() && checkCardFields()) {
             Patient patient = new Patient(patientMenuController.getTextField_Name().getText(),
                     patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
                     patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
-//            Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
-//                    Double.parseDouble(recordMenuController.getTextField_Height().getText()),
-//                    recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
-//                            + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
-//                    recordMenuController.getDatePicker_Birthday().getValue().toString());
             Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
                     Double.parseDouble(recordMenuController.getTextField_Height().getText()),
                     recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
@@ -112,10 +77,8 @@ public class AddPatientAndCardMenuController extends MenuController {
             } else {
                 record.setSex(false);
             }
-            response = patientController.createPatient(patient);
+            HttpResponse response = patientController.createPatient(patient);
             setStatusCode(response.getStatusLine().getStatusCode());
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setHeaderText(null);
             if (checkStatusCode(getStatusCode())) {
                 int id = new Patient().getIdFromJson(response);
                 patient.setId(id);
@@ -123,16 +86,10 @@ public class AddPatientAndCardMenuController extends MenuController {
                 setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(getStatusCode())) {
                     getAlert(null, "Patient is registered!", Alert.AlertType.INFORMATION);
-//                    alert.setContentText("Patient is registered!");
-//                    alert.showAndWait();
-//                    TableView tableView = (TableView)getStage().getScene().lookup("#tableView_PatientTable");
-//                    tableView.getItems().add(patient);
                     if (tableView_PatientTable.getItems().size() < Constant.getObjectOnPage()) {
                         tableView_PatientTable.getItems().add(patient);
                     }
                     tableView_PatientTable.refresh();
-//                    windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
-//                            mainMenuController, "Main menu", 600, 680);
                     getNewWindow().close();
                 }
             }
@@ -140,11 +97,6 @@ public class AddPatientAndCardMenuController extends MenuController {
     }
 
     public void cancel(ActionEvent event) {
-//        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-//        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-//        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, "Do you really want to leave?", ok, cancel);
-//        questionOfCancellation.setHeaderText(null);
-//        Optional<ButtonType> result = questionOfCancellation.showAndWait();
         boolean result = questionOkCancel("Do you really want to leave?");
         if (result) {
             getNewWindow().close();

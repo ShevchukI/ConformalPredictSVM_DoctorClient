@@ -14,17 +14,11 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class QuickDiagnosticChoiceController extends MenuController {
-    @Autowired
-    HttpResponse response;
 
-//    private DiagnosticMenuController diagnosticMenuController;
-//    private IllnessController illnessController;
-//    private int statusCode;
     private ObservableList<Dataset> datasets;
     private WindowsController windowsController;
 
@@ -38,11 +32,9 @@ public class QuickDiagnosticChoiceController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-//        diagnosticMenuController = new DiagnosticMenuController();
-//        illnessController = new IllnessController();
         datasets = FXCollections.observableArrayList();
         windowsController = new WindowsController();
-        response = IllnessController.getAllActiveDataSet();
+        HttpResponse response = IllnessController.getAllActiveDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             datasets.addAll(new Dataset().getListFromResponse(response));
@@ -85,8 +77,6 @@ public class QuickDiagnosticChoiceController extends MenuController {
 
     public void ok(ActionEvent event) throws IOException {
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("id", comboBox_Illness.getSelectionModel().getSelectedItem().getId());
-//            HazelCastMap.getMapByName(HazelCastMap.getDatasetMapName()).put("columns", comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(), comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             HazelCastMap.getDataSetMap().put(1, dataset);
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),

@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -26,9 +25,6 @@ import java.io.IOException;
  */
 public class ChangeInfoMenuController extends MenuController {
 
-    @Autowired
-    HttpResponse response;
-
     private SpecializationController specializationController;
     private ObservableList<Specialization> specializations;
     private Tooltip tooltipError_CurrentPassword;
@@ -36,8 +32,6 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_ConfirmPassword;
     private Tooltip tooltipError_Name;
     private Tooltip tooltipError_Surname;
-//    private DoctorController doctorController;
-//    private int statusCode;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -80,12 +74,11 @@ public class ChangeInfoMenuController extends MenuController {
         tooltipError_ConfirmPassword = new Tooltip();
         tooltipError_Name = new Tooltip();
         tooltipError_Surname = new Tooltip();
-//        doctorController = new DoctorController();
         button_Ok.setGraphic(new ImageView(Constant.getOkIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
         if (change) {
             specializations.add(new Specialization(-1, "None"));
-            response = specializationController.getAllSpecialization();
+            HttpResponse response = specializationController.getAllSpecialization();
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 specializations.addAll(new Specialization().getListFromResponse(response));
@@ -120,10 +113,7 @@ public class ChangeInfoMenuController extends MenuController {
                 }
             });
             comboBox_Specialization.setVisibleRowCount(5);
-//            comboBox_Specialization.getSelectionModel().select(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("specId").toString()));
             comboBox_Specialization.getSelectionModel().select(HazelCastMap.getDoctorMap().get(1).getSpecialization().getId());
-//            textField_Name.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("name").toString());
-//            textField_Surname.setText(HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get("surname").toString());
             textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
             textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
 
@@ -135,13 +125,10 @@ public class ChangeInfoMenuController extends MenuController {
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[1])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = DoctorController.changePassword(passwordField_ConfirmPassword.getText());
+                    HttpResponse response = DoctorController.changePassword(passwordField_ConfirmPassword.getText());
                     setStatusCode(response.getStatusLine().getStatusCode());
                     if (checkStatusCode(getStatusCode())) {
                         HazelCastMap.changePassword(passwordField_ConfirmPassword.getText().toString());
-//                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
-//                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
-//                                passwordField_ConfirmPassword.getText().toString()));
                         getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();
                     }
@@ -218,17 +205,12 @@ public class ChangeInfoMenuController extends MenuController {
     public void saveName(ActionEvent event) throws IOException {
         if (checkNames()) {
             Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText());
-            response = DoctorController.changeName(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
+            HttpResponse response = DoctorController.changeName(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 doctor.setSpecialization(comboBox_Specialization.getSelectionModel().getSelectedItem());
                 HazelCastMap.changeUserInformation(doctor);
                 getAlert(null, "Information changed!", Alert.AlertType.INFORMATION);
-//                HazelCastMap.changeUserInformation(doctor);
-//                HazelCastMap.getMapByName("user").put("name", doctor.getName());
-//                HazelCastMap.getMapByName("user").put("surname", doctor.getSurname());
-//                HazelCastMap.getMapByName("user").put("specId", comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-//                HazelCastMap.getMapByName("user").put("specName", comboBox_Specialization.getSelectionModel().getSelectedItem().getName());
                 Label label_Name = (Label) getStage().getScene().lookup("#label_Name");
                 label_Name.setText(doctor.getSurname() + " " + doctor.getName());
                 Label label_Specialization = (Label) getStage().getScene().lookup("#label_Specialization");

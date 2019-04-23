@@ -26,21 +26,6 @@ public class IllnessController extends MainController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPost request = new HttpPost(getUrl() + "/illness/result/" + configurationId + "/start");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        request.setHeader("Content-Type", "application/json");
-//        request.setEntity(new StringEntity(json));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        }
         return response;
     }
 
@@ -48,17 +33,7 @@ public class IllnessController extends MainController {
         String url = getUrl() + "/illness/result/" + processId + "/start";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/illness/result/" + processId + "/start");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
+
         return response;
     }
 
@@ -66,17 +41,6 @@ public class IllnessController extends MainController {
         String url = getUrl() + "/illness/datasets";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/illness/datasets");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 }

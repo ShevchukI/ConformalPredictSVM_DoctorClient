@@ -14,20 +14,12 @@ import java.io.IOException;
  */
 public class MenuBarController extends MenuController {
 
-//    @Autowired
-//    LoginMenuController loginMenuController;
-//    @Autowired
-//    ChangeInfoMenuController changeInfoMenuController;
-
-//    private QuickDiagnosticChoiceController quickDiagnosticChoiceController;
-
     private WindowsController windowsController;
     private MenuController menuController;
 
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
-//        quickDiagnosticChoiceController = new QuickDiagnosticChoiceController();
         windowsController = new WindowsController();
     }
 
@@ -42,10 +34,6 @@ public class MenuBarController extends MenuController {
                 "Login menu", false, 400, 250);
     }
 
-    public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow(Constant.getChangeNameRoot(), menuController.getStage(),
-                new ChangeInfoMenuController(), "Change name and surname", true, 400, 240);
-    }
 
     public void changePassword(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow(Constant.getChangePasswordRoot(), menuController.getStage(),

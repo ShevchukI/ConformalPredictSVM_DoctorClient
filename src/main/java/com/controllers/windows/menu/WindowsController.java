@@ -3,6 +3,7 @@ package com.controllers.windows.menu;
 import com.controllers.windows.doctor.LoginMenuController;
 import com.models.Page;
 import com.models.Patient;
+import com.models.Record;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
 import javafx.fxml.FXMLLoader;
@@ -76,7 +77,6 @@ public class WindowsController {
     }
 
 
-
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    TableView<Patient> tableView_PatientTable,
                                    String title, int minWidth, int minHeight) throws IOException {
@@ -100,6 +100,28 @@ public class WindowsController {
     }
 
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
+                                   Patient patient, Record record,
+                                   String title, int minWidth, int minHeight) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
+        Pane pane = (Pane) loader.load();
+        Stage newWindow = new Stage();
+        Scene scene = new Scene(pane);
+        newWindow.setScene(scene);
+        newWindow.setMinWidth(minWidth);
+        newWindow.setMinHeight(minHeight);
+        newWindow.setMaxWidth(sSize.getWidth());
+        newWindow.setMaxHeight(sSize.getHeight());
+        newWindow.setResizable(false);
+        newWindow.setTitle(title);
+        newWindow.getIcons().add(new Image("img/icons/icon.png"));
+        newWindow.initModality(Modality.WINDOW_MODAL);
+        newWindow.initOwner(stage);
+        controller = (MenuController) loader.getController();
+        controller.initialize(stage, newWindow, patient, record);
+        newWindow.show();
+    }
+
+    public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    String title, boolean change, int minWidth, int minHeight) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
         Pane pane = (Pane) loader.load();
@@ -117,6 +139,27 @@ public class WindowsController {
         newWindow.initOwner(stage);
         controller = (MenuController) loader.getController();
         controller.initialize(stage, newWindow, change);
+        newWindow.show();
+    }
+
+    public void openNewModalWindow(String rootName, Stage stage, MenuController controller, Page page,
+                                   String title, int minWidth, int minHeight) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
+        Pane pane = (Pane) loader.load();
+        Stage newWindow = new Stage();
+        Scene scene = new Scene(pane);
+        newWindow.setScene(scene);
+        newWindow.setMinWidth(minWidth);
+        newWindow.setMinHeight(minHeight);
+        newWindow.setMaxWidth(sSize.getWidth());
+        newWindow.setMaxHeight(sSize.getHeight());
+        newWindow.setResizable(false);
+        newWindow.setTitle(title);
+        newWindow.getIcons().add(new Image(Constant.getApplicationIcon()));
+        newWindow.initModality(Modality.WINDOW_MODAL);
+        newWindow.initOwner(stage);
+        controller = (MenuController) loader.getController();
+        controller.initialize(stage, newWindow, page);
         newWindow.show();
     }
 

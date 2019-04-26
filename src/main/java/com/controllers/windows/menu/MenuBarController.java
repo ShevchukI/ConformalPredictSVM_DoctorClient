@@ -50,6 +50,6 @@ public class MenuBarController extends MenuController {
 
     public void quickDiagnostic(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow(Constant.getQuickDiagnositcChoiceRoot(), menuController.getStage(),
-                new QuickDiagnosticChoiceController(), menuController.getStage().getTitle(), 500,200);
+                new QuickDiagnosticChoiceController(), "", 500,200);
     }
 }

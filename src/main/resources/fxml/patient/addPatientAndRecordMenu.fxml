@@ -43,7 +43,7 @@
    <top>
       <AnchorPane prefHeight="59.0" prefWidth="731.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="278.0" layoutY="7.0" text="Add new patient" AnchorPane.topAnchor="14.0">
+            <Label fx:id="label_PaneName" layoutX="278.0" layoutY="7.0" text="Add new patient" AnchorPane.topAnchor="14.0">
                <font>
                   <Font size="24.0" />
                </font>

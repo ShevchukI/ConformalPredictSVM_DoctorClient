@@ -43,6 +43,7 @@ public class DiagnosticMenuController extends MenuController {
     private ObservableList<Predict> predicts;
     private Predict predict;
     private boolean quick;
+    private Page page;
 
     @FXML
     private CheckBox checkBox_Significance;
@@ -71,11 +72,11 @@ public class DiagnosticMenuController extends MenuController {
     @FXML
     private Button button_Cancel;
 
-    @FXML
-    public void initialize(Stage stage, Stage newWindow, boolean quick) throws IOException {
+
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
         newWindow.setOnHidden(event -> {
             HazelCastMap.getDataSetMap().clear();
-            HazelCastMap.getMiscellaneousMap().remove("pageId");
+//            HazelCastMap.getMiscellaneousMap().remove("pageId");
         });
         stage.setOnHidden(event -> {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
@@ -84,12 +85,57 @@ public class DiagnosticMenuController extends MenuController {
         predictList = new ArrayList<>();
         setStage(stage);
         setNewWindow(newWindow);
-        this.quick = quick;
-        if (quick) {
-            button_Save.setText("Ok");
-        } else {
-            button_Save.setText("Save");
-        }
+//        this.quick = quick;
+        quick = true;
+        button_Save.setText("Ok");
+//        if (quick) {
+//            button_Save.setText("Ok");
+//        } else {
+//            button_Save.setText("Save");
+//        }
+        stackPane_Table.setVisible(true);
+        stackPane_Progress.setVisible(false);
+        button_Save.setDisable(true);
+        tableColumn_Class.setSortable(false);
+        tableColumn_Class.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleClass"));
+        tableColumn_Credibility.setSortable(false);
+        tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
+            }
+        });
+        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
+        scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        configurationId = HazelCastMap.getDataSetMap().get(1).getId();
+
+        createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
+        button_Run.setGraphic(new ImageView(Constant.getRunIcon()));
+        button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
+        button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
+    }
+
+
+    public void initialize(Stage stage, Stage newWindow, Page page) throws IOException {
+        newWindow.setOnHidden(event -> {
+            HazelCastMap.getDataSetMap().clear();
+            HazelCastMap.getMiscellaneousMap().remove("pageId");
+        });
+        stage.setOnHidden(event -> {
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
+        });
+        this.page = page;
+        illnessController = new IllnessController();
+        predictList = new ArrayList<>();
+        setStage(stage);
+        setNewWindow(newWindow);
+        quick = false;
+        button_Save.setText("Save");
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
         button_Save.setDisable(true);
@@ -116,7 +162,6 @@ public class DiagnosticMenuController extends MenuController {
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
     }
 
-
     public void runDiagnostic(ActionEvent event) throws IOException {
         tableView_Result.setOpacity(0);
         stackPane_Progress.setVisible(true);
@@ -132,7 +177,6 @@ public class DiagnosticMenuController extends MenuController {
             if (i != columns.length - 1) {
                 parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
             }
-
         }
         if (checkBox_Significance.isSelected()) {
             parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
@@ -154,24 +198,50 @@ public class DiagnosticMenuController extends MenuController {
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
-                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
+                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
                                 if (predict.getPredictClass() != 0) {
-                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
-                                        switch (predict.getPredictClass()) {
-                                            case 1:
-                                                predict.setVisibleClass("Positive");
-                                                break;
-                                            case -1:
-                                                predict.setVisibleClass("Negative");
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+                                    if (predict.getRealClass() == predict.getPredictClass()) {
+                                        NumberFormat formatter = new DecimalFormat("#00.00");
+                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+
+//                                        switch (predict.getPredictClass()) {
+//                                            case 1:
+//                                                predict.setVisibleClass("Positive");
+//                                                predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+//                                                break;
+//                                            case -1:
+//                                                predict.setVisibleClass("Negative");
+//                                                predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+//                                                break;
+//                                            default:
+//                                                predict.setVisibleClass("Uncertain");
+//                                                predict.setVisibleConfidence("");
+//                                                break;
+//                                        }
                                     } else {
-                                        predict.setVisibleClass("Uncertain");
+//                                        predict.setVisibleClass("Uncertain");
                                         predict.setVisibleConfidence("");
                                     }
+//                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
+////                                        switch (predict.getPredictClass()) {
+////                                            case 1:
+////                                                predict.setVisibleClass("Positive");
+////                                                break;
+////                                            case -1:
+////                                                predict.setVisibleClass("Negative");
+////                                                break;
+////                                            default:
+////                                                break;
+////                                        }
+//                                        NumberFormat formatter = new DecimalFormat("#00.00");
+////                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+//                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+//                                    } else {
+//                                        if (predict.getVisibleClass().equals("Uncertain")) {
+////                                        predict.setVisibleClass("Uncertain");
+//                                            predict.setVisibleConfidence("");
+//                                        }
+//                                    }
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
@@ -235,33 +305,35 @@ public class DiagnosticMenuController extends MenuController {
     }
 
     public void save(ActionEvent event) throws IOException {
-        if (!quick) {
-            HttpResponse response = PageController.getPage(HazelCastMap.getMiscellaneousMap().get("pageId"));
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                Page page = new Page().fromResponse(response);
-                page.setParameters("");
-                for (int i = 2; i < this.columns.length; i++) {
-                    Label label = (Label) gridPane_Data.lookup("#column" + i);
-                    TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
-                    page.setParameters(page.getParameters() + label.getText() + ":" + textField.getText());
-                    if (i < columns.length - 1) {
-                        page.setParameters(page.getParameters() + ",");
-                    }
-                }
-                page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass());
-                response = PageController.changePage(page, page.getId());
-                setStatusCode(response.getStatusLine().getStatusCode());
-                if (checkStatusCode(getStatusCode())) {
-                    Label label = (Label) getStage().getScene().lookup("#label_NameResult");
-                    Label label1 = (Label) getStage().getScene().lookup("#label_Result");
-                    label.setText(HazelCastMap.getDataSetMap().get(1).getName());
-                    label1.setText(predict.getVisibleClass());
-                    getNewWindow().close();
+        if (quick) {
+            getNewWindow().close();
+        } else {
+//            HttpResponse response = PageController.getPage(HazelCastMap.getMiscellaneousMap().get("pageId"));
+//            setStatusCode(response.getStatusLine().getStatusCode());
+//            if (checkStatusCode(getStatusCode())) {
+//                Page page = new Page().fromResponse(response);
+//                page.setParameters("");
+            for (int i = 2; i < this.columns.length; i++) {
+                Label label = (Label) gridPane_Data.lookup("#column" + i);
+                TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
+                page.setParameters(page.getParameters() + label.getText() + ":" + textField.getText());
+                if (i < columns.length - 1) {
+                    page.setParameters(page.getParameters() + ";");
                 }
             }
-        } else {
-            getNewWindow().close();
+            page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass() + ":" + predict.getVisibleConfidence());
+            HttpResponse response = PageController.changePage(page, page.getId());
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
+                Label nameResult = (Label) getStage().getScene().lookup("#label_NameResult");
+                Label result = (Label) getStage().getScene().lookup("#label_Result");
+                Label confidence = (Label) getStage().getScene().lookup("#label_Confidence");
+                nameResult.setText(HazelCastMap.getDataSetMap().get(1).getName());
+                result.setText(predict.getVisibleClass());
+                confidence.setText(predict.getVisibleConfidence());
+                getNewWindow().close();
+            }
+//            }
         }
     }
 }

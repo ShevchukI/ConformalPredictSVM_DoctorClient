@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class IllnessController extends MainController {
 
-    public static HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) {
+    public HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) {
         String json = new Gson().toJson(parameterSingleObject);
         String url = getUrl() + "/illness/result/" + configurationId + "/start";
         HttpPost request = new HttpPost(url);
@@ -29,7 +29,7 @@ public class IllnessController extends MainController {
         return response;
     }
 
-    public static HttpResponse resultSingleTest(int processId) throws IOException {
+    public HttpResponse resultSingleTest(int processId) throws IOException {
         String url = getUrl() + "/illness/result/" + processId + "/start";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="637.0" prefWidth="966.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
@@ -27,12 +27,12 @@
         <AnchorPane prefHeight="537.0" prefWidth="726.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="14.0" layoutY="53.0" prefHeight="14.0" prefWidth="100.0" text="Doctor:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="53.0" />
-            <Label fx:id="label_Name" layoutX="120.0" layoutY="53.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="53.0" />
+            <Label fx:id="label_Name" layoutX="120.0" layoutY="53.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="53.0" />
             <Label layoutX="14.0" layoutY="81.0" prefHeight="14.0" prefWidth="100.0" text="Specialization:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="81.0" />
-            <Label fx:id="label_Specialization" layoutX="120.0" layoutY="81.0" prefHeight="14.0" prefWidth="422.0" text="placeholder" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
-            <Button fx:id="button_Add" layoutX="14.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#addPatient" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0" />
-            <Button fx:id="button_View" layoutX="114.0" layoutY="116.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewPatient" text="View" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="115.0" />
-            <TextField fx:id="textField_Search" layoutX="206.0" layoutY="116.0" prefHeight="31.0" prefWidth="370.0" promptText="Name Surname" AnchorPane.leftAnchor="206.0" AnchorPane.rightAnchor="303.0" AnchorPane.topAnchor="115.0" />
+            <Label fx:id="label_Specialization" layoutX="120.0" layoutY="81.0" prefHeight="14.0" prefWidth="422.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
+            <Button fx:id="button_Add" layoutX="14.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0" />
+            <Button fx:id="button_View" layoutX="144.0" layoutY="116.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewPatient" text="View" AnchorPane.leftAnchor="144.0" AnchorPane.topAnchor="116.0" />
+            <TextField fx:id="textField_Search" layoutX="240.0" layoutY="116.0" prefHeight="31.0" prefWidth="423.0" promptText="Name Surname" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="303.0" AnchorPane.topAnchor="115.0" />
             <Button fx:id="button_Search" layoutX="647.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="115.0" />
             <TableView fx:id="tableView_PatientTable" layoutX="15.0" layoutY="159.0" prefHeight="330.0" prefWidth="698.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0">
               <columns>
@@ -75,7 +75,7 @@
                </children>
             </Group>
             <Pagination fx:id="pagination_Patient" layoutX="14.0" layoutY="159.0" prefHeight="390.0" prefWidth="698.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0" />
-            <Label alignment="CENTER" layoutX="373.0" layoutY="14.0" prefHeight="35.0" prefWidth="133.0" text="Main menu" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+            <Label alignment="CENTER" layoutX="373.0" layoutY="14.0" prefHeight="35.0" prefWidth="133.0" text="Main menu for Doctor" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                <font>
                   <Font size="24.0" />
                </font>

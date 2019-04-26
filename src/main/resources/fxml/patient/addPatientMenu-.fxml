@@ -82,24 +82,24 @@
          </children>
       </FlowPane>
       <FlowPane prefHeight="41.0" prefWidth="390.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#register" text="Register">
-               <FlowPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Click to register" />
-               </tooltip>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel">
-               <FlowPane.margin>
-                  <Insets bottom="20.0" left="210.0" top="20.0" />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Click to cancel and return to login menu" />
-               </tooltip>
-            </Button>
-         </children>
+         <!--<children>-->
+            <!--<Button mnemonicParsing="false" onAction="#register" text="Register">-->
+               <!--<FlowPane.margin>-->
+                  <!--<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />-->
+               <!--</FlowPane.margin>-->
+               <!--<tooltip>-->
+                  <!--<Tooltip text="Click to register" />-->
+               <!--</tooltip>-->
+            <!--</Button>-->
+            <!--<Button mnemonicParsing="false" onAction="#cancel" text="Cancel">-->
+               <!--<FlowPane.margin>-->
+                  <!--<Insets bottom="20.0" left="210.0" top="20.0" />-->
+               <!--</FlowPane.margin>-->
+               <!--<tooltip>-->
+                  <!--<Tooltip text="Click to cancel and return to login menu" />-->
+               <!--</tooltip>-->
+            <!--</Button>-->
+         <!--</children>-->
       </FlowPane>
    </children>
 </VBox>

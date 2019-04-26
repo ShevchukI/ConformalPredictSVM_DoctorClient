@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.PatientMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.PatientMenuController">
    <children>
       <FlowPane prefHeight="0.0" prefWidth="600.0">
          <children>
@@ -44,7 +44,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </FlowPane.margin>
             </Label>
-            <TextField fx:id="textField_Telephone" prefHeight="26.0" prefWidth="225.0" promptText="+380XXXXXXXXX">
+            <TextField fx:id="textField_Telephone" prefHeight="26.0" prefWidth="225.0">
                <tooltip>
                   <Tooltip fx:id="tooltip_Telephone" text="Enter your telephone" />
                </tooltip>

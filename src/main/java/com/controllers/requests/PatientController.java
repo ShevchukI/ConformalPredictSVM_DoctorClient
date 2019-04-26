@@ -6,6 +6,7 @@ import com.tools.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
@@ -23,6 +24,20 @@ public class PatientController extends MainController {
         HttpResponse response = null;
         try {
             response = crudEntity(new StringEntity(json), request, null, null, null);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static HttpResponse changePatient(Patient patient){
+        String json = new Gson().toJson(patient);
+        String url = getUrl() + "/patient/"+patient.getId();
+        HttpPut request = new HttpPut(url);
+        HttpResponse response = null;
+        try {
+            response = crudEntity(new StringEntity(json), null, null,  request, null);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

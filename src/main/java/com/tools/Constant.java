@@ -16,9 +16,10 @@ public class Constant {
     private final static String PASSWORD = "password";
 
     //String matches
-    private final static String PHONEREG = "[+][3][8][0][0-9]{9}";
+    private final static String PHONEREG = "[+]{0,1}[0-9]{3,20}";
     private final static String EMAILREG = "[a-zA-Z0-9]+[@][a-z]+[.]{0,1}[a-z]{1,3}";
     private final static String WHEIGHT = "[0-9]{1,3}[.]{0,1}[0-9]{1,3}";
+    private final static String DATE_PICKER = "[0-9]{2}.[0-9]{2}.[0-9]{4}";
 
     //Icons
     private final static String SIGN_IN_BUTTON_ICON = "/img/icons/signIn.png";
@@ -44,8 +45,8 @@ public class Constant {
     private final static String MENU_BAR_ROOT = "fxml/doctor/menuBar.fxml";
 
     private final static String ADD_PATIENT_AND_RECORD_MENU_ROOT = "fxml/patient/addPatientAndRecordMenu.fxml";
-    private final static String ADD_PATIENT_MENU_ROOT = "fxml/patient/addPatientMenu.fxml";
-    private final static String ADD_RECORD_MENU_ROOT = "fxml/patient/addRecordMenu.fxml";
+    private final static String ADD_PATIENT_MENU_ROOT = "fxml/patient/addPatientMenu-.fxml";
+    private final static String ADD_RECORD_MENU_ROOT = "fxml/patient/addRecordMenu-.fxml";
     private final static String CARD_MENU_ROOT = "fxml/patient/cardMenu.fxml";
     private final static String CARD_PAGE_MENU_ROOT = "fxml/patient/cardPageMenu.fxml";
 
@@ -199,5 +200,9 @@ public class Constant {
 
     public static String getBorderColorRed() {
         return BORDER_COLOR_RED;
+    }
+
+    public static String getDatePicker() {
+        return DATE_PICKER;
     }
 }

@@ -32,6 +32,7 @@ import java.util.ArrayList;
  */
 public class CardMenuController extends MenuController {
 
+    private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private WindowsController windowsController;
     private RecordController recordController;
     private PageController pageController;
@@ -54,13 +55,13 @@ public class CardMenuController extends MenuController {
     @FXML
     private Label label_Height;
     @FXML
-    private Label label_Count;
-    @FXML
     private Button button_New;
     @FXML
     private Button button_View;
     @FXML
     private Button button_Delete;
+    @FXML
+    private Button button_ChangePatientInfo;
     @FXML
     private Button button_Back;
     @FXML
@@ -78,7 +79,7 @@ public class CardMenuController extends MenuController {
     @FXML
     private ObservableList<Page> pageObservableList;
 
-    private SimpleDateFormat formatter1;
+    private SimpleDateFormat formatter;
 
 
     public void initialize(Stage stage) throws IOException {
@@ -87,19 +88,20 @@ public class CardMenuController extends MenuController {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         windowsController = new WindowsController();
         recordController = new RecordController();
         pageController = new PageController();
-        formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+        formatter = new SimpleDateFormat("dd-MM-yyyy");
         patient = HazelCastMap.getPatientMap().get(1);
-        label_Name.setText(patient.getSurname() + " " + patient.getName());
+        label_Name.setText(patient.getName() + " " + patient.getSurname());
 
 
         HttpResponse response = recordController.getRecordByPatientId(patient.getId());
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             record = new Record().fromJson(response);
-            label_BirthDate.setText(formatter1.format(record.getBirthday()));
+            label_BirthDate.setText(formatter.format(record.getBirthday()));
             label_BloodGroup.setText(record.getBloodGroup());
             if (record.isSex()) {
                 label_Sex.setText("Male");
@@ -122,7 +124,6 @@ public class CardMenuController extends MenuController {
             tableColumn_DoctorName.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorInfo"));
             tableColumn_Specialization.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorSpecialization"));
             tableView_PageTable.setItems(pageObservableList);
-            label_Count.setText(String.valueOf(pageObservableList.size()));
         }
         button_View.disableProperty().bind(Bindings.isEmpty(tableView_PageTable.getSelectionModel().getSelectedItems()));
         button_Delete.disableProperty().bind(Bindings.isEmpty(tableView_PageTable.getSelectionModel().getSelectedItems()));
@@ -165,8 +166,10 @@ public class CardMenuController extends MenuController {
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
-               new MainMenuController(), "Main menu", 600, 800);
+//        windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
+//                new MainMenuController(), "Main menu", 600, 800);
+        windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
+                new MainMenuController(), "Main menu", true, 600, 800);
     }
 
     public void deletePage(ActionEvent event) throws IOException {
@@ -191,6 +194,11 @@ public class CardMenuController extends MenuController {
         } else {
             getAlert(null, "You can`t change this page!", Alert.AlertType.ERROR);
         }
+    }
+
+    public void changePatientInfo(ActionEvent event) throws IOException {
+        windowsController.openNewModalWindow(Constant.getAddPatientAndRecordMenuRoot(), this.getStage(),
+                addPatientAndCardMenuController, patient, record, null, 740, 540);
     }
 
 }

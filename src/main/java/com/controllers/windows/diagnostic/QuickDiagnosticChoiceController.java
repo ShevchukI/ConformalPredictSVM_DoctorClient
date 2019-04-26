@@ -80,7 +80,7 @@ public class QuickDiagnosticChoiceController extends MenuController {
             Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(), comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             HazelCastMap.getDataSetMap().put(1, dataset);
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
-                    new DiagnosticMenuController(), "Main menu", true, 600, 440);
+                    new DiagnosticMenuController(), "", 700, 440);
             getNewWindow().close();
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);

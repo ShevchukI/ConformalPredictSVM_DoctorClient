@@ -70,6 +70,8 @@ public class CardPageMenuController extends MenuController {
     @FXML
     private Label label_Result;
     @FXML
+    private Label label_Confidence;
+    @FXML
     private Button button_Previous;
     @FXML
     private Button button_Next;
@@ -117,9 +119,10 @@ public class CardPageMenuController extends MenuController {
             label_CurrentDate.setText(formatter2.format(pages.get(row).getDate()));
             if (pages.get(row).getAnswer() != null) {
                 String[] result = pages.get(row).getAnswer().split(":");
-                if (result.length == 2) {
+                if (result.length == 3) {
                     label_NameResult.setText(result[0]);
                     label_Result.setText(result[1]);
+                    label_Confidence.setText(result[2]);
                 }
             }
             button_Save.setDisable(true);
@@ -303,7 +306,7 @@ public class CardPageMenuController extends MenuController {
         if (action.equals(VIEW)) {
             boolean result = questionOkCancel("Do you really want to save the changes?");
             if (result) {
-                page = new Page(textArea_Symptoms.getText(), textArea_Description.getText(), pages.get(row).getParameters(), pages.get(row).getAnswer(), pages.get(row).getDate());
+                page = new Page(textArea_Symptoms.getText(), textArea_Description.getText(), pages.get(row).getParameters(), label_NameResult.getText() + ":" + label_Result.getText(), pages.get(row).getDate());
                 pages.get(row).setTheme(textArea_Symptoms.getText());
                 pages.get(row).setDescription(textArea_Description.getText());
                 pages.get(row).setAnswer(label_NameResult.getText() + ":" + label_Result.getText());
@@ -377,17 +380,18 @@ public class CardPageMenuController extends MenuController {
     }
 
     public void diagnostic(ActionEvent event) throws IOException {
-
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
             Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(),
                     comboBox_Illness.getSelectionModel().getSelectedItem().getName(),
                     comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             HazelCastMap.getDataSetMap().put(1, dataset);
-            if(action.equals(VIEW)) {
-                HazelCastMap.getMiscellaneousMap().put("pageId", pages.get(row).getId());
-            }
+//            if(action.equals(VIEW)) {
+//                HazelCastMap.getMiscellaneousMap().put("pageId", pages.get(row).getId());
+//            }
+//            windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
+//                    new DiagnosticMenuController(), "Main menu", false, 600, 440);
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
-                    new DiagnosticMenuController(), "Main menu", false, 600, 440);
+                    new DiagnosticMenuController(), pages.get(row), "", 600, 440);
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
         }

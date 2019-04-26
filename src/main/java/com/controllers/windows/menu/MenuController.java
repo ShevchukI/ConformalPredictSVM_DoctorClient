@@ -2,6 +2,8 @@ package com.controllers.windows.menu;
 
 import com.models.Page;
 import com.models.Patient;
+import com.models.Record;
+import com.tools.Constant;
 import com.tools.HazelCastMap;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -62,24 +64,28 @@ public abstract class MenuController {
 
     }
 
+    public void initialize(Stage stage, Stage newWindow, Page page) throws IOException {
+
+    }
+
+    public void initialize(Stage stage, Stage newWindow, Patient patient, Record record){
+
+    }
+
     public boolean checkStatusCode(int statusCode) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
         switch (statusCode) {
             case 200:
                 return true;
             case 201:
                 return true;
             case 401:
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Unauthorized: login or password incorrect!");
-                alert.setContentText("Error code: " + statusCode);
-                alert.showAndWait();
+                Constant.getAlert(null, "Unauthorized: login or password incorrect!", Alert.AlertType.ERROR);
+                return false;
+            case 423:
+                Constant.getAlert(null, "Not allow!", Alert.AlertType.ERROR);
                 return false;
             case 504:
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Connection to the server is missing!");
-                alert.setContentText("Error code: " + statusCode);
-                alert.showAndWait();
+                Constant.getAlert(null, "Connection to the server is missing!", Alert.AlertType.ERROR);
                 return false;
             default:
                 return false;

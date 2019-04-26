@@ -124,8 +124,22 @@ public class Predict {
         this.alphaNegative = alphaNegative;
     }
 
+//    public String getVisibleClass() {
+//        return visibleClass;
+//    }
+
     public String getVisibleClass() {
-        return visibleClass;
+        if (getRealClass() == getPredictClass()) {
+            switch (getPredictClass()) {
+                case 1:
+                    return "Positive";
+                case -1:
+                    return "Negative";
+                default:
+                    break;
+            }
+        }
+        return "Uncertain";
     }
 
     public void setVisibleClass(String visibleClass) {
@@ -153,4 +167,9 @@ public class Predict {
         String json = reader.readLine();
         return new Gson().fromJson(json, Predict.class);
     }
+
+//    public String getVisibleConfidence() {
+//        NumberFormat formatter = new DecimalFormat("#00.00");
+//        return String.valueOf(formatter.format(getConfidence()*100)) + "%";
+//    }
 }

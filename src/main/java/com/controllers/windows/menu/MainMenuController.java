@@ -87,8 +87,6 @@ public class MainMenuController extends MenuController {
         windowsController = new WindowsController();
         label_Name.setText(doctor.getSurname() + " " + doctor.getName());
         label_Specialization.setText(doctor.getSpecialization().getName());
-
-//        tableColumn_Number = new TableColumn<Patient, Number>("#");
         checkSearch = false;
         pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
 

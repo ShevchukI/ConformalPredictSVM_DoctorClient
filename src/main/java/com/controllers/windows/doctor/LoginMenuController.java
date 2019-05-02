@@ -40,7 +40,6 @@ public class LoginMenuController extends MenuController {
         });
         setStage(stage);
         HazelCastMap.clearInstance();
-//        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
         button_SignIn.setGraphic(new ImageView(Constant.getSignInButtonIcon()));
     }

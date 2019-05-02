@@ -27,7 +27,6 @@
                 <TableView fx:id="tableView_PageTable" layoutX="16.0" layoutY="190.0" prefHeight="320.0" prefWidth="633.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="190.0">
                     <columns>
                   <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
-                        <TableColumn fx:id="tableColumn_Theme" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Symptoms" />
                         <TableColumn fx:id="tableColumn_Date" minWidth="80.0" prefWidth="130.0" style="-fx-alignment: CENTER;" text="Date" />
                   <TableColumn fx:id="tableColumn_DoctorName" minWidth="80.0" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Doctor name" />
                   <TableColumn fx:id="tableColumn_Specialization" minWidth="80.0" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Specialization" />
@@ -53,7 +52,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button fx:id="button_ChangePatientInfo" onAction="#changePatientInfo" layoutX="388.0" layoutY="151.0" mnemonicParsing="false" text="Change patient info" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="151.0" />
+            <Button fx:id="button_ChangePatientInfo" layoutX="388.0" layoutY="151.0" mnemonicParsing="false" onAction="#changePatientInfo" text="Change patient info" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="151.0" />
 
             </children></AnchorPane>
     </center>

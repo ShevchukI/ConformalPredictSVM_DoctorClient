@@ -7,13 +7,11 @@ import com.models.Record;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -26,11 +24,9 @@ import java.util.ArrayList;
 public class WindowsController {
 
     private Dimension sSize;
-    private Rectangle2D screenBounds;
 
     public WindowsController() {
         sSize = Toolkit.getDefaultToolkit().getScreenSize();
-        screenBounds = Screen.getPrimary().getVisualBounds();
     }
 
     public void start(Stage stage) throws IOException {

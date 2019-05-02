@@ -53,27 +53,12 @@ public class PageController extends MainController {
     }
 
     public static HttpResponse changePage(Page page, int id) {
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        String date = formatter.format(page.getDate());
-//        String json = new Gson().toJson(page);
-//        String[] content = json.split("date\":");
-//        json = content[0] + "date\":" + "\"" + date + "\"}";
         Page pageWithoutDate = new Page();
         pageWithoutDate.setPageWithoutDate(page);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(page.getDate());
         String json = new Gson().toJson(pageWithoutDate);
         json = json.substring(0, json.length()-1) + ",\"date\":\"" + date + "\"}";
-//        String[] content = json.split(",");
-//        content[content.length - 6] = "";
-//        content[content.length - 7] = "\"date\":\"" + date + "\"";
-//        json = "";
-//        for (int i = 0; i < content.length - 1; i++) {
-//            json = json + content[i];
-//            if (i != content.length - 1){
-//                json = json + ",";
-//            }
-//        }
         String url = getUrl() + "/page/" + id;
         HttpPut request = new HttpPut(url);
         HttpResponse response = null;

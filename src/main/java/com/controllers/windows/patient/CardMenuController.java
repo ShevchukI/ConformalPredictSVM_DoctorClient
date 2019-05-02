@@ -69,8 +69,6 @@ public class CardMenuController extends MenuController {
     @FXML
     private TableView<Page> tableView_PageTable;
     @FXML
-    private TableColumn tableColumn_Theme;
-    @FXML
     private TableColumn tableColumn_Date;
     @FXML
     private TableColumn tableColumn_DoctorName;
@@ -96,7 +94,6 @@ public class CardMenuController extends MenuController {
         patient = HazelCastMap.getPatientMap().get(1);
         label_Name.setText(patient.getName() + " " + patient.getSurname());
 
-
         HttpResponse response = recordController.getRecordByPatientId(patient.getId());
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -116,13 +113,17 @@ public class CardMenuController extends MenuController {
         if (checkStatusCode(getStatusCode())) {
             pages = pageController.getAllPage(response);
             pageObservableList = FXCollections.observableList(pages);
-//            tableColumn_Number = new TableColumn<Page, Number>("#");
+            tableColumn_Number.impl_setReorderable(false);
             tableColumn_Number.setSortable(false);
             tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PageTable.getItems().indexOf(column.getValue()) + 1));
-            tableColumn_Theme.setCellValueFactory(new PropertyValueFactory<Page, String>("theme"));
+
+            tableColumn_Date.impl_setReorderable(false);
             tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("date"));
-//            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("dateFormatted"));
+
+            tableColumn_DoctorName.impl_setReorderable(false);
             tableColumn_DoctorName.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorInfo"));
+
+            tableColumn_Specialization.impl_setReorderable(false);
             tableColumn_Specialization.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorSpecialization"));
             tableView_PageTable.setItems(pageObservableList);
         }
@@ -148,40 +149,17 @@ public class CardMenuController extends MenuController {
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
-//    public void viewPage(ActionEvent event) throws IOException {
-//        viewPage();
-//
-//    }
-
-//    public void viewPage() throws IOException {
-//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-//        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
-//                new CardPageMenuController(), pages, row, "view", "Page", 800, 800);
-//    }
-
     public void viewPage() throws IOException {
-//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-
         windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
                 new CardPageMenuController(), tableView_PageTable.getSelectionModel().getSelectedItem(), "Page", 800, 800);
     }
 
     public void newPage(ActionEvent event) throws IOException {
-//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         windowsController.openWindow(Constant.getCardPageMenuRoot(), getStage(),
                 new CardPageMenuController(), "Page", true, 800, 800);
     }
 
-//    public void newPage(ActionEvent event) throws IOException {
-//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-//        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
-//                new CardPageMenuController(), pages, row, "new", "Page", 800, 800);
-//    }
-
-
     public void backToMainMenu(ActionEvent event) throws IOException {
-//        windowsController.openWindowResizable(Constant.getMainMenuRoot(), getStage(),
-//                new MainMenuController(), "Main menu", 600, 800);
         windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
                 new MainMenuController(), "Main menu", true, 600, 800);
     }

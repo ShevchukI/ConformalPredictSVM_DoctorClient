@@ -125,7 +125,4 @@ public class Page {
         return doctor.getName() + " " + doctor.getSurname();
     }
 
-//    public Date getDateFormatter(){
-//        r
-//    }
 }

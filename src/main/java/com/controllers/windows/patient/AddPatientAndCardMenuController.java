@@ -27,10 +27,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class AddPatientAndCardMenuController extends MenuController {
 
-    //    private MainMenuController mainMenuController;
-//    private WindowsController windowsController;
-//    private PatientController patientController;
-//    private RecordController recordController;
     private TableView<Patient> tableView_PatientTable;
     private int patientId;
 
@@ -57,10 +53,6 @@ public class AddPatientAndCardMenuController extends MenuController {
         setNewWindow(newWindow);
         patientMenuController.init(this);
         recordMenuController.init(this);
-//        mainMenuController = new MainMenuController();
-//        windowsController = new WindowsController();
-//        patientController = new PatientController();
-//        recordController = new RecordController();
         this.tableView_PatientTable = tableView_PatientTable;
         formatter = new SimpleDateFormat("yyyy-MM-dd");
     }
@@ -90,7 +82,6 @@ public class AddPatientAndCardMenuController extends MenuController {
         String date = datePickerEditorFormat.format(record.getBirthday());
 
         recordMenuController.getDatePicker_Birthday().setValue(LocalDate.parse(date, datePickerValueFormat));
-//        recordMenuController.getDatePicker_Birthday().getEditor().setText(date);
         if (record.isSex()) {
             recordMenuController.getChoiceBox_Sex().getSelectionModel().select("Male");
         } else {
@@ -182,7 +173,6 @@ public class AddPatientAndCardMenuController extends MenuController {
             patientMenuController.getTextField_Telephone().setTooltip(patientMenuController.getTooltipError_Telephone());
             patientMenuController.getTextField_Telephone().setStyle(Constant.getBorderColorRed());
         } else if (!patientMenuController.getTextField_Telephone().getText().matches(Constant.getPHONEREG())) {
-//            patientMenuController.getTooltipError_Telephone().setText("Your telephone must have the  format: +380XXXXXXXXX");
             patientMenuController.getTextField_Telephone().setTooltip(patientMenuController.getTooltipError_Telephone());
             patientMenuController.getTextField_Telephone().setStyle(Constant.getBorderColorRed());
         } else {
@@ -226,10 +216,6 @@ public class AddPatientAndCardMenuController extends MenuController {
             recordMenuController.getDatePicker_Birthday().setTooltip(recordMenuController.getTooltipError_Birthday());
             recordMenuController.getDatePicker_Birthday().setStyle(Constant.getBorderColorRed());
         }
-//        else if (!recordMenuController.getDatePicker_Birthday().getEditor().getText().matches(Constant.getDatePicker())) {
-//            recordMenuController.getDatePicker_Birthday().setTooltip(recordMenuController.getTooltipError_Birthday());
-//            recordMenuController.getDatePicker_Birthday().setStyle(Constant.getBorderColorRed());
-//        }
         else {
             recordMenuController.getDatePicker_Birthday().setTooltip(patientMenuController.getTooltip_Name());
             recordMenuController.getDatePicker_Birthday().setStyle(Constant.getBorderColorInherit());

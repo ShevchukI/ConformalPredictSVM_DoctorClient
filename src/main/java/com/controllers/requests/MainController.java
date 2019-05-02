@@ -17,7 +17,6 @@ import java.util.Base64;
  */
 public abstract class MainController {
     private final static String LOCALHOST_URL = "http://localhost:8888";
-//    private final static String LOCALHOST_URL = "http://111810cd.ngrok.io";
     private final static String DOCTOR_URL = "/doctor-system/doctor";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
 

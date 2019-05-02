@@ -33,12 +33,10 @@
             <children>
                 <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="100.0" text="Patient:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
                 <Label fx:id="label_PatientName" layoutX="150.0" layoutY="15.0" prefHeight="14.0" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="14.0" />
-                <Label disable="true" layoutX="14.0" layoutY="71.0" minWidth="80.0" prefHeight="14.0" text="Symptoms:" visible="false" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="71.0" />
-                <Label layoutX="14.0" layoutY="185.0" minWidth="80.0" prefHeight="14.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="185.0" />
-            <TextArea fx:id="textArea_Description" layoutX="150.0" layoutY="185.0" prefHeight="330.0" prefWidth="386.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="185.0" />
+                <Label layoutX="14.0" layoutY="185.0" minWidth="80.0" prefHeight="14.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="70.0" />
+            <TextArea fx:id="textArea_Description" layoutX="150.0" layoutY="185.0" prefHeight="330.0" prefWidth="386.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
             <Label layoutX="14.0" layoutY="42.0" prefHeight="18.0" text="Doctor:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="42.0" />
             <Label fx:id="label_Doctor" layoutX="120.0" layoutY="42.0" prefHeight="18.0" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="42.0" />
-            <TextArea fx:id="textArea_Symptoms" disable="true" layoutX="120.0" layoutY="71.0" prefHeight="100.0" prefWidth="386.0" visible="false" wrapText="true" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="71.0" />
 
             </children></AnchorPane>
     </center>

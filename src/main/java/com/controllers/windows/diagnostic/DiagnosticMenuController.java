@@ -1,15 +1,12 @@
 package com.controllers.windows.diagnostic;
 
 import com.controllers.requests.IllnessController;
-import com.controllers.requests.PageController;
 import com.controllers.windows.menu.MenuController;
 import com.models.Page;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,12 +42,12 @@ public class DiagnosticMenuController extends MenuController {
     private boolean quick;
     private Page page;
 
-    @FXML
-    private CheckBox checkBox_Significance;
-    @FXML
-    private Slider slider_Significance;
-    @FXML
-    private TextField textField_Significance;
+    //    @FXML
+//    private CheckBox checkBox_Significance;
+//    @FXML
+//    private Slider slider_Significance;
+//    @FXML
+//    private TextField textField_Significance;
     @FXML
     private ScrollPane scrollPane_Data;
     @FXML
@@ -85,6 +82,7 @@ public class DiagnosticMenuController extends MenuController {
         predictList = new ArrayList<>();
         setStage(stage);
         setNewWindow(newWindow);
+        getNewWindow().setTitle("Doctor System");
 //        this.quick = quick;
         quick = true;
         button_Save.setText("Ok");
@@ -101,15 +99,15 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Credibility.setSortable(false);
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         NumberFormat formatter = new DecimalFormat("#0.00");
-        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
-            }
-        });
-        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
+//        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+//        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+//        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
+//            public void changed(ObservableValue<? extends Number> ov,
+//                                Number old_val, Number new_val) {
+//                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
+//            }
+//        });
+//        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         configurationId = HazelCastMap.getDataSetMap().get(1).getId();
@@ -144,15 +142,15 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Credibility.setSortable(false);
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         NumberFormat formatter = new DecimalFormat("#0.00");
-        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
-            }
-        });
-        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
+//        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+//        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
+//        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
+//            public void changed(ObservableValue<? extends Number> ov,
+//                                Number old_val, Number new_val) {
+//                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
+//            }
+//        });
+//        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         configurationId = HazelCastMap.getDataSetMap().get(1).getId();
@@ -163,26 +161,40 @@ public class DiagnosticMenuController extends MenuController {
     }
 
     public void runDiagnostic(ActionEvent event) throws IOException {
-        tableView_Result.setOpacity(0);
-        stackPane_Progress.setVisible(true);
-        button_Run.setDisable(true);
+        String matches = "[0-9]{1,3}";
+
+
         ParameterSingleObject parameterSingleObject = new ParameterSingleObject("", 0);
+        parameterSingleObject.setParams("");
         for (int i = 2; i < columns.length; i++) {
             TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
-            if (!textField.getText().equals("")) {
-                parameterSingleObject.setParams(parameterSingleObject.getParams() + textField.getText());
+            if (!textField.getText().matches(matches)) {
+                textField.setStyle(Constant.getBorderColorRed());
             } else {
-                parameterSingleObject.setParams(parameterSingleObject.getParams() + 0);
+                textField.setStyle(Constant.getBorderColorInherit());
             }
+            parameterSingleObject.setParams(parameterSingleObject.getParams() + textField.getText());
+//            if (!textField.getText().equals("")) {
+//                parameterSingleObject.setParams(parameterSingleObject.getParams() + textField.getText());
+//            } else {
+//                parameterSingleObject.setParams(parameterSingleObject.getParams() + 0);
+//            }
             if (i != columns.length - 1) {
                 parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
             }
+            if (textField.getStyle().equals(Constant.getBorderColorRed())) {
+                return;
+            }
         }
-        if (checkBox_Significance.isSelected()) {
-            parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
-        } else {
-            parameterSingleObject.setSignificance(null);
-        }
+        tableView_Result.setOpacity(0);
+        stackPane_Progress.setVisible(true);
+        button_Run.setDisable(true);
+//        if (checkBox_Significance.isSelected()) {
+//            parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
+//        } else {
+//            parameterSingleObject.setSignificance(null);
+//        }
+        parameterSingleObject.setSignificance(0.2);
         HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -275,22 +287,22 @@ public class DiagnosticMenuController extends MenuController {
     }
 
 
-    public void setSignificanceValue(ActionEvent event) {
-        setSignificanceValue();
-    }
+//    public void setSignificanceValue(ActionEvent event) {
+//        setSignificanceValue();
+//    }
 
-    public void setSignificanceValue() {
-        slider_Significance.setValue(Double.parseDouble(textField_Significance.getText()));
-    }
+//    public void setSignificanceValue() {
+//        slider_Significance.setValue(Double.parseDouble(textField_Significance.getText()));
+//    }
 
     private void createFields(String columns) throws IOException {
         this.columns = columns.split(",");
         for (int i = 2; i < this.columns.length; i++) {
-            Tooltip tooltip = new Tooltip(this.columns[i]);
+//            Tooltip tooltip = new Tooltip(this.columns[i]);
             Label label = new Label(this.columns[i]);
             label.setId("column" + i);
             label.setMinWidth(Region.USE_COMPUTED_SIZE);
-            label.setTooltip(tooltip);
+//            label.setTooltip(tooltip);
             TextField textField = new TextField();
             textField.setId("parameter" + i);
             textField.setMinWidth(100.0);
@@ -313,6 +325,7 @@ public class DiagnosticMenuController extends MenuController {
 //            if (checkStatusCode(getStatusCode())) {
 //                Page page = new Page().fromResponse(response);
 //                page.setParameters("");
+            page.setParameters("");
             for (int i = 2; i < this.columns.length; i++) {
                 Label label = (Label) gridPane_Data.lookup("#column" + i);
                 TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
@@ -322,17 +335,17 @@ public class DiagnosticMenuController extends MenuController {
                 }
             }
             page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass() + ":" + predict.getVisibleConfidence());
-            HttpResponse response = PageController.changePage(page, page.getId());
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                Label nameResult = (Label) getStage().getScene().lookup("#label_NameResult");
-                Label result = (Label) getStage().getScene().lookup("#label_Result");
-                Label confidence = (Label) getStage().getScene().lookup("#label_Confidence");
-                nameResult.setText(HazelCastMap.getDataSetMap().get(1).getName());
-                result.setText(predict.getVisibleClass());
-                confidence.setText(predict.getVisibleConfidence());
-                getNewWindow().close();
-            }
+//            HttpResponse response = PageController.changePage(page, page.getId());
+//            setStatusCode(response.getStatusLine().getStatusCode());
+//            if (checkStatusCode(getStatusCode())) {
+            Label nameResult = (Label) getStage().getScene().lookup("#label_NameResult");
+            Label result = (Label) getStage().getScene().lookup("#label_Result");
+            Label confidence = (Label) getStage().getScene().lookup("#label_Confidence");
+            nameResult.setText(HazelCastMap.getDataSetMap().get(1).getName());
+            result.setText(predict.getVisibleClass());
+            confidence.setText(predict.getVisibleConfidence());
+            getNewWindow().close();
+//            }
 //            }
         }
     }

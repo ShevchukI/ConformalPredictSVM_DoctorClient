@@ -59,7 +59,7 @@ public class LoginMenuController extends MenuController {
             if(checkStatusCode(statusCode)){
                 HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);
                 windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
-                        new MainMenuController(), null, true, 900, 680);
+                        new MainMenuController(), null, true, 1100, 680);
             }
         }
     }

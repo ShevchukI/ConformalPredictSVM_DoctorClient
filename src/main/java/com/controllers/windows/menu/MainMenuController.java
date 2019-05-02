@@ -88,23 +88,29 @@ public class MainMenuController extends MenuController {
         label_Name.setText(doctor.getSurname() + " " + doctor.getName());
         label_Specialization.setText(doctor.getSpecialization().getName());
 
-        tableColumn_Number = new TableColumn<Patient, Number>("#");
+//        tableColumn_Number = new TableColumn<Patient, Number>("#");
         checkSearch = false;
         pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
 
+        tableColumn_Number.impl_setReorderable(false);
         tableColumn_Number.setSortable(false);
         tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_PatientTable.getItems().
                 indexOf(column.getValue()) + 1) + (pageIndex - 1) * Constant.getObjectOnPage()));
-        tableColumn_Name.setCellValueFactory(new PropertyValueFactory<Patient, String>("name"));
+        tableColumn_Name.impl_setReorderable(false);
         tableColumn_Name.setSortable(false);
-        tableColumn_Surname.setCellValueFactory(new PropertyValueFactory<Patient, String>("surname"));
+        tableColumn_Name.setCellValueFactory(new PropertyValueFactory<Patient, String>("name"));
+        tableColumn_Surname.impl_setReorderable(false);
         tableColumn_Surname.setSortable(false);
-        tableColumn_Address.setCellValueFactory(new PropertyValueFactory<Patient, String>("address"));
+        tableColumn_Surname.setCellValueFactory(new PropertyValueFactory<Patient, String>("surname"));
+        tableColumn_Address.impl_setReorderable(false);
         tableColumn_Address.setSortable(false);
-        tableColumn_Telephone.setCellValueFactory(new PropertyValueFactory<Patient, String>("telephone"));
+        tableColumn_Address.setCellValueFactory(new PropertyValueFactory<Patient, String>("address"));
+        tableColumn_Telephone.impl_setReorderable(false);
         tableColumn_Telephone.setSortable(false);
-        tableColumn_Email.setCellValueFactory(new PropertyValueFactory<Patient, String>("email"));
+        tableColumn_Telephone.setCellValueFactory(new PropertyValueFactory<Patient, String>("telephone"));
+        tableColumn_Email.impl_setReorderable(false);
         tableColumn_Email.setSortable(false);
+        tableColumn_Email.setCellValueFactory(new PropertyValueFactory<Patient, String>("email"));
         button_View.disableProperty().bind(Bindings.isEmpty(tableView_PatientTable.getSelectionModel().getSelectedItems()));
         tableView_PatientTable.setRowFactory(tv -> {
             TableRow<Patient> row = new TableRow<>();

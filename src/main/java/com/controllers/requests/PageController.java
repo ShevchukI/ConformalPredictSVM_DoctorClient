@@ -53,12 +53,27 @@ public class PageController extends MainController {
     }
 
     public static HttpResponse changePage(Page page, int id) {
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        String date = formatter.format(page.getDate());
+//        String json = new Gson().toJson(page);
+//        String[] content = json.split("date\":");
+//        json = content[0] + "date\":" + "\"" + date + "\"}";
+        Page pageWithoutDate = new Page();
+        pageWithoutDate.setPageWithoutDate(page);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(page.getDate());
-        String json = new Gson().toJson(page);
-        String[] content = json.split("date\":");
-        json =content[0]+"date\":"+"\""+date+"\"}";
-
+        String json = new Gson().toJson(pageWithoutDate);
+        json = json.substring(0, json.length()-1) + ",\"date\":\"" + date + "\"}";
+//        String[] content = json.split(",");
+//        content[content.length - 6] = "";
+//        content[content.length - 7] = "\"date\":\"" + date + "\"";
+//        json = "";
+//        for (int i = 0; i < content.length - 1; i++) {
+//            json = json + content[i];
+//            if (i != content.length - 1){
+//                json = json + ",";
+//            }
+//        }
         String url = getUrl() + "/page/" + id;
         HttpPut request = new HttpPut(url);
         HttpResponse response = null;
@@ -74,9 +89,15 @@ public class PageController extends MainController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(page.getDate());
         String json = new Gson().toJson(page);
-        String[] content = json.split(":");
-        content[2] = "\""+date+"\"}";
-        json = content[0] + ":" + content[1] +":" + content[2];
+        String[] content = json.split(",");
+        content[content.length - 2] = "\"date\":\"" + date + "\"}";
+        json = "";
+        for (int i = 0; i < content.length - 1; i++) {
+            json = json + content[i];
+            if (i != content.length - 2){
+                json = json + ",";
+            }
+        }
         String url = getUrl() + "/page/" + id;
         HttpPost request = new HttpPost(url);
 
@@ -95,7 +116,7 @@ public class PageController extends MainController {
     public static HttpResponse getPage(int id) throws IOException {
         String url = getUrl() + "/page/" + id;
         HttpGet request = new HttpGet(url);
-        HttpResponse response = crudEntity(null,null, request, null, null);
+        HttpResponse response = crudEntity(null, null, request, null, null);
         return response;
     }
 

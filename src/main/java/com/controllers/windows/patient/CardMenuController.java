@@ -67,7 +67,7 @@ public class CardMenuController extends MenuController {
     @FXML
     private TableColumn<Page, Number> tableColumn_Number;
     @FXML
-    private TableView tableView_PageTable;
+    private TableView<Page> tableView_PageTable;
     @FXML
     private TableColumn tableColumn_Theme;
     @FXML
@@ -116,11 +116,12 @@ public class CardMenuController extends MenuController {
         if (checkStatusCode(getStatusCode())) {
             pages = pageController.getAllPage(response);
             pageObservableList = FXCollections.observableList(pages);
-            tableColumn_Number = new TableColumn<Page, Number>("#");
+//            tableColumn_Number = new TableColumn<Page, Number>("#");
             tableColumn_Number.setSortable(false);
             tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PageTable.getItems().indexOf(column.getValue()) + 1));
             tableColumn_Theme.setCellValueFactory(new PropertyValueFactory<Page, String>("theme"));
-            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("dateFormatted"));
+            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("date"));
+//            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("dateFormatted"));
             tableColumn_DoctorName.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorInfo"));
             tableColumn_Specialization.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorSpecialization"));
             tableView_PageTable.setItems(pageObservableList);
@@ -128,7 +129,7 @@ public class CardMenuController extends MenuController {
         button_View.disableProperty().bind(Bindings.isEmpty(tableView_PageTable.getSelectionModel().getSelectedItems()));
         button_Delete.disableProperty().bind(Bindings.isEmpty(tableView_PageTable.getSelectionModel().getSelectedItems()));
         tableView_PageTable.setRowFactory(tv -> {
-            TableRow<Patient> row = new TableRow<>();
+            TableRow<Page> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     try {
@@ -147,22 +148,35 @@ public class CardMenuController extends MenuController {
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
-    public void viewPage(ActionEvent event) throws IOException {
-        viewPage();
+//    public void viewPage(ActionEvent event) throws IOException {
+//        viewPage();
+//
+//    }
 
-    }
+//    public void viewPage() throws IOException {
+//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+//        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
+//                new CardPageMenuController(), pages, row, "view", "Page", 800, 800);
+//    }
 
     public void viewPage() throws IOException {
-        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+
         windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
-                new CardPageMenuController(), pages, row, "view", "Page", 800, 800);
+                new CardPageMenuController(), tableView_PageTable.getSelectionModel().getSelectedItem(), "Page", 800, 800);
     }
 
     public void newPage(ActionEvent event) throws IOException {
-        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
-                new CardPageMenuController(), pages, row, "new", "Page", 800, 800);
+//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+        windowsController.openWindow(Constant.getCardPageMenuRoot(), getStage(),
+                new CardPageMenuController(), "Page", true, 800, 800);
     }
+
+//    public void newPage(ActionEvent event) throws IOException {
+//        int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+//        windowsController.openWindowResizable(Constant.getCardPageMenuRoot(), getStage(),
+//                new CardPageMenuController(), pages, row, "new", "Page", 800, 800);
+//    }
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {

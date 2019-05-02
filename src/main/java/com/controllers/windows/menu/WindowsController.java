@@ -39,7 +39,7 @@ public class WindowsController {
                 "Doctor client", false, 341, 236);
     }
 
-    public void openWindowResizable(String rootName, Stage stage, MenuController controller,
+    public void openWindowResizable(String rootName, Stage stage, MenuController controller, Page page,
                                     String title, int minWidth, int minHeight) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
         Pane pane = (Pane) loader.load();
@@ -54,7 +54,26 @@ public class WindowsController {
         stage.setResizable(true);
         stage.setTitle(title);
         controller = (MenuController) loader.getController();
-        controller.initialize(stage);
+        controller.initialize(stage, page);
+        stage.show();
+    }
+
+    public void openWindowResizable(String rootName, Stage stage, MenuController controller, TableView<Page> pageTableView,
+                                    String title, int minWidth, int minHeight) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
+        Pane pane = (Pane) loader.load();
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.setMinWidth(minWidth);
+        stage.setMinHeight(minHeight);
+        stage.setWidth(stage.getWidth());
+        stage.setHeight(stage.getHeight());
+        stage.setMaxWidth(sSize.getWidth());
+        stage.setMaxHeight(sSize.getHeight());
+        stage.setResizable(true);
+        stage.setTitle(title);
+        controller = (MenuController) loader.getController();
+        controller.initialize(stage, pageTableView);
         stage.show();
     }
 

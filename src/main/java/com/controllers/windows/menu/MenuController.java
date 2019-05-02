@@ -47,6 +47,10 @@ public abstract class MenuController {
 
     }
 
+    public void initialize(Stage stage, TableView<Page> pageTableView) throws IOException{
+
+    }
+
     public void setNewWindow(Stage newWindow) {
         this.newWindow = newWindow;
     }
@@ -65,6 +69,10 @@ public abstract class MenuController {
     }
 
     public void initialize(Stage stage, Stage newWindow, Page page) throws IOException {
+
+    }
+
+    public void initialize(Stage stage, Page page) throws IOException {
 
     }
 

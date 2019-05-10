@@ -118,7 +118,7 @@ public class CardMenuController extends MenuController {
             tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>(tableView_PageTable.getItems().indexOf(column.getValue()) + 1));
 
             tableColumn_Date.impl_setReorderable(false);
-            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("date"));
+            tableColumn_Date.setCellValueFactory(new PropertyValueFactory<Page, String>("datePlusDay"));
 
             tableColumn_DoctorName.impl_setReorderable(false);
             tableColumn_DoctorName.setCellValueFactory(new PropertyValueFactory<Page, String>("doctorInfo"));
@@ -143,6 +143,7 @@ public class CardMenuController extends MenuController {
             return row;
         });
 
+        button_ChangePatientInfo.setGraphic(new ImageView(Constant.getEditIcon()));
         button_New.setGraphic(new ImageView(Constant.getAddIcon()));
         button_Delete.setGraphic(new ImageView(Constant.getDeleteIcon()));
         button_View.setGraphic(new ImageView(Constant.getInfoIcon()));
@@ -161,7 +162,7 @@ public class CardMenuController extends MenuController {
 
     public void backToMainMenu(ActionEvent event) throws IOException {
         windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
-                new MainMenuController(), "Main menu", true, 600, 800);
+                new MainMenuController(), "Main menu", true, 1100, 680);
     }
 
     public void deletePage(ActionEvent event) throws IOException {

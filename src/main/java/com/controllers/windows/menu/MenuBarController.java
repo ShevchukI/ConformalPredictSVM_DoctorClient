@@ -49,7 +49,7 @@ public class MenuBarController extends MenuController {
 
 
     public void quickDiagnostic(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow(Constant.getQuickDiagnositcChoiceRoot(), menuController.getStage(),
+        windowsController.openNewModalWindow(Constant.getQuickDiagnosticChoiceRoot(), menuController.getStage(),
                 new QuickDiagnosticChoiceController(), "", 500,200);
     }
 }

@@ -130,6 +130,10 @@ public class DiagnosticMenuController extends MenuController {
     public void runDiagnostic(ActionEvent event) throws IOException {
         String matches = "[0-9]{1,3}";
 
+        for(int i = 2; i<columns.length; i++){
+            TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
+            textField.setStyle(Constant.getBorderColorInherit());
+        }
 
         ParameterSingleObject parameterSingleObject = new ParameterSingleObject("", 0);
         parameterSingleObject.setParams("");
@@ -167,7 +171,7 @@ public class DiagnosticMenuController extends MenuController {
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
-                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
+//                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
                                 if (parameterSingleObject.getSignificance() == null) {
                                     if (predict.getPredictClass() != 0) {
 //                                        if (predict.getRealClass() == predict.getPredictClass()) {

@@ -32,10 +32,11 @@ public class Constant {
     private final static String RETURN_ICON = "img/icons/return.png";
     private final static String RUN_ICON = "img/icons/run.png";
     private final static String SEARCH_ICON = "img/icons/search.png";
+    private final static String EDIT_ICON = "img/icons/edit.png";
 
     //FXML root
     private final static String DIAGNOSTIC_MENU_ROOT = "fxml/diagnostic/diagnosticMenu.fxml";
-    private final static String QUICK_DIAGNOSITC_CHOICE_ROOT = "fxml/diagnostic/quickDiagnosticChoice.fxml";
+    private final static String QUICK_DIAGNOSTIC_CHOICE_ROOT = "fxml/diagnostic/quickDiagnosticChoice.fxml";
 
     private final static String CHANGE_NAME_ROOT = "fxml/doctor/changeName.fxml";
     private final static String CHANGE_PASSWORD_ROOT = "fxml/doctor/changePassword.fxml";
@@ -142,12 +143,16 @@ public class Constant {
         return SEARCH_ICON;
     }
 
+    public static String getEditIcon() {
+        return EDIT_ICON;
+    }
+
     public static String getDiagnosticMenuRoot() {
         return DIAGNOSTIC_MENU_ROOT;
     }
 
-    public static String getQuickDiagnositcChoiceRoot() {
-        return QUICK_DIAGNOSITC_CHOICE_ROOT;
+    public static String getQuickDiagnosticChoiceRoot() {
+        return QUICK_DIAGNOSTIC_CHOICE_ROOT;
     }
 
     public static String getChangeNameRoot() {

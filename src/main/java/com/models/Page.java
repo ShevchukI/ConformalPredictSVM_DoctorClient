@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
+import java.util.Calendar;
 
 /**
  * Created by Admin on 26.01.2019.
@@ -82,6 +83,13 @@ public class Page {
 
     public Date getDate() {
         return date;
+    }
+
+    public Date getDatePlusDay(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        return new Date(calendar.getTimeInMillis());
     }
 
     public void setDate(Date date) {

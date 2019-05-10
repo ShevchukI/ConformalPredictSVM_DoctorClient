@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 
@@ -55,6 +56,9 @@ public class AddPatientAndCardMenuController extends MenuController {
         recordMenuController.init(this);
         this.tableView_PatientTable = tableView_PatientTable;
         formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
+        button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
     }
 
     public void initialize(Stage stage, Stage newWindow, Patient patient, Record record) {
@@ -92,6 +96,8 @@ public class AddPatientAndCardMenuController extends MenuController {
         recordMenuController.getTextField_Weight().setText(String.valueOf(record.getWeight()));
         recordMenuController.getTextField_Height().setText(String.valueOf(record.getHeight()));
 
+        button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
+        button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
     }
 
 

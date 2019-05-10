@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
@@ -69,6 +70,9 @@ public class QuickDiagnosticChoiceController extends MenuController {
             }
         });
         comboBox_Illness.setVisibleRowCount(5);
+
+        button_Ok.setGraphic(new ImageView(Constant.getOkIcon()));
+        button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
     }
 
     public void cancel(ActionEvent event){

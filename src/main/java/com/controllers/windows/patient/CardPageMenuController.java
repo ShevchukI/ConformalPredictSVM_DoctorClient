@@ -3,7 +3,6 @@ package com.controllers.windows.patient;
 import com.controllers.requests.IllnessController;
 import com.controllers.requests.PageController;
 import com.controllers.windows.diagnostic.DiagnosticMenuController;
-import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
@@ -38,6 +37,7 @@ public class CardPageMenuController extends MenuController {
     private PageController pageController;
     private Page page;
     private boolean create;
+    private boolean change;
 
     @FXML
     private MenuBarController menuBarController;
@@ -45,8 +45,6 @@ public class CardPageMenuController extends MenuController {
     private Label label_PatientName;
     @FXML
     private Label label_Doctor;
-    @FXML
-    private TextArea textArea_Symptoms;
     @FXML
     private TextArea textArea_Description;
     @FXML
@@ -57,10 +55,6 @@ public class CardPageMenuController extends MenuController {
     private Label label_Result;
     @FXML
     private Label label_Confidence;
-    @FXML
-    private Button button_Previous;
-    @FXML
-    private Button button_Next;
     @FXML
     private Button button_Save;
     @FXML
@@ -78,6 +72,8 @@ public class CardPageMenuController extends MenuController {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
+
         windowsController = new WindowsController();
         datasets = FXCollections.observableArrayList();
         pageController = new PageController();
@@ -130,8 +126,10 @@ public class CardPageMenuController extends MenuController {
         });
         comboBox_Illness.setVisibleRowCount(5);
 
+        change = true;
 
         button_Change.setVisible(false);
+        button_Change.setGraphic(new ImageView(Constant.getEditIcon()));
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
@@ -141,6 +139,8 @@ public class CardPageMenuController extends MenuController {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
+
         windowsController = new WindowsController();
         datasets = FXCollections.observableArrayList();
         pageController = new PageController();
@@ -153,21 +153,20 @@ public class CardPageMenuController extends MenuController {
                 + " / " + HazelCastMap.getDoctorMap().get(1).getSpecialization().getName());
 
         label_PatientName.setText(HazelCastMap.getPatientMap().get(1).getName() + " " + HazelCastMap.getPatientMap().get(1).getSurname());
-        label_CurrentDate.setText(String.valueOf(page.getDate()));
+        label_CurrentDate.setText(String.valueOf(page.getDatePlusDay()));
 
         textArea_Description.setText(this.page.getDescription());
-        textArea_Symptoms.setEditable(false);
         textArea_Description.setEditable(false);
         oldDescription = textArea_Description.getText();
 
         if (this.page.getAnswer() != null) {
             String[] result = this.page.getAnswer().split(":");
 //            if (result.length == 3) {
-            if(result.length == 3){
+            if (result.length == 3) {
                 label_NameResult.setText(result[0]);
                 label_Result.setText(result[1]);
                 label_Confidence.setText(result[2]);
-            } else if(result.length == 2){
+            } else if (result.length == 2) {
                 label_NameResult.setText(result[0]);
                 label_Result.setText(result[1]);
             }
@@ -216,9 +215,14 @@ public class CardPageMenuController extends MenuController {
             button_Change.setDisable(true);
         }
 
+        change = false;
 
+
+        comboBox_Illness.setDisable(true);
+        button_Diagnostic.setDisable(true);
         button_Save.setDisable(true);
 
+        button_Change.setGraphic(new ImageView(Constant.getEditIcon()));
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
 
@@ -230,8 +234,9 @@ public class CardPageMenuController extends MenuController {
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 getAlert(null, "Saved!", Alert.AlertType.INFORMATION);
-                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-                        new CardMenuController(), null, true, 600, 680);
+                change = false;
+//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
+//                        new CardMenuController(), null, true, 600, 680);
             }
         } else {
             page.setDescription(textArea_Description.getText());
@@ -240,15 +245,27 @@ public class CardPageMenuController extends MenuController {
             if (checkStatusCode(getStatusCode())) {
                 getAlert(null, "Changed!", Alert.AlertType.INFORMATION);
 
-                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-                        new CardMenuController(), null, true, 600, 680);
+//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
+//                        new CardMenuController(), null, true, 600, 680);
             }
         }
     }
 
 
     public void backToCardMenu(ActionEvent event) throws IOException {
-        if (create) {
+//        if (create) {
+//            if(change) {
+//                boolean result = questionOkCancel("Do you really want to leave without save?");
+//                if (result) {
+//                    windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
+//                            new CardMenuController(), null, true, 600, 680);
+//                }
+//            } else {
+//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
+//                        new CardMenuController(), null, true, 600, 680);
+//            }
+//        } else {
+        if (change) {
             boolean result = questionOkCancel("Do you really want to leave without save?");
             if (result) {
                 windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
@@ -260,18 +277,14 @@ public class CardPageMenuController extends MenuController {
         }
     }
 
-    public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
-                new MainMenuController(), null, true, 600, 680);
-
-    }
+//    }
 
     public void changePage(ActionEvent event) {
         button_Save.setDisable(false);
-        textArea_Symptoms.setEditable(true);
         textArea_Description.setEditable(true);
         comboBox_Illness.setDisable(false);
         button_Diagnostic.setDisable(false);
+        change = true;
     }
 
     public void diagnostic(ActionEvent event) throws IOException {
@@ -285,11 +298,5 @@ public class CardPageMenuController extends MenuController {
         } else {
             getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
         }
-    }
-
-    public void previousPage(ActionEvent event) {
-    }
-
-    public void nextPage(ActionEvent event) {
     }
 }

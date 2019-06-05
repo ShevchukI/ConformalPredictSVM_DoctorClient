@@ -89,6 +89,25 @@ public class Constant {
         alert.showAndWait();
     }
 
+    public static boolean checkStatusCode(int statusCode) {
+        switch (statusCode) {
+            case 200:
+                return true;
+            case 201:
+                return true;
+            case 401:
+                Constant.getAlert(null, "Unauthorized: login or password incorrect!", Alert.AlertType.ERROR);
+                return false;
+            case 423:
+                Constant.getAlert(null, "Not allow!", Alert.AlertType.ERROR);
+                return false;
+            case 504:
+                Constant.getAlert(null, "Connection to the server is missing!", Alert.AlertType.ERROR);
+                return false;
+            default:
+                return false;
+        }
+    }
 
 
     public static String getPHONEREG() {

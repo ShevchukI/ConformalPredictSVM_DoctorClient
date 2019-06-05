@@ -12,11 +12,11 @@ import com.models.Patient;
 
 public class HazelCastMap {
     private static final String INSTANCE_NAME = "mainDoctorInstance";
-    private static final String USER_MAP_NAME = "authorization";
+    private static final String USER_MAP_NAME = "authorizationDoctor";
     private static final String DOCTOR_MAP_NAME = "doctor";
-    private static final String DATASET_MAP_NAME = "dataset";
-    private static final String KEY_MAP_NAME = "key";
-    private static final String MISCELLANEOUS_MAP_NAME = "misc";
+    private static final String DATASET_MAP_NAME = "datasetDoctor";
+    private static final String KEY_MAP_NAME = "keyDoctor";
+    private static final String MISCELLANEOUS_MAP_NAME = "miscDoctor";
     private static final String PATIENT_MAP_NAME = "patient";
     private static HazelcastInstance hazelcastInstance;
 
@@ -48,7 +48,7 @@ public class HazelCastMap {
     }
 
     public static void fillMap(Doctor doctorFromJson, String[] authorization) {
-        Doctor doctor = doctorFromJson;
+//        Doctor doctor = doctorFromJson;
         String key = Encryptor.genRandString();
         String vector = Encryptor.genRandString();
         getMapByName(KEY_MAP_NAME).put("key", key);
@@ -56,7 +56,7 @@ public class HazelCastMap {
         getMapByName(USER_MAP_NAME).put("login", Encryptor.encrypt(key, vector, authorization[0]));
         getMapByName(USER_MAP_NAME).put("password", Encryptor.encrypt(key, vector, authorization[1]));
 
-        getDoctorMap().put(1, doctor);
+        getDoctorMap().put(1, doctorFromJson);
 
         getMiscellaneousMap().put("pageIndex", 1);
     }
@@ -106,14 +106,14 @@ public class HazelCastMap {
         return hazelcastInstance.getMap(DATASET_MAP_NAME);
     }
 
-    public static void changePassword(String password){
-        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password",
-                Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
-                password));
-    }
+//    public static void changePassword(String password){
+//        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password",
+//                Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
+//                password));
+//    }
 
-    public static void changeUserInformation(Doctor doctor){
-        getDoctorMap().put(1, doctor);
-    }
+//    public static void changeUserInformation(Doctor doctor){
+//        getDoctorMap().put(1, doctor);
+//    }
 }

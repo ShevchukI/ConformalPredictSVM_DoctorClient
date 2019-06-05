@@ -1,6 +1,5 @@
 package com.controllers.windows.doctor;
 
-import com.controllers.requests.DoctorController;
 import com.controllers.requests.SpecializationController;
 import com.controllers.windows.menu.MenuController;
 import com.models.Doctor;
@@ -32,6 +31,7 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_ConfirmPassword;
     private Tooltip tooltipError_Name;
     private Tooltip tooltipError_Surname;
+    private Doctor doctor;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -117,24 +117,19 @@ public class ChangeInfoMenuController extends MenuController {
             textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
             textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
 
+            if (HazelCastMap.getDoctorMap().get(1) != null) {
+                doctor = HazelCastMap.getDoctorMap().get(1);
+            } else {
+                doctor = new Doctor();
+            }
         }
     }
 
     public void savePassword(ActionEvent event) throws IOException {
-
         if (checkPasswords()) {
-            if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[1])) {
-                if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    HttpResponse response = DoctorController.changePassword(passwordField_ConfirmPassword.getText());
-                    setStatusCode(response.getStatusLine().getStatusCode());
-                    if (checkStatusCode(getStatusCode())) {
-                        HazelCastMap.changePassword(passwordField_ConfirmPassword.getText().toString());
-                        getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
-                        getNewWindow().close();
-                    }
-                }
-            } else {
-                getAlert(null, "Error! Current password incorrect, please try again.", Alert.AlertType.ERROR);
+            if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
+                doctor.changePassword(passwordField_CurrentPassword.getText(), passwordField_NewPassword.getText());
+                getNewWindow().close();
             }
         }
     }
@@ -204,13 +199,9 @@ public class ChangeInfoMenuController extends MenuController {
 
     public void saveName(ActionEvent event) throws IOException {
         if (checkNames()) {
-            Doctor doctor = new Doctor(textField_Name.getText(), textField_Surname.getText());
-            HttpResponse response = DoctorController.changeName(doctor, comboBox_Specialization.getSelectionModel().getSelectedItem().getId());
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                doctor.setSpecialization(comboBox_Specialization.getSelectionModel().getSelectedItem());
-                HazelCastMap.changeUserInformation(doctor);
-                getAlert(null, "Information changed!", Alert.AlertType.INFORMATION);
+            int statusCode = doctor.changeInfo(textField_Name.getText(), textField_Surname.getText(),
+                    comboBox_Specialization.getSelectionModel().getSelectedItem());
+            if (checkStatusCode(statusCode)) {
                 Label label_Name = (Label) getStage().getScene().lookup("#label_Name");
                 label_Name.setText(doctor.getSurname() + " " + doctor.getName());
                 Label label_Specialization = (Label) getStage().getScene().lookup("#label_Specialization");

@@ -28,9 +28,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Admin on 06.02.2019.
- */
+
 public class DiagnosticMenuController extends MenuController {
 
     private int configurationId;

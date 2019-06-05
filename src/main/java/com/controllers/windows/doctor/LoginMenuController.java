@@ -1,6 +1,5 @@
 package com.controllers.windows.doctor;
 
-import com.controllers.requests.DoctorController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
@@ -53,7 +52,7 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            HttpResponse response = DoctorController.getDoctorAuth(authorization);
+            HttpResponse response = Doctor.getDoctorAuth(authorization);
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
                 HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);

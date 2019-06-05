@@ -20,11 +20,11 @@ public abstract class MainController {
     private final static String DOCTOR_URL = "/doctor-system/doctor";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
 
-    protected static String getUrl(){
+    public static String getUrl(){
         return URL;
     }
 
-    protected static HttpResponse crudEntity(HttpEntity httpEntity, HttpPost post, HttpGet get, HttpPut put, HttpDelete delete) {
+    public static HttpResponse crudEntity(HttpEntity httpEntity, HttpPost post, HttpGet get, HttpPut put, HttpDelete delete) {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((Constant.getAuth()[0] + ":" + Constant.getAuth()[1]).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpRequestBase request = null;

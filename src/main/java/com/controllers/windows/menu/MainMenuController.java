@@ -33,7 +33,7 @@ public class MainMenuController extends MenuController {
     private ObservableList<Patient> patientObservableList;
     private WindowsController windowsController;
     private PatientPage patientPage;
-    private int searchType;
+//    private int searchType;
     private int pageIndex;
     private boolean checkSearch;
     private Doctor doctor;
@@ -161,13 +161,13 @@ public class MainMenuController extends MenuController {
             getPage(pageIndex);
         } else {
             if (radio_All.isSelected()) {
-                searchType = 0;
+//                searchType = 0;
                 HazelCastMap.getMiscellaneousMap().put("searchType", 0);
             } else if (radio_Name.isSelected()) {
-                searchType = 1;
+//                searchType = 1;
                 HazelCastMap.getMiscellaneousMap().put("searchType", 1);
             } else if (radio_Surname.isSelected()) {
-                searchType = 2;
+//                searchType = 2;
                 HazelCastMap.getMiscellaneousMap().put("searchType", 2);
             }
             checkSearch = true;

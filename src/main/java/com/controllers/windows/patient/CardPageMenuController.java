@@ -1,7 +1,7 @@
 package com.controllers.windows.patient;
 
 import com.controllers.requests.IllnessController;
-import com.controllers.requests.PageController;
+//import com.controllers.requests.PageController;
 import com.controllers.windows.diagnostic.DiagnosticMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -34,7 +34,6 @@ public class CardPageMenuController extends MenuController {
 
 
     private String oldDescription;
-    private PageController pageController;
     private Page page;
     private boolean create;
     private boolean change;
@@ -76,7 +75,6 @@ public class CardPageMenuController extends MenuController {
 
         windowsController = new WindowsController();
         datasets = FXCollections.observableArrayList();
-        pageController = new PageController();
         create = true;
         java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
@@ -143,7 +141,6 @@ public class CardPageMenuController extends MenuController {
 
         windowsController = new WindowsController();
         datasets = FXCollections.observableArrayList();
-        pageController = new PageController();
         create = false;
 
         this.page = page;
@@ -239,18 +236,6 @@ public class CardPageMenuController extends MenuController {
 
 
     public void backToCardMenu(ActionEvent event) throws IOException {
-//        if (create) {
-//            if(change) {
-//                boolean result = questionOkCancel("Do you really want to leave without save?");
-//                if (result) {
-//                    windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-//                            new CardMenuController(), null, true, 600, 680);
-//                }
-//            } else {
-//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-//                        new CardMenuController(), null, true, 600, 680);
-//            }
-//        } else {
         if (change) {
             boolean result = questionOkCancel("Do you really want to leave without save?");
             if (result) {

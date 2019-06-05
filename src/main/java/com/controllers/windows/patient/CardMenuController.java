@@ -1,6 +1,6 @@
 package com.controllers.windows.patient;
 
-import com.controllers.requests.PageController;
+//import com.controllers.requests.PageController;
 import com.controllers.requests.RecordController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
@@ -35,7 +35,6 @@ public class CardMenuController extends MenuController {
     private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private WindowsController windowsController;
     private RecordController recordController;
-    private PageController pageController;
     private ArrayList<Page> pages;
     private Patient patient;
     private Record record;
@@ -90,7 +89,6 @@ public class CardMenuController extends MenuController {
         addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         windowsController = new WindowsController();
         recordController = new RecordController();
-        pageController = new PageController();
         formatter = new SimpleDateFormat("dd-MM-yyyy");
         patient = HazelCastMap.getPatientMap().get(1);
         label_Name.setText(patient.getName() + " " + patient.getSurname());
@@ -172,18 +170,12 @@ public class CardMenuController extends MenuController {
         if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
             boolean result = questionOkCancel("Do you really want to delete this page?");
             if (result) {
-                try {
-                    row = tableView_PageTable.getSelectionModel().getFocusedIndex();
-                    int id = pageObservableList.get(row).getId();
-                    HttpResponse response = pageController.deletePage(id);
-                    setStatusCode(response.getStatusLine().getStatusCode());
-                    if (checkStatusCode(getStatusCode())) {
-                        getAlert(null, "Page deleted!", Alert.AlertType.INFORMATION);
-                        pageObservableList.remove(row);
-                        tableView_PageTable.refresh();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                row = tableView_PageTable.getSelectionModel().getFocusedIndex();
+                page = pageObservableList.get(row);
+                int statusCode = page.deletePage();
+                if (checkStatusCode(statusCode)) {
+                    pageObservableList.remove(row);
+                    tableView_PageTable.refresh();
                 }
             }
         } else {

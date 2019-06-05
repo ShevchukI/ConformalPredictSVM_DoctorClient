@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.scene.control.Alert;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -88,7 +89,7 @@ public class Page {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(this.getDate());
         String json = new Gson().toJson(pageWithoutDate);
-        json = json.substring(0, json.length()-1) + ",\"date\":\"" + date + "\"}";
+        json = json.substring(0, json.length() - 1) + ",\"date\":\"" + date + "\"}";
         String url = getUrl() + "/page/" + this.getId();
         HttpPut request = new HttpPut(url);
         HttpResponse response = null;
@@ -112,7 +113,7 @@ public class Page {
         json = "";
         for (int i = 0; i < content.length - 1; i++) {
             json = json + content[i];
-            if (i != content.length - 2){
+            if (i != content.length - 2) {
                 json = json + ",";
             }
         }
@@ -123,6 +124,29 @@ public class Page {
         if (checkStatusCode(statusCode)) {
             getAlert(null, "Saved!", Alert.AlertType.INFORMATION);
         }
+    }
+
+    public int deletePage() {
+        int statusCode = 0;
+        try {
+            HttpResponse response = deletePage(this);
+            statusCode = response.getStatusLine().getStatusCode();
+            if (checkStatusCode(statusCode)) {
+                getAlert(null, "Page deleted!", Alert.AlertType.INFORMATION);
+                return statusCode;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return statusCode;
+        }
+        return statusCode;
+    }
+
+    private HttpResponse deletePage(Page page) throws IOException {
+        String url = getUrl() + "/page/" + page.getId();
+        HttpDelete request = new HttpDelete(url);
+        HttpResponse response = crudEntity(null, null, null, null, request);
+        return response;
     }
 
     public int getId() {
@@ -169,7 +193,7 @@ public class Page {
         return date;
     }
 
-    public Date getDatePlusDay(){
+    public Date getDatePlusDay() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, 1);
@@ -204,17 +228,18 @@ public class Page {
         return gson.fromJson(json, Page.class);
     }
 
-    public String getDoctorName(){
+    public String getDoctorName() {
         return doctor.getName();
     }
 
-    public String getDoctorSpecialization(){
+    public String getDoctorSpecialization() {
         return doctor.getSpecialization().getName();
     }
 
 
-    public String getDoctorInfo(){
+    public String getDoctorInfo() {
         return doctor.getName() + " " + doctor.getSurname();
     }
+
 
 }

@@ -1,6 +1,5 @@
 package com.controllers.windows.diagnostic;
 
-import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Dataset;
@@ -35,7 +34,7 @@ public class QuickDiagnosticChoiceController extends MenuController {
         setNewWindow(newWindow);
         datasets = FXCollections.observableArrayList();
         windowsController = new WindowsController();
-        HttpResponse response = IllnessController.getAllActiveDataSet();
+        HttpResponse response = Dataset.getAllActiveDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             datasets.addAll(new Dataset().getListFromResponse(response));

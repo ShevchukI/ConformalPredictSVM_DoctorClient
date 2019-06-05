@@ -1,6 +1,6 @@
 package com.controllers.windows.diagnostic;
 
-import com.controllers.requests.IllnessController;
+//import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
 import com.models.Page;
 import com.models.ParameterSingleObject;
@@ -33,7 +33,7 @@ public class DiagnosticMenuController extends MenuController {
 
     private int configurationId;
     private String[] columns;
-    private IllnessController illnessController;
+//    private IllnessController illnessController;
     private List<Predict> predictList;
     private ObservableList<Predict> predicts;
     private Predict predict;
@@ -69,7 +69,7 @@ public class DiagnosticMenuController extends MenuController {
         stage.setOnHidden(event -> {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
-        illnessController = new IllnessController();
+//        illnessController = new IllnessController();
         predictList = new ArrayList<>();
         setStage(stage);
         setNewWindow(newWindow);
@@ -88,6 +88,9 @@ public class DiagnosticMenuController extends MenuController {
         configurationId = HazelCastMap.getDataSetMap().get(1).getId();
 
         createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
+
+        predict = new Predict();
+
         button_Run.setGraphic(new ImageView(Constant.getRunIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
@@ -103,7 +106,7 @@ public class DiagnosticMenuController extends MenuController {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         this.page = page;
-        illnessController = new IllnessController();
+//        illnessController = new IllnessController();
         predictList = new ArrayList<>();
         setStage(stage);
         setNewWindow(newWindow);
@@ -120,6 +123,7 @@ public class DiagnosticMenuController extends MenuController {
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         configurationId = HazelCastMap.getDataSetMap().get(1).getId();
         createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
+        predict = new Predict();
         button_Run.setGraphic(new ImageView(Constant.getRunIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
@@ -154,18 +158,18 @@ public class DiagnosticMenuController extends MenuController {
         stackPane_Progress.setVisible(true);
         button_Run.setDisable(true);
         parameterSingleObject.setSignificance(null);
-        HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = predict.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
             Thread calculation = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    predict = new Predict();
+//                    predict = new Predict();
                     predict.setPredictClass(0);
                     while (predict.getPredictClass() == 0) {
                         try {
-                            HttpResponse response = illnessController.resultSingleTest(processId);
+                            HttpResponse response = predict.resultSingleTest(processId);
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);

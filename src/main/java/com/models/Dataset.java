@@ -3,10 +3,14 @@ package com.models;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import static com.tools.Constant.crudEntity;
+import static com.tools.Constant.getUrl;
 
 /**
  * Created by Admin on 03.02.2019.
@@ -42,6 +46,13 @@ public class Dataset implements Serializable{
     public Dataset(int id, String columns) {
         this.id = id;
         this.columns = columns;
+    }
+
+    public static HttpResponse getAllActiveDataSet() throws IOException {
+        String url = getUrl() + "/illness/datasets";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+        return response;
     }
 
     public int getId() {

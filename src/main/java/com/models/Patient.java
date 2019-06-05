@@ -14,9 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.controllers.requests.MainController.crudEntity;
-import static com.controllers.requests.MainController.getUrl;
-import static com.tools.Constant.checkStatusCode;
+import static com.tools.Constant.*;
 
 /**
  * Created by Admin on 14.01.2019.

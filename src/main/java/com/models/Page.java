@@ -18,10 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.controllers.requests.MainController.crudEntity;
-import static com.controllers.requests.MainController.getUrl;
-import static com.tools.Constant.checkStatusCode;
-import static com.tools.Constant.getAlert;
+import static com.tools.Constant.*;
 
 /**
  * Created by Admin on 26.01.2019.

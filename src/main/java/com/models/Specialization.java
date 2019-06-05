@@ -11,8 +11,9 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import static com.controllers.requests.MainController.crudEntity;
-import static com.controllers.requests.MainController.getUrl;
+import static com.tools.Constant.crudEntity;
+import static com.tools.Constant.getUrl;
+
 
 /**
  * Created by Admin on 13.01.2019.

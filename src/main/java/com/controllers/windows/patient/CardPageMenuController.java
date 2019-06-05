@@ -1,7 +1,5 @@
 package com.controllers.windows.patient;
 
-import com.controllers.requests.IllnessController;
-//import com.controllers.requests.PageController;
 import com.controllers.windows.diagnostic.DiagnosticMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -23,6 +21,8 @@ import org.apache.http.HttpResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
+
+//import com.controllers.requests.PageController;
 
 /**
  * Created by Admin on 14.01.2019.
@@ -88,7 +88,7 @@ public class CardPageMenuController extends MenuController {
         page = new Page();
         page.setDate(date);
 
-        HttpResponse response = IllnessController.getAllActiveDataSet();
+        HttpResponse response = Dataset.getAllActiveDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             datasets.addAll(new Dataset().getListFromResponse(response));
@@ -170,7 +170,7 @@ public class CardPageMenuController extends MenuController {
 
 //            }
         }
-        HttpResponse response = IllnessController.getAllActiveDataSet();
+        HttpResponse response = Dataset.getAllActiveDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             datasets.addAll(new Dataset().getListFromResponse(response));
@@ -236,6 +236,7 @@ public class CardPageMenuController extends MenuController {
 
 
     public void backToCardMenu(ActionEvent event) throws IOException {
+
         if (change) {
             boolean result = questionOkCancel("Do you really want to leave without save?");
             if (result) {

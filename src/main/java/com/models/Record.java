@@ -16,9 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.controllers.requests.MainController.crudEntity;
-import static com.controllers.requests.MainController.getUrl;
-import static com.tools.Constant.checkStatusCode;
+import static com.tools.Constant.*;
 
 /**
  * Created by Admin on 26.01.2019.
@@ -40,25 +38,6 @@ public class Record {
         this.bloodGroup = bloodGroup;
         this.birthday = birthday;
     }
-
-//    public int addNew(double weight, double height, String bloodGroup, Date birthday, String sex, Patient patient) {
-//        this.weight = weight;
-//        this.height = height;
-//        this.bloodGroup = bloodGroup;
-//        this.birthday = birthday;
-//        if (sex.equals("Male")) {
-//            this.sex = true;
-//        } else {
-//            this.sex = false;
-//        }
-//        HttpResponse response = changeRecord(this, patient.getId());
-//        int statusCode = response.getStatusLine().getStatusCode();
-//        if(checkStatusCode(statusCode)){
-//            return statusCode;
-//        } else {
-//            return 0;
-//        }
-//    }
 
     private HttpResponse changeRecord(Record record, int id){
         String json = prepareJson(record);

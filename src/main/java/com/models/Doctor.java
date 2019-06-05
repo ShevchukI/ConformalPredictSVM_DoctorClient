@@ -21,9 +21,7 @@ import org.apache.http.message.BasicStatusLine;
 import java.io.*;
 import java.util.Base64;
 
-import static com.controllers.requests.MainController.crudEntity;
-import static com.controllers.requests.MainController.getUrl;
-import static com.tools.Constant.getAlert;
+import static com.tools.Constant.*;
 import static com.tools.HazelCastMap.getDoctorMap;
 
 /**

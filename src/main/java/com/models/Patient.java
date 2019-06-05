@@ -79,15 +79,11 @@ public class Patient implements Serializable {
         this.telephone = telephone;
         this.address = address;
         this.email = email;
-        try {
-            HttpResponse response = changePatient(this);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
-                this.id = getIdFromJson(response);
-                return statusCode;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        HttpResponse response = changePatient(this);
+        statusCode = response.getStatusLine().getStatusCode();
+        if (checkStatusCode(statusCode)) {
+//                this.id = getIdFromJson(response);
+            return statusCode;
         }
         return statusCode;
     }

@@ -2,13 +2,25 @@ package com.models;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import javafx.scene.control.Alert;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.controllers.requests.MainController.crudEntity;
+import static com.controllers.requests.MainController.getUrl;
+import static com.tools.Constant.checkStatusCode;
+import static com.tools.Constant.getAlert;
 
 /**
  * Created by Admin on 26.01.2019.
@@ -39,6 +51,78 @@ public class Page {
         this.description = description;
         this.parameters = parameters;
         this.answer = answer;
+    }
+
+    public static HttpResponse getAllPageByPatientId(int id) {
+        String url = getUrl() + "/page/" + id + "/all";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+        return response;
+    }
+
+    public static ArrayList getAllPage(HttpResponse response) {
+        ArrayList<Page> pages;
+        StringBuilder stringBuilder = new StringBuilder();
+        DataInputStream dataInputStream = null;
+        try {
+            dataInputStream = new DataInputStream(response.getEntity().getContent());
+            String line;
+            while ((line = dataInputStream.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            dataInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String json = stringBuilder.toString();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Type founderListType = new TypeToken<ArrayList<Page>>() {
+        }.getType();
+        pages = gson.fromJson(json, founderListType);
+        return pages;
+    }
+
+    public void changePage() {
+        Page pageWithoutDate = new Page();
+        pageWithoutDate.setPageWithoutDate(this);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date = formatter.format(this.getDate());
+        String json = new Gson().toJson(pageWithoutDate);
+        json = json.substring(0, json.length()-1) + ",\"date\":\"" + date + "\"}";
+        String url = getUrl() + "/page/" + this.getId();
+        HttpPut request = new HttpPut(url);
+        HttpResponse response = null;
+        try {
+            response = crudEntity(new StringEntity(json), null, null, request, null);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (checkStatusCode(statusCode)) {
+            getAlert(null, "Changed!", Alert.AlertType.INFORMATION);
+        }
+    }
+
+    public void createPage(int id) throws IOException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date = formatter.format(this.getDate());
+        String json = new Gson().toJson(this);
+        String[] content = json.split(",");
+        content[content.length - 2] = "\"date\":\"" + date + "\"}";
+        json = "";
+        for (int i = 0; i < content.length - 1; i++) {
+            json = json + content[i];
+            if (i != content.length - 2){
+                json = json + ",";
+            }
+        }
+        String url = getUrl() + "/page/" + id;
+        HttpPost request = new HttpPost(url);
+        HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (checkStatusCode(statusCode)) {
+            getAlert(null, "Saved!", Alert.AlertType.INFORMATION);
+        }
     }
 
     public int getId() {

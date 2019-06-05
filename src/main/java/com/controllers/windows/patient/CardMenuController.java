@@ -39,6 +39,7 @@ public class CardMenuController extends MenuController {
     private ArrayList<Page> pages;
     private Patient patient;
     private Record record;
+    private Page page;
 
     @FXML
     private MenuBarController menuBarController;
@@ -93,6 +94,7 @@ public class CardMenuController extends MenuController {
         formatter = new SimpleDateFormat("dd-MM-yyyy");
         patient = HazelCastMap.getPatientMap().get(1);
         label_Name.setText(patient.getName() + " " + patient.getSurname());
+        page = new Page();
 
         HttpResponse response = recordController.getRecordByPatientId(patient.getId());
         setStatusCode(response.getStatusLine().getStatusCode());
@@ -108,10 +110,10 @@ public class CardMenuController extends MenuController {
             label_Weight.setText(String.valueOf(record.getWeight()));
             label_Height.setText(String.valueOf(record.getHeight()));
         }
-        response = pageController.getAllPageByPatientId(patient.getId());
+        response = page.getAllPageByPatientId(patient.getId());
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
-            pages = pageController.getAllPage(response);
+            pages = page.getAllPage(response);
             pageObservableList = FXCollections.observableList(pages);
             tableColumn_Number.impl_setReorderable(false);
             tableColumn_Number.setSortable(false);

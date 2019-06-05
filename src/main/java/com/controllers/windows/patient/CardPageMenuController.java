@@ -228,26 +228,12 @@ public class CardPageMenuController extends MenuController {
 
 
     public void savePage(ActionEvent event) throws IOException, ParseException {
+        page.setDescription(textArea_Description.getText());
         if (create) {
-            page.setDescription(textArea_Description.getText());
-            HttpResponse response = pageController.createPage(page, HazelCastMap.getPatientMap().get(1).getId());
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                getAlert(null, "Saved!", Alert.AlertType.INFORMATION);
-                change = false;
-//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-//                        new CardMenuController(), null, true, 600, 680);
-            }
+            page.createPage(HazelCastMap.getPatientMap().get(1).getId());
+            change = false;
         } else {
-            page.setDescription(textArea_Description.getText());
-            HttpResponse response = pageController.changePage(page, page.getId());
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                getAlert(null, "Changed!", Alert.AlertType.INFORMATION);
-
-//                windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
-//                        new CardMenuController(), null, true, 600, 680);
-            }
+            page.changePage();
         }
     }
 

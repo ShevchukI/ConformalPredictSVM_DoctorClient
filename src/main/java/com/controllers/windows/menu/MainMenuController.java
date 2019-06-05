@@ -1,6 +1,5 @@
 package com.controllers.windows.menu;
 
-import com.controllers.requests.PatientController;
 import com.controllers.windows.patient.AddPatientAndCardMenuController;
 import com.controllers.windows.patient.CardMenuController;
 import com.models.Doctor;
@@ -199,7 +198,7 @@ public class MainMenuController extends MenuController {
     }
 
     public void getPage(int pageIndex) throws IOException {
-        HttpResponse response = PatientController.getPatientPage(pageIndex);
+        HttpResponse response = Patient.getPatientPage(pageIndex);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             patientPage = PatientPage.fromJson(response);
@@ -211,7 +210,7 @@ public class MainMenuController extends MenuController {
     }
 
     public void searchPage(int pageIndex, String search, int searchType) throws IOException {
-        HttpResponse response = PatientController.findPatientPage(search, searchType, pageIndex);
+        HttpResponse response = Patient.findPatientPage(search, searchType, pageIndex);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (getStatusCode() == 200) {
             patientPage = new PatientPage().fromJson(response);

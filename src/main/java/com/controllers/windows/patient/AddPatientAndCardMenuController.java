@@ -1,7 +1,5 @@
 package com.controllers.windows.patient;
 
-import com.controllers.requests.PatientController;
-import com.controllers.requests.RecordController;
 import com.controllers.windows.menu.MenuController;
 import com.models.Patient;
 import com.models.Record;
@@ -15,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,7 +26,9 @@ import java.time.format.DateTimeFormatter;
 public class AddPatientAndCardMenuController extends MenuController {
 
     private TableView<Patient> tableView_PatientTable;
-    private int patientId;
+    //    private int patientId;
+    private Patient patient;
+    private Record record;
 
     @FXML
     private Label label_PaneName;
@@ -57,11 +56,14 @@ public class AddPatientAndCardMenuController extends MenuController {
         this.tableView_PatientTable = tableView_PatientTable;
         formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+        patient = new Patient();
+        record = new Record();
+
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
     }
 
-    public void initialize(Stage stage, Stage newWindow, Patient patient, Record record) {
+    public void initialize(Stage stage, Stage newWindow, Patient patientEntity, Record recordEntity) {
         stage.setOnHidden(event -> {
             HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
@@ -71,7 +73,10 @@ public class AddPatientAndCardMenuController extends MenuController {
         recordMenuController.init(this);
         label_PaneName.setText("Change patient");
         formatter = new SimpleDateFormat("yyyy-MM-dd");
-        patientId = patient.getId();
+
+        patient = patientEntity;
+        record = recordEntity;
+//        patientId = patient.getId();
         patientMenuController.getTextField_Name().setText(patient.getName());
         patientMenuController.getTextField_Surname().setText(patient.getSurname());
         patientMenuController.getTextField_Telephone().setText(patient.getTelephone());
@@ -103,44 +108,63 @@ public class AddPatientAndCardMenuController extends MenuController {
 
     public void savePatient(ActionEvent event) throws IOException, ParseException {
         if (checkPatientFields() && checkCardFields()) {
-            Patient patient = new Patient(patientMenuController.getTextField_Name().getText(),
-                    patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
-                    patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
-            Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
-                    Double.parseDouble(recordMenuController.getTextField_Height().getText()),
-                    recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
-                            + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
-                    formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()));
-            if (recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem().equals("Male")) {
-                record.setSex(true);
-            } else {
-                record.setSex(false);
-            }
+//            Patient patient = new Patient(patientMenuController.getTextField_Name().getText(),
+//                    patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
+//                    patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
+//            Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
+//                    Double.parseDouble(recordMenuController.getTextField_Height().getText()),
+//                    recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
+//                            + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
+//                    formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()));
+//            if (recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem().equals("Male")) {
+//                record.setSex(true);
+//            } else {
+//                record.setSex(false);
+//            }
             if (tableView_PatientTable != null) {
-                HttpResponse response = PatientController.createPatient(patient);
-                setStatusCode(response.getStatusLine().getStatusCode());
-                if (checkStatusCode(getStatusCode())) {
-                    int id = new Patient().getIdFromJson(response);
-                    patient.setId(id);
-                    response = RecordController.changeRecord(record, id);
-                    setStatusCode(response.getStatusLine().getStatusCode());
-                    if (checkStatusCode(getStatusCode())) {
-                        getAlert(null, "Patient is registered!", Alert.AlertType.INFORMATION);
-                        if (tableView_PatientTable.getItems().size() < Constant.getObjectOnPage()) {
-                            tableView_PatientTable.getItems().add(patient);
-                        }
-                        tableView_PatientTable.refresh();
-                        getNewWindow().close();
-                    }
+                int statusCode = patient.addNew(patientMenuController.getTextField_Name().getText(),
+                        patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
+                        patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
+//                HttpResponse response = PatientController.createPatient(patient);
+//                setStatusCode(response.getStatusLine().getStatusCode());
+//                if (checkStatusCode(getStatusCode())) {
+//                    int id = new Patient().getIdFromJson(response);
+//                    patient.setId(id);
+                if (checkStatusCode(statusCode)) {
+                    statusCode = record.changeRecord(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
+                            Double.parseDouble(recordMenuController.getTextField_Height().getText()),
+                            recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
+                                    + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
+                            formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()),
+                            recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem(), patient);
                 }
+//                    response = RecordController.changeRecord(record, id);
+//                    setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(statusCode)) {
+                    getAlert(null, "Patient is registered!", Alert.AlertType.INFORMATION);
+                    if (tableView_PatientTable.getItems().size() < Constant.getObjectOnPage()) {
+                        tableView_PatientTable.getItems().add(patient);
+                    }
+                    tableView_PatientTable.refresh();
+                    getNewWindow().close();
+                }
+//                }
             } else {
-                patient.setId(patientId);
-                HttpResponse response = PatientController.changePatient(patient);
-                setStatusCode(response.getStatusLine().getStatusCode());
-                if(checkStatusCode(getStatusCode())){
-                    response = RecordController.changeRecord(record, patientId);
-                    setStatusCode(response.getStatusLine().getStatusCode());
-                    if (checkStatusCode(getStatusCode())) {
+//                patient.setId(patientId);
+                int statusCode = patient.changePatient(patientMenuController.getTextField_Name().getText(),
+                        patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
+                        patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
+
+//                HttpResponse response = PatientController.changePatient(patient);
+//                setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(statusCode)) {
+                    statusCode = record.changeRecord(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
+                            Double.parseDouble(recordMenuController.getTextField_Height().getText()),
+                            recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
+                                    + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
+                            formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()),
+                            recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem(), patient);
+                    if (checkStatusCode(statusCode)) {
                         getAlert(null, "Patient changed!", Alert.AlertType.INFORMATION);
                         changeVisibleData(patient, record);
                         getNewWindow().close();
@@ -217,12 +241,11 @@ public class AddPatientAndCardMenuController extends MenuController {
     }
 
     private boolean checkCardFields() {
-        if (recordMenuController.getDatePicker_Birthday().getValue()==null) {
+        if (recordMenuController.getDatePicker_Birthday().getValue() == null) {
             recordMenuController.getTooltipError_Birthday().setText("Patient birthday is empty!");
             recordMenuController.getDatePicker_Birthday().setTooltip(recordMenuController.getTooltipError_Birthday());
             recordMenuController.getDatePicker_Birthday().setStyle(Constant.getBorderColorRed());
-        }
-        else {
+        } else {
             recordMenuController.getDatePicker_Birthday().setTooltip(patientMenuController.getTooltip_Name());
             recordMenuController.getDatePicker_Birthday().setStyle(Constant.getBorderColorInherit());
         }
@@ -286,7 +309,7 @@ public class AddPatientAndCardMenuController extends MenuController {
         }
     }
 
-    private void changeVisibleData(Patient patient, Record record){
+    private void changeVisibleData(Patient patient, Record record) {
         SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
 
         Label name = (Label) getStage().getScene().lookup("#label_Name");

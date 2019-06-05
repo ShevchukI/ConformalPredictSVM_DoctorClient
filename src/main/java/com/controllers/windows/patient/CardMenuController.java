@@ -1,7 +1,7 @@
 package com.controllers.windows.patient;
 
 //import com.controllers.requests.PageController;
-import com.controllers.requests.RecordController;
+//import com.controllers.requests.RecordController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -34,7 +34,7 @@ public class CardMenuController extends MenuController {
 
     private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private WindowsController windowsController;
-    private RecordController recordController;
+//    private RecordController recordController;
     private ArrayList<Page> pages;
     private Patient patient;
     private Record record;
@@ -88,13 +88,13 @@ public class CardMenuController extends MenuController {
         setStage(stage);
         addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         windowsController = new WindowsController();
-        recordController = new RecordController();
+//        recordController = new RecordController();
         formatter = new SimpleDateFormat("dd-MM-yyyy");
         patient = HazelCastMap.getPatientMap().get(1);
         label_Name.setText(patient.getName() + " " + patient.getSurname());
         page = new Page();
 
-        HttpResponse response = recordController.getRecordByPatientId(patient.getId());
+        HttpResponse response = Record.getRecordByPatientId(patient.getId());
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             record = new Record().fromJson(response);

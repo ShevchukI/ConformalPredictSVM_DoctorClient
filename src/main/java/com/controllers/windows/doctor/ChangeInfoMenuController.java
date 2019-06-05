@@ -1,6 +1,6 @@
 package com.controllers.windows.doctor;
 
-import com.controllers.requests.SpecializationController;
+//import com.controllers.requests.SpecializationController;
 import com.controllers.windows.menu.MenuController;
 import com.models.Doctor;
 import com.models.Specialization;
@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 public class ChangeInfoMenuController extends MenuController {
 
-    private SpecializationController specializationController;
+//    private SpecializationController specializationController;
     private ObservableList<Specialization> specializations;
     private Tooltip tooltipError_CurrentPassword;
     private Tooltip tooltipError_NewPassword;
@@ -67,7 +67,7 @@ public class ChangeInfoMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
-        specializationController = new SpecializationController();
+//        specializationController = new SpecializationController();
         specializations = FXCollections.observableArrayList();
         tooltipError_CurrentPassword = new Tooltip();
         tooltipError_NewPassword = new Tooltip();
@@ -78,7 +78,7 @@ public class ChangeInfoMenuController extends MenuController {
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
         if (change) {
             specializations.add(new Specialization(-1, "None"));
-            HttpResponse response = specializationController.getAllSpecialization();
+            HttpResponse response = Specialization.getAllSpecialization();
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 specializations.addAll(new Specialization().getListFromResponse(response));

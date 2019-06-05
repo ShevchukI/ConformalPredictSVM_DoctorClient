@@ -3,12 +3,16 @@ package com.models;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import static com.controllers.requests.MainController.crudEntity;
+import static com.controllers.requests.MainController.getUrl;
 
 /**
  * Created by Admin on 13.01.2019.
@@ -25,6 +29,13 @@ public class Specialization implements Serializable{
     public Specialization(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public static HttpResponse getAllSpecialization(){
+        String url = getUrl() + "/specializations";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+        return response;
     }
 
     public int getId() {

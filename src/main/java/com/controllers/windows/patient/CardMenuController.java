@@ -162,7 +162,7 @@ public class CardMenuController extends MenuController {
 
     public void backToMainMenu(ActionEvent event) throws IOException {
         windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
-                new MainMenuController(), "Main menu", true, 1100, 680);
+                new MainMenuController(), "", true, 1100, 680);
     }
 
     public void deletePage(ActionEvent event) throws IOException {

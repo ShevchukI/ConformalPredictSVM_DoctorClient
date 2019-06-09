@@ -47,13 +47,14 @@ public class Doctor implements Serializable {
 
     }
 
-    public Doctor(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
+    public Doctor(String login, String password) {
+        this.login = login;
+        this.password = password;
     }
 
-    public static HttpResponse getDoctorAuth(String[] authorization) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+
+    public HttpResponse authorization() throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((this.login + ":" + this.password).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/authorization");
         request.addHeader("Authorization", basicAuthPayload);

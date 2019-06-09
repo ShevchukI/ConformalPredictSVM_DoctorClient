@@ -26,7 +26,7 @@ import static com.tools.Constant.*;
 public class Page {
 
     private int id;
-    private String theme;
+//    private String theme;
     private String description;
     private String parameters;
     private String answer;
@@ -37,7 +37,7 @@ public class Page {
     }
 
     public Page(String theme, String description, String parameters, String answer, Date date) {
-        this.theme = theme;
+//        this.theme = theme;
         this.description = description;
         this.parameters = parameters;
         this.answer = answer;
@@ -45,7 +45,7 @@ public class Page {
     }
 
     public Page(String theme, String description, String parameters, String answer) {
-        this.theme = theme;
+//        this.theme = theme;
         this.description = description;
         this.parameters = parameters;
         this.answer = answer;
@@ -154,13 +154,13 @@ public class Page {
         this.id = id;
     }
 
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
+//    public String getTheme() {
+//        return theme;
+//    }
+//
+//    public void setTheme(String theme) {
+//        this.theme = theme;
+//    }
 
     public String getDescription() {
         return description;
@@ -211,7 +211,7 @@ public class Page {
 
     public void setPageWithoutDate(Page page) {
         this.id = page.getId();
-        this.theme = page.getTheme();
+//        this.theme = page.getTheme();
         this.description = page.getDescription();
         this.parameters = page.getParameters();
         this.answer = page.getAnswer();

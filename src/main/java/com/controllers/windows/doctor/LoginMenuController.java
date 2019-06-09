@@ -25,6 +25,7 @@ public class LoginMenuController extends MenuController {
 
     private int statusCode;
     private WindowsController windowsController;
+    private Doctor doctor;
 
     @FXML
     private TextField textField_Login;
@@ -52,7 +53,8 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            HttpResponse response = Doctor.getDoctorAuth(authorization);
+            doctor = new Doctor(textField_Login.getText(), passwordField_Password.getText());
+            HttpResponse response = doctor.authorization();
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
                 HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);

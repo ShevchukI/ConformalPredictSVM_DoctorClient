@@ -46,7 +46,7 @@
             <Label fx:id="label_Weight" layoutX="444.0" layoutY="95.0" prefHeight="14.0" prefWidth="80.0" AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="95.0" />
             <Label fx:id="label_Height" layoutX="444.0" layoutY="123.0" prefHeight="14.0" prefWidth="80.0" AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="123.0" />
             <Label layoutX="388.0" layoutY="123.0" prefHeight="14.0" prefWidth="50.0" text="Height" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="123.0" />
-            <Button fx:id="button_Delete" layoutX="584.0" layoutY="151.0" minWidth="80.0" mnemonicParsing="false" onAction="#deletePage" text="Delete page" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0" />
+            <Button fx:id="button_Delete" disable="true" layoutX="584.0" layoutY="151.0" minWidth="80.0" mnemonicParsing="false" onAction="#deletePage" text="Delete page" textFill="RED" visible="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0" />
             <Label alignment="CENTER" layoutX="267.0" layoutY="14.0" text="Patient card" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                <font>
                   <Font size="24.0" />

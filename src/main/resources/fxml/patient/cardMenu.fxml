@@ -9,51 +9,81 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.patient.CardMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0"
+            prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.windows.patient.CardMenuController">
     <top>
         <VBox>
             <children>
-                <fx:include fx:id="menuBar" source="../menu/menuBar.fxml" />
+                <fx:include fx:id="menuBar" source="../menu/menuBar.fxml"/>
             </children>
         </VBox>
     </top>
     <center>
         <AnchorPane prefHeight="395.0" prefWidth="558.0" BorderPane.alignment="CENTER">
             <children>
-                <Label layoutX="14.0" layoutY="67.0" prefHeight="14.0" prefWidth="120.0" text="Patient name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="67.0" />
-                <Label fx:id="label_Name" layoutX="150.0" layoutY="67.0" prefHeight="14.0" prefWidth="150.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="67.0" />
-                <Label layoutX="14.0" layoutY="95.0" prefHeight="14.0" prefWidth="120.0" text="Date of birth:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="95.0" />
-                <Label fx:id="label_BirthDate" layoutX="150.0" layoutY="95.0" prefHeight="14.0" prefWidth="150.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="95.0" />
-                <TableView fx:id="tableView_PageTable" layoutX="16.0" layoutY="190.0" prefHeight="320.0" prefWidth="633.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="190.0">
+                <Label layoutX="14.0" layoutY="67.0" prefHeight="14.0" prefWidth="120.0" text="Patient name:"
+                       AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="67.0"/>
+                <Label fx:id="label_Name" layoutX="150.0" layoutY="67.0" prefHeight="14.0" prefWidth="150.0"
+                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="67.0"/>
+                <Label layoutX="14.0" layoutY="95.0" prefHeight="14.0" prefWidth="120.0" text="Date of birth:"
+                       AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="95.0"/>
+                <Label fx:id="label_BirthDate" layoutX="150.0" layoutY="95.0" prefHeight="14.0" prefWidth="150.0"
+                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="95.0"/>
+                <TableView fx:id="tableView_PageTable" layoutX="16.0" layoutY="190.0" prefHeight="320.0"
+                           prefWidth="633.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0"
+                           AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="190.0">
                     <columns>
-                  <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
-                        <TableColumn fx:id="tableColumn_Date" minWidth="80.0" prefWidth="130.0" style="-fx-alignment: CENTER;" text="Date" />
-                  <TableColumn fx:id="tableColumn_DoctorName" minWidth="80.0" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Doctor name" />
-                  <TableColumn fx:id="tableColumn_Specialization" minWidth="80.0" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Specialization" />
+                        <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0"
+                                     style="-fx-alignment: CENTER;" text="#"/>
+                        <TableColumn fx:id="tableColumn_Date" minWidth="80.0" prefWidth="130.0"
+                                     style="-fx-alignment: CENTER;" text="Date"/>
+                        <TableColumn fx:id="tableColumn_DoctorName" minWidth="80.0" prefWidth="140.0"
+                                     style="-fx-alignment: CENTER;" text="Doctor name"/>
+                        <TableColumn fx:id="tableColumn_Specialization" minWidth="80.0" prefWidth="140.0"
+                                     style="-fx-alignment: CENTER;" text="Specialization"/>
                     </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
-            <Label layoutX="14.0" layoutY="123.0" prefHeight="14.0" prefWidth="120.0" text="Group of blood:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="123.0" />
-            <Label fx:id="label_BloodGroup" layoutX="150.0" layoutY="123.0" prefHeight="14.0" prefWidth="150.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="123.0" />
-            <Button fx:id="button_Back" layoutX="424.0" layoutY="457.0" minWidth="80.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="14.0" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-            <Button fx:id="button_View" layoutX="145.0" layoutY="151.0" minWidth="80.0" onAction="#viewPage" prefHeight="26.0" text="View page" AnchorPane.leftAnchor="145.0" AnchorPane.topAnchor="151.0" />
-            <Button fx:id="button_New" layoutX="14.0" layoutY="151.0" minWidth="80.0" onAction="#newPage" prefHeight="26.0" text="New page" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="151.0" />
-            <Label layoutX="388.0" layoutY="67.0" prefHeight="14.0" prefWidth="50.0" text="Sex:" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="67.0" />
-            <Label fx:id="label_Sex" layoutX="444.0" layoutY="67.0" prefHeight="14.0" prefWidth="80.0" AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="67.0" />
-            <Label layoutX="388.0" layoutY="95.0" prefHeight="14.0" prefWidth="50.0" text="Weight" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="95.0" />
-            <Label fx:id="label_Weight" layoutX="444.0" layoutY="95.0" prefHeight="14.0" prefWidth="80.0" AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="95.0" />
-            <Label fx:id="label_Height" layoutX="444.0" layoutY="123.0" prefHeight="14.0" prefWidth="80.0" AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="123.0" />
-            <Label layoutX="388.0" layoutY="123.0" prefHeight="14.0" prefWidth="50.0" text="Height" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="123.0" />
-            <Button fx:id="button_Delete" disable="true" layoutX="584.0" layoutY="151.0" minWidth="80.0" mnemonicParsing="false" onAction="#deletePage" text="Delete page" textFill="RED" visible="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0" />
-            <Label alignment="CENTER" layoutX="267.0" layoutY="14.0" text="Patient card" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <Button fx:id="button_ChangePatientInfo" layoutX="388.0" layoutY="151.0" mnemonicParsing="false" onAction="#changePatientInfo" text="Change patient info" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="151.0" />
+                <Label layoutX="14.0" layoutY="123.0" prefHeight="14.0" prefWidth="120.0" text="Group of blood:"
+                       AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="123.0"/>
+                <Label fx:id="label_BloodGroup" layoutX="150.0" layoutY="123.0" prefHeight="14.0" prefWidth="150.0"
+                       AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="123.0"/>
+                <Button fx:id="button_Back" layoutX="424.0" layoutY="457.0" minWidth="80.0" mnemonicParsing="false"
+                        onAction="#backToMainMenu" prefHeight="14.0" text="Back" AnchorPane.bottomAnchor="14.0"
+                        AnchorPane.rightAnchor="14.0"/>
+                <Button fx:id="button_View" layoutX="145.0" layoutY="151.0" minWidth="80.0" onAction="#viewPage"
+                        prefHeight="26.0" text="View page" AnchorPane.leftAnchor="145.0" AnchorPane.topAnchor="151.0"/>
+                <Button fx:id="button_New" layoutX="14.0" layoutY="151.0" minWidth="80.0" onAction="#newPage"
+                        prefHeight="26.0" text="New page" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="151.0"/>
+                <Label layoutX="388.0" layoutY="67.0" prefHeight="14.0" prefWidth="50.0" text="Sex:"
+                       AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="67.0"/>
+                <Label fx:id="label_Sex" layoutX="444.0" layoutY="67.0" prefHeight="14.0" prefWidth="80.0"
+                       AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="67.0"/>
+                <Label layoutX="388.0" layoutY="95.0" prefHeight="14.0" prefWidth="50.0" text="Weight"
+                       AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="95.0"/>
+                <Label fx:id="label_Weight" layoutX="444.0" layoutY="95.0" prefHeight="14.0" prefWidth="80.0"
+                       AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="95.0"/>
+                <Label fx:id="label_Height" layoutX="444.0" layoutY="123.0" prefHeight="14.0" prefWidth="80.0"
+                       AnchorPane.leftAnchor="444.0" AnchorPane.topAnchor="123.0"/>
+                <Label layoutX="388.0" layoutY="123.0" prefHeight="14.0" prefWidth="50.0" text="Height"
+                       AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="123.0"/>
+                <Button fx:id="button_Delete" disable="true" layoutX="584.0" layoutY="151.0" minWidth="80.0"
+                        mnemonicParsing="false" onAction="#deletePage" text="Delete page" textFill="RED" visible="false"
+                        AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0"/>
+                <Label alignment="CENTER" layoutX="267.0" layoutY="14.0" text="Patient card" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Label>
+                <Button fx:id="button_ChangePatientInfo" layoutX="388.0" layoutY="151.0" mnemonicParsing="false"
+                        onAction="#changePatientInfo" text="Change patient info" AnchorPane.leftAnchor="388.0"
+                        AnchorPane.topAnchor="151.0"/>
 
-            </children></AnchorPane>
+            </children>
+        </AnchorPane>
     </center>
 </BorderPane>

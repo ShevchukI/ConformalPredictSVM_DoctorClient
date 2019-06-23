@@ -153,13 +153,17 @@ public class Predict {
     }
 
     public String getVisibleClass() {
-        switch (getPredictClass()) {
-            case 1:
-                return "Positive";
-            case -1:
-                return "Negative";
-            default:
-                return "Uncertain";
+        if (getCredibility() == 1) {
+            switch (getPredictClass()) {
+                case 1:
+                    return "Positive";
+                case -1:
+                    return "Negative";
+                default:
+                    return "Uncertain";
+            }
+        } else {
+            return "Uncertain";
         }
     }
 
@@ -188,7 +192,6 @@ public class Predict {
         String json = reader.readLine();
         return new Gson().fromJson(json, Predict.class);
     }
-
 
 
 }

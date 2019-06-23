@@ -11,8 +11,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Base64;
+import java.util.Scanner;
 
 
 public class Constant {
@@ -66,9 +67,17 @@ public class Constant {
     private final static String LOCALHOST_URL = "http://localhost:8888";
     private final static String DOCTOR_URL = "/doctor-system/doctor";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
+    private final static String SETTING_FILE_NAME = "config.ini";
 
-    public static String getUrl(){
-        return URL;
+    public static String getUrl() {
+        try {
+            FileReader fileReader = new FileReader(SETTING_FILE_NAME);
+            Scanner scanner = new Scanner(fileReader);
+            return scanner.nextLine() + DOCTOR_URL;
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return URL;
+        }
     }
 
     public static HttpResponse crudEntity(HttpEntity httpEntity, HttpPost post, HttpGet get, HttpPut put, HttpDelete delete) {
@@ -78,7 +87,7 @@ public class Constant {
         if (post != null) {
 
             post.setHeader("Content-Type", "application/json");
-            if(httpEntity!=null) {
+            if (httpEntity != null) {
                 post.setEntity(httpEntity);
             }
             request = post;
@@ -86,7 +95,7 @@ public class Constant {
         } else if (put != null) {
 
             put.setHeader("Content-Type", "application/json");
-            if(httpEntity!=null) {
+            if (httpEntity != null) {
                 put.setEntity(httpEntity);
             }
             request = put;
@@ -123,17 +132,15 @@ public class Constant {
 
 
     public static String responseToString(HttpResponse response) throws IOException {
-        return  EntityUtils.toString(response.getEntity());
+        return EntityUtils.toString(response.getEntity());
     }
-
 
 
     public static void run(Runnable treatment) {
-        if(treatment == null) throw new IllegalArgumentException("The treatment to perform can not be null");
-        if(Platform.isFxApplicationThread()) treatment.run();
+        if (treatment == null) throw new IllegalArgumentException("The treatment to perform can not be null");
+        if (Platform.isFxApplicationThread()) treatment.run();
         else Platform.runLater(treatment);
     }
-
 
 
     public static void getAlert(String header, String content, Alert.AlertType alertType) {

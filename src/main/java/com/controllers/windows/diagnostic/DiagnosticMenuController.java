@@ -1,6 +1,7 @@
 package com.controllers.windows.diagnostic;
 
 //import com.controllers.requests.IllnessController;
+
 import com.controllers.windows.menu.MenuController;
 import com.models.Page;
 import com.models.ParameterSingleObject;
@@ -33,7 +34,7 @@ public class DiagnosticMenuController extends MenuController {
 
     private int configurationId;
     private String[] columns;
-//    private IllnessController illnessController;
+    //    private IllnessController illnessController;
     private List<Predict> predictList;
     private ObservableList<Predict> predicts;
     private Predict predict;
@@ -132,7 +133,7 @@ public class DiagnosticMenuController extends MenuController {
     public void runDiagnostic(ActionEvent event) throws IOException {
         String matches = "[0-9]{1,3}";
 
-        for(int i = 2; i<columns.length; i++){
+        for (int i = 2; i < columns.length; i++) {
             TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
             textField.setStyle(Constant.getBorderColorInherit());
         }
@@ -177,11 +178,15 @@ public class DiagnosticMenuController extends MenuController {
                                 if (parameterSingleObject.getSignificance() == null) {
                                     if (predict.getPredictClass() != 0) {
 //                                        if (predict.getRealClass() == predict.getPredictClass()) {
-                                            NumberFormat formatter = new DecimalFormat("#00.00");
+                                        NumberFormat formatter = new DecimalFormat("#00.00");
+                                        if(predict.getCredibility()<1){
+                                            predict.setVisibleConfidence("");
+                                        }else {
                                             predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
 //                                        } else {
 //                                            predict.setVisibleConfidence("");
 //                                        }
+                                        }
                                         predictList.clear();
                                         predictList.add(predict);
                                         predicts = FXCollections.observableArrayList(predictList);
@@ -257,4 +262,3 @@ public class DiagnosticMenuController extends MenuController {
         }
     }
 }
-

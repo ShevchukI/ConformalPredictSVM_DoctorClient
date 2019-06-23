@@ -8,32 +8,45 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.doctor.ChangeInfoMenuController">
-   <children>
-      <Button fx:id="button_Ok" layoutX="14.0" layoutY="135.0" minWidth="80.0" mnemonicParsing="false" onAction="#saveName" prefHeight="26.0" text="Ok" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-      <Button fx:id="button_Cancel" layoutX="300.0" layoutY="135.0" minWidth="80.0" mnemonicParsing="false" onAction="#cancel" prefHeight="26.0" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-      <Label layoutX="14.0" layoutY="73.0" prefHeight="18.0" prefWidth="125.0" text="Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="73.0" />
-      <TextField fx:id="textField_Name" layoutX="126.0" layoutY="69.0" prefHeight="31.0" prefWidth="360.0" promptText="Name" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="69.0">
-         <tooltip>
-            <Tooltip fx:id="tooltip_Name" text="Enter your name" />
-         </tooltip>
-      </TextField>
-      <Label layoutX="14.0" layoutY="115.0" prefHeight="18.0" prefWidth="125.0" text="Surname:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0" />
-      <TextField fx:id="textField_Surname" layoutX="126.0" layoutY="111.0" prefHeight="31.0" prefWidth="360.0" promptText="Surname" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="111.0">
-         <tooltip>
-            <Tooltip fx:id="tooltip_Surname" text="Enter your surname" />
-         </tooltip>
-      </TextField>
-      <Label layoutX="14.0" layoutY="155.0" prefHeight="18.0" prefWidth="125.0" text="Specialization:" AnchorPane.topAnchor="155.0" />
-      <ComboBox fx:id="comboBox_Specialization" layoutX="126.0" layoutY="151.0" prefHeight="31.0" prefWidth="360.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0">
-         <tooltip>
-            <Tooltip fx:id="tooltip_Specialization" text="Choose your specialization" />
-         </tooltip>
-      </ComboBox>
-      <Label layoutX="166.0" layoutY="21.0" text="Change Information" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="122.0" AnchorPane.topAnchor="14.0">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0"
+            prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.windows.doctor.ChangeInfoMenuController">
+    <children>
+        <Button fx:id="button_Ok" layoutX="14.0" layoutY="135.0" minWidth="80.0" mnemonicParsing="false"
+                onAction="#saveName" prefHeight="26.0" text="Ok" AnchorPane.bottomAnchor="14.0"
+                AnchorPane.leftAnchor="14.0"/>
+        <Button fx:id="button_Cancel" layoutX="300.0" layoutY="135.0" minWidth="80.0" mnemonicParsing="false"
+                onAction="#cancel" prefHeight="26.0" text="Cancel" AnchorPane.bottomAnchor="14.0"
+                AnchorPane.rightAnchor="14.0"/>
+        <Label layoutX="14.0" layoutY="73.0" prefHeight="18.0" prefWidth="125.0" text="Name:"
+               AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="73.0"/>
+        <TextField fx:id="textField_Name" layoutX="126.0" layoutY="69.0" prefHeight="31.0" prefWidth="360.0"
+                   promptText="Name" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="69.0">
+            <tooltip>
+                <Tooltip fx:id="tooltip_Name" text="Enter your name"/>
+            </tooltip>
+        </TextField>
+        <Label layoutX="14.0" layoutY="115.0" prefHeight="18.0" prefWidth="125.0" text="Surname:"
+               AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0"/>
+        <TextField fx:id="textField_Surname" layoutX="126.0" layoutY="111.0" prefHeight="31.0" prefWidth="360.0"
+                   promptText="Surname" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="111.0">
+            <tooltip>
+                <Tooltip fx:id="tooltip_Surname" text="Enter your surname"/>
+            </tooltip>
+        </TextField>
+        <Label layoutX="14.0" layoutY="155.0" prefHeight="18.0" prefWidth="125.0" text="Specialization:"
+               AnchorPane.topAnchor="155.0"/>
+        <ComboBox fx:id="comboBox_Specialization" layoutX="126.0" layoutY="151.0" prefHeight="31.0" prefWidth="360.0"
+                  AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="151.0">
+            <tooltip>
+                <Tooltip fx:id="tooltip_Specialization" text="Choose your specialization"/>
+            </tooltip>
+        </ComboBox>
+        <Label layoutX="166.0" layoutY="21.0" text="Change Information" AnchorPane.leftAnchor="166.0"
+               AnchorPane.rightAnchor="122.0" AnchorPane.topAnchor="14.0">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+    </children>
 </AnchorPane>

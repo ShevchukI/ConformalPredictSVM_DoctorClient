@@ -16,79 +16,114 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="637.0" prefWidth="966.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="637.0"
+            prefWidth="966.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
-                <fx:include fx:id="menuBar" source="menuBar.fxml" />
+                <fx:include fx:id="menuBar" source="menuBar.fxml"/>
             </children>
         </VBox>
     </top>
     <center>
         <AnchorPane prefHeight="537.0" prefWidth="726.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="14.0" layoutY="53.0" prefHeight="14.0" prefWidth="100.0" text="Doctor:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="53.0" />
-            <Label fx:id="label_Name" layoutX="120.0" layoutY="53.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="53.0" />
-            <Label layoutX="14.0" layoutY="81.0" prefHeight="14.0" prefWidth="100.0" text="Specialization:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="81.0" />
-            <Label fx:id="label_Specialization" layoutX="120.0" layoutY="81.0" prefHeight="14.0" prefWidth="422.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
-            <Button fx:id="button_Add" layoutX="14.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="115.0" />
-            <Button fx:id="button_View" layoutX="144.0" layoutY="116.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewPatient" text="View patient" AnchorPane.leftAnchor="144.0" AnchorPane.topAnchor="116.0" />
-            <TextField fx:id="textField_Search" layoutX="259.0" layoutY="116.0" prefHeight="31.0" prefWidth="404.0" promptText="Name Surname" AnchorPane.leftAnchor="280.0" AnchorPane.rightAnchor="303.0" AnchorPane.topAnchor="115.0" />
-            <Button fx:id="button_Search" layoutX="647.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="115.0" />
-            <TableView fx:id="tableView_PatientTable" layoutX="15.0" layoutY="159.0" prefHeight="330.0" prefWidth="698.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0">
-              <columns>
-                <TableColumn fx:id="tableColumn_Number" editable="false" maxWidth="120.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
-                <TableColumn fx:id="tableColumn_Name" editable="false" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Name" />
-                <TableColumn fx:id="tableColumn_Surname" editable="false" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Surname" />
-                <TableColumn fx:id="tableColumn_Address" editable="false" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Address" />
-                <TableColumn fx:id="tableColumn_Telephone" editable="false" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Telephone" />
-                <TableColumn fx:id="tableColumn_Email" editable="false" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Email" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </TableView>
-            <Group layoutX="674.0" layoutY="107.0" AnchorPane.rightAnchor="232.19775390625" AnchorPane.topAnchor="107.0">
-               <children>
-                  <RadioButton fx:id="radio_Name" layoutX="16.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="11.0">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="bySearch" />
-                     </toggleGroup>
-                  </RadioButton>
-                  <Label layoutY="17.0" text="by Name">
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding></Label>
-               </children>
-            </Group>
-            <Group layoutX="741.0" layoutY="107.0" AnchorPane.rightAnchor="146.25732421875" AnchorPane.topAnchor="107.0">
-               <children>
-                  <RadioButton fx:id="radio_Surname" layoutX="24.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" toggleGroup="$bySearch" />
-                  <Label layoutY="17.0" text="by Surname">
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding></Label>
-               </children>
-            </Group>
-            <Group layoutX="824.0" layoutY="107.0" AnchorPane.rightAnchor="104.87353515625" AnchorPane.topAnchor="107.0">
-               <children>
-                  <RadioButton fx:id="radio_All" layoutX="7.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="4.0" selected="true" toggleGroup="$bySearch" />
-                  <Label layoutY="17.0" text="by All">
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding></Label>
-               </children>
-            </Group>
-            <Pagination fx:id="pagination_Patient" layoutX="14.0" layoutY="159.0" prefHeight="390.0" prefWidth="698.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0" />
-            <Label alignment="CENTER" layoutX="373.0" layoutY="14.0" prefHeight="35.0" prefWidth="133.0" text="Main menu for Doctor" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
+            <children>
+                <Label layoutX="14.0" layoutY="53.0" prefHeight="14.0" prefWidth="100.0" text="Doctor:"
+                       AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="53.0"/>
+                <Label fx:id="label_Name" layoutX="120.0" layoutY="53.0" AnchorPane.leftAnchor="120.0"
+                       AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="53.0"/>
+                <Label layoutX="14.0" layoutY="81.0" prefHeight="14.0" prefWidth="100.0" text="Specialization:"
+                       AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="81.0"/>
+                <Label fx:id="label_Specialization" layoutX="120.0" layoutY="81.0" prefHeight="14.0" prefWidth="422.0"
+                       AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0"/>
+                <Button fx:id="button_Add" layoutX="14.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false"
+                        onAction="#addPatient" text="Add Patient" AnchorPane.leftAnchor="14.0"
+                        AnchorPane.topAnchor="115.0"/>
+                <Button fx:id="button_View" layoutX="144.0" layoutY="116.0" minWidth="80.0" mnemonicParsing="false"
+                        onAction="#viewPatient" text="View patient" AnchorPane.leftAnchor="144.0"
+                        AnchorPane.topAnchor="116.0"/>
+                <TextField fx:id="textField_Search" layoutX="259.0" layoutY="116.0" prefHeight="31.0" prefWidth="404.0"
+                           promptText="Name Surname" AnchorPane.leftAnchor="280.0" AnchorPane.rightAnchor="303.0"
+                           AnchorPane.topAnchor="115.0"/>
+                <Button fx:id="button_Search" layoutX="647.0" layoutY="115.0" minWidth="80.0" mnemonicParsing="false"
+                        onAction="#search" text="Search" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="115.0"/>
+                <TableView fx:id="tableView_PatientTable" layoutX="15.0" layoutY="159.0" prefHeight="330.0"
+                           prefWidth="698.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0"
+                           AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0">
+                    <columns>
+                        <TableColumn fx:id="tableColumn_Number" editable="false" maxWidth="120.0" minWidth="30.0"
+                                     style="-fx-alignment: CENTER;" text="#"/>
+                        <TableColumn fx:id="tableColumn_Name" editable="false" minWidth="80.0" prefWidth="100.0"
+                                     style="-fx-alignment: CENTER;" text="Name"/>
+                        <TableColumn fx:id="tableColumn_Surname" editable="false" minWidth="80.0" prefWidth="100.0"
+                                     style="-fx-alignment: CENTER;" text="Surname"/>
+                        <TableColumn fx:id="tableColumn_Address" editable="false" minWidth="80.0" prefWidth="100.0"
+                                     style="-fx-alignment: CENTER;" text="Address"/>
+                        <TableColumn fx:id="tableColumn_Telephone" editable="false" minWidth="80.0" prefWidth="100.0"
+                                     style="-fx-alignment: CENTER;" text="Telephone"/>
+                        <TableColumn fx:id="tableColumn_Email" editable="false" minWidth="80.0" prefWidth="100.0"
+                                     style="-fx-alignment: CENTER;" text="Email"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <cursor>
+                        <Cursor fx:constant="DEFAULT"/>
+                    </cursor>
+                </TableView>
+                <Group layoutX="674.0" layoutY="107.0" AnchorPane.rightAnchor="232.19775390625"
+                       AnchorPane.topAnchor="107.0">
+                    <children>
+                        <RadioButton fx:id="radio_Name" layoutX="16.0" mnemonicParsing="false" prefHeight="18.0"
+                                     prefWidth="11.0">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="bySearch"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <Label layoutY="17.0" text="by Name">
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                        </Label>
+                    </children>
+                </Group>
+                <Group layoutX="741.0" layoutY="107.0" AnchorPane.rightAnchor="146.25732421875"
+                       AnchorPane.topAnchor="107.0">
+                    <children>
+                        <RadioButton fx:id="radio_Surname" layoutX="24.0" mnemonicParsing="false" prefHeight="18.0"
+                                     prefWidth="0.0" toggleGroup="$bySearch"/>
+                        <Label layoutY="17.0" text="by Surname">
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                        </Label>
+                    </children>
+                </Group>
+                <Group layoutX="824.0" layoutY="107.0" AnchorPane.rightAnchor="104.87353515625"
+                       AnchorPane.topAnchor="107.0">
+                    <children>
+                        <RadioButton fx:id="radio_All" layoutX="7.0" mnemonicParsing="false" prefHeight="18.0"
+                                     prefWidth="4.0" selected="true" toggleGroup="$bySearch"/>
+                        <Label layoutY="17.0" text="by All">
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                        </Label>
+                    </children>
+                </Group>
+                <Pagination fx:id="pagination_Patient" layoutX="14.0" layoutY="159.0" prefHeight="390.0"
+                            prefWidth="698.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0"
+                            AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="159.0"/>
+                <Label alignment="CENTER" layoutX="373.0" layoutY="14.0" prefHeight="35.0" prefWidth="133.0"
+                       text="Main menu for Doctor" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="14.0">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Label>
 
-         </children></AnchorPane>
+            </children>
+        </AnchorPane>
     </center>
 </BorderPane>

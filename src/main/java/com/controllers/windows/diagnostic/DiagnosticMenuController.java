@@ -7,7 +7,7 @@ import com.models.Page;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -65,11 +65,12 @@ public class DiagnosticMenuController extends MenuController {
 
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         newWindow.setOnHidden(event -> {
-            HazelCastMap.getDataSetMap().clear();
+            GlobalMap.getDataSetMap().clear();
+//            HazelCastMap.getDataSetMap().clear();
         });
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
 //        illnessController = new IllnessController();
         predictList = new ArrayList<>();
         setStage(stage);
@@ -86,9 +87,11 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        configurationId = HazelCastMap.getDataSetMap().get(1).getId();
+        configurationId = GlobalMap.getDataSetMap().get(1).getId();
+//        configurationId = HazelCastMap.getDataSetMap().get(1).getId();
 
-        createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
+        createFields(GlobalMap.getDataSetMap().get(1).getColumns());
+//        createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
 
         predict = new Predict();
 
@@ -100,12 +103,14 @@ public class DiagnosticMenuController extends MenuController {
 
     public void initialize(Stage stage, Stage newWindow, Page page) throws IOException {
         newWindow.setOnHidden(event -> {
-            HazelCastMap.getDataSetMap().clear();
-            HazelCastMap.getMiscellaneousMap().remove("pageId");
+            GlobalMap.getDataSetMap().clear();
+//            HazelCastMap.getDataSetMap().clear();
+//            GlobalMap.getMiscMap().remove(Constant.getPageId());
+//            HazelCastMap.getMiscellaneousMap().remove("pageId");
         });
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         this.page = page;
 //        illnessController = new IllnessController();
         predictList = new ArrayList<>();
@@ -122,8 +127,10 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        configurationId = HazelCastMap.getDataSetMap().get(1).getId();
-        createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
+        configurationId = GlobalMap.getDataSetMap().get(1).getId();
+        createFields(GlobalMap.getDataSetMap().get(1).getColumns());
+//        configurationId = HazelCastMap.getDataSetMap().get(1).getId();
+//        createFields(HazelCastMap.getDataSetMap().get(1).getColumns());
         predict = new Predict();
         button_Run.setGraphic(new ImageView(Constant.getRunIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
@@ -251,11 +258,13 @@ public class DiagnosticMenuController extends MenuController {
                     page.setParameters(page.getParameters() + ";");
                 }
             }
-            page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass() + ":" + predict.getVisibleConfidence());
+            page.setAnswer(GlobalMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass() + ":" + predict.getVisibleConfidence());
+//            page.setAnswer(HazelCastMap.getDataSetMap().get(1).getName() + ":" + predict.getVisibleClass() + ":" + predict.getVisibleConfidence());
             Label nameResult = (Label) getStage().getScene().lookup("#label_NameResult");
             Label result = (Label) getStage().getScene().lookup("#label_Result");
             Label confidence = (Label) getStage().getScene().lookup("#label_Confidence");
-            nameResult.setText(HazelCastMap.getDataSetMap().get(1).getName());
+            nameResult.setText(GlobalMap.getDataSetMap().get(1).getName());
+//            nameResult.setText(HazelCastMap.getDataSetMap().get(1).getName());
             result.setText(predict.getVisibleClass());
             confidence.setText(predict.getVisibleConfidence());
             getNewWindow().close();

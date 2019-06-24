@@ -22,6 +22,9 @@ public class Constant {
     private final static String VECTOR = "vector";
     private final static String LOGIN = "login";
     private final static String PASSWORD = "password";
+    private final static String PAGE_INDEX = "pageIndex";
+    private final static String PAGE_ID = "pageId";
+    private final static String SEARCH_TYPE = "searchType";
 
     //String matches
     private final static String PHONEREG = "[+]{0,1}[0-9]{3,20}";
@@ -121,10 +124,16 @@ public class Constant {
 
     public static String[] getAuth() {
         String[] auth = new String[2];
-        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
-        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
+        String login = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.getKEY()),
+                GlobalMap.getKeyMap().get(Constant.getVECTOR()),
+                GlobalMap.getUserMap().get(Constant.getLOGIN()));
+        String password = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.getKEY()),
+                GlobalMap.getKeyMap().get(Constant.getVECTOR()),
+                GlobalMap.getUserMap().get(Constant.getPASSWORD()));
+//        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
+//        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
         auth[0] = login;
         auth[1] = password;
         return auth;
@@ -289,5 +298,33 @@ public class Constant {
 
     public static String getDatePicker() {
         return DATE_PICKER;
+    }
+
+    public static String getKEY() {
+        return KEY;
+    }
+
+    public static String getVECTOR() {
+        return VECTOR;
+    }
+
+    public static String getLOGIN() {
+        return LOGIN;
+    }
+
+    public static String getPASSWORD() {
+        return PASSWORD;
+    }
+
+    public static String getPageIndex() {
+        return PAGE_INDEX;
+    }
+
+    public static String getPageId() {
+        return PAGE_ID;
+    }
+
+    public static String getSearchType() {
+        return SEARCH_TYPE;
     }
 }

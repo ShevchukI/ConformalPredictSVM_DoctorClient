@@ -5,7 +5,6 @@ import com.models.Page;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
@@ -30,7 +29,7 @@ public class WindowsController {
     }
 
     public void start(Stage stage) throws IOException {
-        HazelCastMap.createInstanceAndMap();
+//        HazelCastMap.createInstanceAndMap();
         openWindow(Constant.getLoginMenuRoot(), stage, new LoginMenuController(),
                 "Doctor client", false, 341, 236);
     }

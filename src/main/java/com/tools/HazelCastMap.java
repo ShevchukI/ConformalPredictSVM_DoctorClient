@@ -47,28 +47,28 @@ public class HazelCastMap {
         return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
     }
 
-    public static void fillMap(Doctor doctorFromJson, String[] authorization) {
-//        Doctor doctor = doctorFromJson;
-        String key = Encryptor.genRandString();
-        String vector = Encryptor.genRandString();
-        getMapByName(KEY_MAP_NAME).put("key", key);
-        getMapByName(KEY_MAP_NAME).put("vector", vector);
-        getMapByName(USER_MAP_NAME).put("login", Encryptor.encrypt(key, vector, authorization[0]));
-        getMapByName(USER_MAP_NAME).put("password", Encryptor.encrypt(key, vector, authorization[1]));
+//    public static void fillMap(Doctor doctorFromJson, String[] authorization) {
+////        Doctor doctor = doctorFromJson;
+//        String key = Encryptor.genRandString();
+//        String vector = Encryptor.genRandString();
+//        getMapByName(KEY_MAP_NAME).put("key", key);
+//        getMapByName(KEY_MAP_NAME).put("vector", vector);
+//        getMapByName(USER_MAP_NAME).put("login", Encryptor.encrypt(key, vector, authorization[0]));
+//        getMapByName(USER_MAP_NAME).put("password", Encryptor.encrypt(key, vector, authorization[1]));
+//
+//        getDoctorMap().put(1, doctorFromJson);
+//
+//        getMiscellaneousMap().put("pageIndex", 1);
+//    }
 
-        getDoctorMap().put(1, doctorFromJson);
-
-        getMiscellaneousMap().put("pageIndex", 1);
-    }
-
-    public static void clearInstance() {
-        getMapByName(USER_MAP_NAME).clear();
-        getMapByName(DATASET_MAP_NAME).clear();
-        getMapByName(KEY_MAP_NAME).clear();
-        getMapByName(DOCTOR_MAP_NAME).clear();
-        getMapByName(MISCELLANEOUS_MAP_NAME).clear();
-        getMapByName(PATIENT_MAP_NAME).clear();
-    }
+//    public static void clearInstance() {
+//        getMapByName(USER_MAP_NAME).clear();
+//        getMapByName(DATASET_MAP_NAME).clear();
+//        getMapByName(KEY_MAP_NAME).clear();
+//        getMapByName(DOCTOR_MAP_NAME).clear();
+//        getMapByName(MISCELLANEOUS_MAP_NAME).clear();
+//        getMapByName(PATIENT_MAP_NAME).clear();
+//    }
 
     public static String getUserMapName() {
         return USER_MAP_NAME;

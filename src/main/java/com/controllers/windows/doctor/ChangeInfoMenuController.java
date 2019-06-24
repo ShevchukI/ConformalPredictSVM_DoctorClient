@@ -5,7 +5,7 @@ import com.controllers.windows.menu.MenuController;
 import com.models.Doctor;
 import com.models.Specialization;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,9 +62,9 @@ public class ChangeInfoMenuController extends MenuController {
 
     @FXML
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
 //        specializationController = new SpecializationController();
@@ -113,12 +113,17 @@ public class ChangeInfoMenuController extends MenuController {
                 }
             });
             comboBox_Specialization.setVisibleRowCount(5);
-            comboBox_Specialization.getSelectionModel().select(HazelCastMap.getDoctorMap().get(1).getSpecialization().getId());
-            textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
-            textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
+            comboBox_Specialization.getSelectionModel().select(GlobalMap.getDoctorMap().get(1).getSpecialization().getId());
+//            comboBox_Specialization.getSelectionModel().select(HazelCastMap.getDoctorMap().get(1).getSpecialization().getId());
+            textField_Name.setText(GlobalMap.getDoctorMap().get(1).getName());
+            textField_Surname.setText(GlobalMap.getDoctorMap().get(1).getSurname());
+//            textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
+//            textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
 
-            if (HazelCastMap.getDoctorMap().get(1) != null) {
-                doctor = HazelCastMap.getDoctorMap().get(1);
+            if (GlobalMap.getDoctorMap().get(1) != null) {
+//            if (HazelCastMap.getDoctorMap().get(1) != null) {
+                doctor = GlobalMap.getDoctorMap().get(1);
+//                doctor = HazelCastMap.getDoctorMap().get(1);
             } else {
                 doctor = new Doctor();
             }

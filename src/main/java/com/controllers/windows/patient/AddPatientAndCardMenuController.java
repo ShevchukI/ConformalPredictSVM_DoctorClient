@@ -4,7 +4,6 @@ import com.controllers.windows.menu.MenuController;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -46,9 +45,9 @@ public class AddPatientAndCardMenuController extends MenuController {
 
 
     public void initialize(Stage stage, Stage newWindow, TableView<Patient> tableView_PatientTable) {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
         patientMenuController.init(this);
@@ -64,9 +63,9 @@ public class AddPatientAndCardMenuController extends MenuController {
     }
 
     public void initialize(Stage stage, Stage newWindow, Patient patientEntity, Record recordEntity) {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
         patientMenuController.init(this);

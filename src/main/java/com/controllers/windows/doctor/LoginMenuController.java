@@ -5,7 +5,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Doctor;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -35,11 +35,12 @@ public class LoginMenuController extends MenuController {
     private Button button_SignIn;
 
     public void initialize(Stage stage) {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
-        HazelCastMap.clearInstance();
+        GlobalMap.clearMap();
+//        HazelCastMap.clearInstance();
         windowsController = new WindowsController();
         button_SignIn.setGraphic(new ImageView(Constant.getSignInButtonIcon()));
     }
@@ -57,7 +58,9 @@ public class LoginMenuController extends MenuController {
             HttpResponse response = doctor.authorization();
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
-                HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);
+                GlobalMap.fillMap(authorization);
+                GlobalMap.getDoctorMap().put(1, new Doctor().fromJson(response));
+//                HazelCastMap.fillMap(new Doctor().fromJson(response), authorization);
                 windowsController.openWindow(Constant.getMainMenuRoot(), getStage(),
                         new MainMenuController(), null, true, 1100, 680);
             }

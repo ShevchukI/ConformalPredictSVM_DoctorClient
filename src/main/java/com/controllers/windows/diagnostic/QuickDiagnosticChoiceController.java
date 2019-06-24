@@ -4,7 +4,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Dataset;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -81,7 +81,8 @@ public class QuickDiagnosticChoiceController extends MenuController {
     public void ok(ActionEvent event) throws IOException {
         if (comboBox_Illness.getSelectionModel().getSelectedItem() != null) {
             Dataset dataset = new Dataset(comboBox_Illness.getSelectionModel().getSelectedItem().getId(), comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
-            HazelCastMap.getDataSetMap().put(1, dataset);
+            GlobalMap.getDataSetMap().put(1, dataset);
+//            HazelCastMap.getDataSetMap().put(1, dataset);
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
                     new DiagnosticMenuController(), "", 700, 440);
             getNewWindow().close();

@@ -4,7 +4,6 @@ import com.models.Page;
 import com.models.Patient;
 import com.models.Record;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -33,9 +32,9 @@ public abstract class MenuController {
     }
 
     public void initialize(Stage stage) throws IOException {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
     }
 

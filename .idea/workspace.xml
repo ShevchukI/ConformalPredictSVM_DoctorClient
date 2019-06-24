@@ -7,29 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a5f1913e-faa8-4c73-93bf-af8758dd02c6" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/tools/HazelCastMap.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/DiagnosticMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/DiagnosticMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/doctor/ChangeInfoMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/doctor/ChangeInfoMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/doctor/LoginMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/doctor/LoginMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/MainMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/MainMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/MenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/MenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/WindowsController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/menu/WindowsController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/AddPatientAndCardMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/AddPatientAndCardMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/CardMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/CardMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/CardPageMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/CardPageMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/PatientMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/PatientMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/RecordMenuController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/patient/RecordMenuController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Dataset.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Dataset.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Doctor.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Doctor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Page.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Page.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/ParameterSingleObject.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/ParameterSingleObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Patient.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Patient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/PatientPage.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/PatientPage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Predict.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Predict.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/models/Record.java" afterPath="$PROJECT_DIR$/src/main/java/com/models/Record.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tools/Constant.java" afterPath="$PROJECT_DIR$/src/main/java/com/tools/Constant.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tools/GlobalMap.java" afterPath="$PROJECT_DIR$/src/main/java/com/tools/GlobalMap.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -137,8 +116,8 @@
       <file leaf-file-name="QuickDiagnosticChoiceController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="83" column="21" lean-forward="false" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
+            <state relative-caret-position="463">
+              <caret line="84" column="0" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -290,9 +269,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/models/Record.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tools/Constant.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/models/Dataset.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/models/Predict.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tools/GlobalMap.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java" />
       </list>
     </option>
   </component>
@@ -1315,7 +1294,7 @@
       <workItem from="1560709921616" duration="662000" />
       <workItem from="1560955173816" duration="261000" />
       <workItem from="1561301473288" duration="2174000" />
-      <workItem from="1561383976144" duration="7927000" />
+      <workItem from="1561383976144" duration="7960000" />
     </task>
     <task id="LOCAL-00001" summary="fix rebase">
       <created>1555142740426</created>
@@ -1450,11 +1429,18 @@
       <option name="project" value="LOCAL" />
       <updated>1561391751756</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="after delete comment">
+      <created>1561395139539</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1561395139539</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="180272000" />
+    <option name="totallyTimeSpent" value="180305000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1529,7 +1515,8 @@
     <MESSAGE value="add config file" />
     <MESSAGE value="replace HazelCast to the HashMap" />
     <MESSAGE value="before delete comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="before delete comment" />
+    <MESSAGE value="after delete comment" />
+    <option name="LAST_COMMIT_MESSAGE" value="after delete comment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1967,8 +1954,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/controllers/windows/diagnostic/QuickDiagnosticChoiceController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="83" column="21" lean-forward="false" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
+        <state relative-caret-position="463">
+          <caret line="84" column="0" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

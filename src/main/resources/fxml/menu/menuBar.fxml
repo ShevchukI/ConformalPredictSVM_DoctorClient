@@ -23,11 +23,11 @@
                 </Menu>
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Quick diagnostic">
-            <items>
-                <MenuItem mnemonicParsing="false" text="Start" onAction="#quickDiagnostic"/>
-            </items>
-        </Menu>
+        <!--<Menu mnemonicParsing="false" text="Quick diagnostic">-->
+            <!--<items>-->
+                <!--<MenuItem mnemonicParsing="false" text="Start" onAction="#quickDiagnostic"/>-->
+            <!--</items>-->
+        <!--</Menu>-->
         <!--<Menu mnemonicParsing="false" text="Help">-->
             <!--<items>-->
                 <!--<MenuItem mnemonicParsing="false" onAction="#about" text="About"/>-->

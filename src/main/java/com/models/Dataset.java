@@ -21,25 +21,11 @@ public class Dataset implements Serializable{
     private String description;
     private String columns;
 
+    public Dataset(){}
 
-    public Dataset() {
-    }
     public Dataset(int id, String name, String columns) {
         this.id = id;
         this.name = name;
-        this.columns = columns;
-    }
-
-    public Dataset(int id, String name, String description, String columns) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.columns = columns;
-    }
-
-    public Dataset(String name, String description, String columns) {
-        this.name = name;
-        this.description = description;
         this.columns = columns;
     }
 
@@ -71,26 +57,8 @@ public class Dataset implements Serializable{
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getColumns() {
         return columns;
-    }
-
-    public void setColumns(String columns) {
-        this.columns = columns;
-    }
-
-    public Dataset fromResponse(HttpResponse response) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        String json = reader.readLine();
-        return new Gson().fromJson(json, Dataset.class);
     }
 
     public ArrayList<Dataset> getListFromResponse(HttpResponse response) throws IOException {

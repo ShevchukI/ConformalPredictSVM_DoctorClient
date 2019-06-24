@@ -26,7 +26,6 @@ import static com.tools.Constant.*;
 public class Page {
 
     private int id;
-//    private String theme;
     private String description;
     private String parameters;
     private String answer;
@@ -34,21 +33,6 @@ public class Page {
     private Doctor doctor;
 
     public Page() {
-    }
-
-    public Page(String theme, String description, String parameters, String answer, Date date) {
-//        this.theme = theme;
-        this.description = description;
-        this.parameters = parameters;
-        this.answer = answer;
-        this.date = date;
-    }
-
-    public Page(String theme, String description, String parameters, String answer) {
-//        this.theme = theme;
-        this.description = description;
-        this.parameters = parameters;
-        this.answer = answer;
     }
 
     public static HttpResponse getAllPageByPatientId(int id) {
@@ -154,14 +138,6 @@ public class Page {
         this.id = id;
     }
 
-//    public String getTheme() {
-//        return theme;
-//    }
-//
-//    public void setTheme(String theme) {
-//        this.theme = theme;
-//    }
-
     public String getDescription() {
         return description;
     }
@@ -211,32 +187,10 @@ public class Page {
 
     public void setPageWithoutDate(Page page) {
         this.id = page.getId();
-//        this.theme = page.getTheme();
         this.description = page.getDescription();
         this.parameters = page.getParameters();
         this.answer = page.getAnswer();
         this.doctor = page.getDoctor();
     }
-
-    public Page fromResponse(HttpResponse response) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        String json = reader.readLine();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        return gson.fromJson(json, Page.class);
-    }
-
-    public String getDoctorName() {
-        return doctor.getName();
-    }
-
-    public String getDoctorSpecialization() {
-        return doctor.getSpecialization().getName();
-    }
-
-
-    public String getDoctorInfo() {
-        return doctor.getName() + " " + doctor.getSurname();
-    }
-
 
 }

@@ -32,7 +32,6 @@ public class MainMenuController extends MenuController {
     private ObservableList<Patient> patientObservableList;
     private WindowsController windowsController;
     private PatientPage patientPage;
-//    private int searchType;
     private int pageIndex;
     private boolean checkSearch;
     private Doctor doctor;
@@ -75,13 +74,9 @@ public class MainMenuController extends MenuController {
     private Button button_Search;
 
     public void initialize(Stage stage) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         menuBarController.init(this);
         doctor = GlobalMap.getDoctorMap().get(1);
-//        doctor = HazelCastMap.getDoctorMap().get(1);
         patientObservableList = FXCollections.observableArrayList();
         addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         windowsController = new WindowsController();
@@ -89,8 +84,6 @@ public class MainMenuController extends MenuController {
         label_Specialization.setText(doctor.getSpecialization().getName());
         checkSearch = false;
         pageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.getPageIndex()));
-//        pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
-
         tableColumn_Number.impl_setReorderable(false);
         tableColumn_Number.setSortable(false);
         tableColumn_Number.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_PatientTable.getItems().
@@ -131,7 +124,6 @@ public class MainMenuController extends MenuController {
     }
 
     public void addPatient(ActionEvent event) throws IOException {
-
         windowsController.openNewModalWindow(Constant.getAddPatientAndRecordMenuRoot(), this.getStage(),
                 addPatientAndCardMenuController, tableView_PatientTable,"Add new patient", 740, 540);
     }
@@ -146,11 +138,7 @@ public class MainMenuController extends MenuController {
         } else {
             Patient patient = tableView_PatientTable.getSelectionModel().getSelectedItem();
             GlobalMap.getMiscMap().put("pageIndex", String.valueOf(pageIndex));
-//            HazelCastMap.getMiscellaneousMap().put("pageIndex", pageIndex);
-
             GlobalMap.getPatientMap().put(1, patient);
-//            HazelCastMap.getPatientMap().put(1, patient);
-
             windowsController.openWindow(Constant.getCardMenuRoot(), getStage(),
                     new CardMenuController(), null, true, 600, 680);
         }
@@ -160,32 +148,24 @@ public class MainMenuController extends MenuController {
         if (textField_Search.getText().equals("")) {
             checkSearch = false;
             GlobalMap.getMiscMap().put("pageIndex", "1");
-//            HazelCastMap.getMiscellaneousMap().put("pageIndex", 1);
             pageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.getPageIndex()));
-//            pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
             getPage(pageIndex);
         } else {
             if (radio_All.isSelected()) {
 //                searchType = 0;
                 GlobalMap.getMiscMap().put("searchType", "0");
-//                HazelCastMap.getMiscellaneousMap().put("searchType", 0);
             } else if (radio_Name.isSelected()) {
 //                searchType = 1;
                 GlobalMap.getMiscMap().put(Constant.getSearchType(), "1");
-//                HazelCastMap.getMiscellaneousMap().put("searchType", 1);
             } else if (radio_Surname.isSelected()) {
 //                searchType = 2;
                 GlobalMap.getMiscMap().put(Constant.getSearchType(), "2");
-//                HazelCastMap.getMiscellaneousMap().put("searchType", 2);
             }
             checkSearch = true;
             GlobalMap.getMiscMap().put(Constant.getPageIndex(), "1");
-//            HazelCastMap.getMiscellaneousMap().put("pageIndex", 1);
             pageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.getPageIndex()));
-//            pageIndex = HazelCastMap.getMiscellaneousMap().get("pageIndex");
             searchPage(pageIndex, textField_Search.getText(),
                     Integer.parseInt(GlobalMap.getMiscMap().get(Constant.getSearchType())));
-//                    HazelCastMap.getMiscellaneousMap().get("searchType"));
         }
     }
 
@@ -202,7 +182,6 @@ public class MainMenuController extends MenuController {
                 this.pageIndex = pageIndex + 1;
                 searchPage(this.pageIndex, textField_Search.getText(),
                         Integer.parseInt(GlobalMap.getMiscMap().get(Constant.getSearchType())));
-//                        HazelCastMap.getMiscellaneousMap().get("searchType"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

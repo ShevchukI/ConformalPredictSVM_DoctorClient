@@ -32,9 +32,6 @@ public abstract class MenuController {
     }
 
     public void initialize(Stage stage) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
     }
 
@@ -50,11 +47,11 @@ public abstract class MenuController {
 
     }
 
-    public void setNewWindow(Stage newWindow) {
+    protected void setNewWindow(Stage newWindow) {
         this.newWindow = newWindow;
     }
 
-    public Stage getNewWindow() {
+    protected Stage getNewWindow() {
         return newWindow;
     }
 

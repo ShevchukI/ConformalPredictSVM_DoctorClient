@@ -1,6 +1,5 @@
 package com.tools;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
@@ -11,7 +10,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.util.EntityUtils;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -88,21 +89,17 @@ public class Constant {
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpRequestBase request = null;
         if (post != null) {
-
             post.setHeader("Content-Type", "application/json");
             if (httpEntity != null) {
                 post.setEntity(httpEntity);
             }
             request = post;
-
         } else if (put != null) {
-
             put.setHeader("Content-Type", "application/json");
             if (httpEntity != null) {
                 put.setEntity(httpEntity);
             }
             request = put;
-
         } else if (get != null) {
             request = get;
         } else if (delete != null) {
@@ -130,27 +127,14 @@ public class Constant {
         String password = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.getKEY()),
                 GlobalMap.getKeyMap().get(Constant.getVECTOR()),
                 GlobalMap.getUserMap().get(Constant.getPASSWORD()));
-//        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
-//        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
         auth[0] = login;
         auth[1] = password;
         return auth;
     }
 
-
     public static String responseToString(HttpResponse response) throws IOException {
         return EntityUtils.toString(response.getEntity());
     }
-
-
-    public static void run(Runnable treatment) {
-        if (treatment == null) throw new IllegalArgumentException("The treatment to perform can not be null");
-        if (Platform.isFxApplicationThread()) treatment.run();
-        else Platform.runLater(treatment);
-    }
-
 
     public static void getAlert(String header, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);

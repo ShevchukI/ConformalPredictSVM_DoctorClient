@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Admin on 10.01.2019.
@@ -29,7 +28,6 @@ public class WindowsController {
     }
 
     public void start(Stage stage) throws IOException {
-//        HazelCastMap.createInstanceAndMap();
         openWindow(Constant.getLoginMenuRoot(), stage, new LoginMenuController(),
                 "Doctor client", false, 341, 236);
     }
@@ -52,44 +50,6 @@ public class WindowsController {
         controller.initialize(stage, page);
         stage.show();
     }
-
-    public void openWindowResizable(String rootName, Stage stage, MenuController controller, TableView<Page> pageTableView,
-                                    String title, int minWidth, int minHeight) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
-        Pane pane = (Pane) loader.load();
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.setMinWidth(minWidth);
-        stage.setMinHeight(minHeight);
-        stage.setWidth(stage.getWidth());
-        stage.setHeight(stage.getHeight());
-        stage.setMaxWidth(sSize.getWidth());
-        stage.setMaxHeight(sSize.getHeight());
-        stage.setResizable(true);
-        stage.setTitle(title);
-        controller = (MenuController) loader.getController();
-        controller.initialize(stage, pageTableView);
-        stage.show();
-    }
-
-    public void openWindowResizable(String rootName, Stage stage, MenuController controller,
-                                    ArrayList<Page> pages, int row, String action,
-                                    String title, int minWidth, int minHeight) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(rootName));
-        Pane pane = (Pane) loader.load();
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.setMinWidth(minWidth);
-        stage.setMinHeight(minHeight);
-        stage.setMaxWidth(sSize.getWidth());
-        stage.setMaxHeight(sSize.getHeight());
-        stage.setResizable(true);
-        stage.setTitle(title);
-        controller = (MenuController) loader.getController();
-        controller.initialize(pages, row, stage, action);
-        stage.show();
-    }
-
 
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    TableView<Patient> tableView_PatientTable,

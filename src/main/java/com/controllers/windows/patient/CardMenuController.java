@@ -1,7 +1,5 @@
 package com.controllers.windows.patient;
 
-//import com.controllers.requests.PageController;
-//import com.controllers.requests.RecordController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -34,7 +32,6 @@ public class CardMenuController extends MenuController {
 
     private AddPatientAndCardMenuController addPatientAndCardMenuController;
     private WindowsController windowsController;
-//    private RecordController recordController;
     private ArrayList<Page> pages;
     private Patient patient;
     private Record record;
@@ -82,16 +79,11 @@ public class CardMenuController extends MenuController {
 
     public void initialize(Stage stage) throws IOException {
         menuBarController.init(this);
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         addPatientAndCardMenuController = new AddPatientAndCardMenuController();
         windowsController = new WindowsController();
-//        recordController = new RecordController();
         formatter = new SimpleDateFormat("dd-MM-yyyy");
         patient = GlobalMap.getPatientMap().get(1);
-//        patient = HazelCastMap.getPatientMap().get(1);
         label_Name.setText(patient.getName() + " " + patient.getSurname());
         page = new Page();
 
@@ -169,7 +161,6 @@ public class CardMenuController extends MenuController {
     public void deletePage(ActionEvent event) throws IOException {
         int row = tableView_PageTable.getSelectionModel().getFocusedIndex();
         if (pages.get(row).getDoctor().getId() == GlobalMap.getDoctorMap().get(1).getId()) {
-//        if (pages.get(row).getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
             boolean result = questionOkCancel("Do you really want to delete this page?");
             if (result) {
                 row = tableView_PageTable.getSelectionModel().getFocusedIndex();

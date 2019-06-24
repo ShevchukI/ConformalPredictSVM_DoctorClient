@@ -29,14 +29,6 @@ public class GlobalMap {
         getUserMap().put(Constant.getLOGIN(), Encryptor.encrypt(key, vector, authorization[0]));
         getUserMap().put(Constant.getPASSWORD(), Encryptor.encrypt(key, vector, authorization[1]));
         getMiscMap().put(Constant.getPageIndex(), "1");
-//        getMapByName(KEY_MAP_NAME).put("key", key);
-//        getMapByName(KEY_MAP_NAME).put("vector", vector);
-//        getMapByName(USER_MAP_NAME).put("login", Encryptor.encrypt(key, vector, authorization[0]));
-//        getMapByName(USER_MAP_NAME).put("password", Encryptor.encrypt(key, vector, authorization[1]));
-//
-//        getDoctorMap().put(1, doctorFromJson);
-//
-//        getMiscellaneousMap().put("pageIndex", 1);
     }
 
     public static void clearMap(){

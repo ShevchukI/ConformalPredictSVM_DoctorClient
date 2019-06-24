@@ -51,7 +51,6 @@ public class Doctor implements Serializable {
         this.password = password;
     }
 
-
     public HttpResponse authorization() throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((this.login + ":" + this.password).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
@@ -75,7 +74,6 @@ public class Doctor implements Serializable {
         int statusCode = response.getStatusLine().getStatusCode();
         if (Constant.checkStatusCode(statusCode)) {
             GlobalMap.getDoctorMap().put(1, this);
-//            getDoctorMap().put(1, this);
             getAlert(null, "Information changed!", Alert.AlertType.INFORMATION);
             return statusCode;
         } else {
@@ -106,10 +104,6 @@ public class Doctor implements Serializable {
                                 GlobalMap.getKeyMap().get(Constant.getVECTOR()),
                                 newPassword
                         ));
-//                HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password",
-//                        Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
-//                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
-//                                newPassword));
                 getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
             }
         } else {
@@ -150,11 +144,6 @@ public class Doctor implements Serializable {
         return surname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-
     public int getId() {
         return id;
     }
@@ -166,10 +155,5 @@ public class Doctor implements Serializable {
     public Specialization getSpecialization() {
         return specialization;
     }
-
-    public void setSpecialization(Specialization specialization) {
-        this.specialization = specialization;
-    }
-
 
 }

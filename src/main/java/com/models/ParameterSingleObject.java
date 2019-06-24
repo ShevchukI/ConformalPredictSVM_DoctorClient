@@ -7,9 +7,6 @@ public class ParameterSingleObject {
     private String params;
     private Double significance;
 
-    public ParameterSingleObject() {
-    }
-
     public ParameterSingleObject(String params, double significance) {
         this.params = params;
         this.significance = significance;

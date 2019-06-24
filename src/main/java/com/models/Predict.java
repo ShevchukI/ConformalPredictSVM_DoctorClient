@@ -32,23 +32,7 @@ public class Predict {
     private String visibleConfidence;
     private String visibleParameters;
 
-
     public Predict() {
-    }
-
-    public Predict(int id, int realClass,
-                   double pPositive, double pNegative,
-                   int predictClass, double confidence, double credibility,
-                   double alphaPositive, double alphaNegative) {
-        this.id = id;
-        this.realClass = realClass;
-        this.pPositive = pPositive;
-        this.pNegative = pNegative;
-        this.predictClass = predictClass;
-        this.confidence = confidence;
-        this.credibility = credibility;
-        this.alphaPositive = alphaPositive;
-        this.alphaNegative = alphaNegative;
     }
 
     public HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) {
@@ -80,6 +64,30 @@ public class Predict {
         this.id = id;
     }
 
+    public int getPredictClass() {
+        return predictClass;
+    }
+
+    public void setPredictClass(int predictClass) {
+        this.predictClass = predictClass;
+    }
+
+    public double getConfidence() {
+        return confidence;
+    }
+
+    public double getCredibility() {
+        return credibility;
+    }
+
+    public String getVisibleConfidence() {
+        return visibleConfidence;
+    }
+
+    public void setVisibleConfidence(String visibleConfidence) {
+        this.visibleConfidence = visibleConfidence;
+    }
+
     public int getRealClass() {
         return realClass;
     }
@@ -104,36 +112,12 @@ public class Predict {
         this.pNegative = pNegative;
     }
 
-    public int getPredictClass() {
-        return predictClass;
-    }
-
-    public void setPredictClass(int predictClass) {
-        this.predictClass = predictClass;
-    }
-
-    public double getConfidence() {
-        return confidence;
-    }
-
     public void setConfidence(double confidence) {
         this.confidence = confidence;
     }
 
-    public double getCredibility() {
-        return credibility;
-    }
-
     public void setCredibility(double credibility) {
         this.credibility = credibility;
-    }
-
-    public String getVisibleConfidence() {
-        return visibleConfidence;
-    }
-
-    public void setVisibleConfidence(String visibleConfidence) {
-        this.visibleConfidence = visibleConfidence;
     }
 
     public double getAlphaPositive() {
@@ -150,21 +134,6 @@ public class Predict {
 
     public void setAlphaNegative(double alphaNegative) {
         this.alphaNegative = alphaNegative;
-    }
-
-    public String getVisibleClass() {
-        if (getCredibility() == 1) {
-            switch (getPredictClass()) {
-                case 1:
-                    return "Positive";
-                case -1:
-                    return "Negative";
-                default:
-                    return "Uncertain";
-            }
-        } else {
-            return "Uncertain";
-        }
     }
 
     public void setVisibleClass(String visibleClass) {
@@ -185,6 +154,21 @@ public class Predict {
 
     public void setVisibleParameters(String visibleParameters) {
         this.visibleParameters = visibleParameters;
+    }
+
+    public String getVisibleClass() {
+        if (getCredibility() == 1) {
+            switch (getPredictClass()) {
+                case 1:
+                    return "Positive";
+                case -1:
+                    return "Negative";
+                default:
+                    return "Uncertain";
+            }
+        } else {
+            return "Uncertain";
+        }
     }
 
     public Predict fromJson(HttpResponse response) throws IOException {

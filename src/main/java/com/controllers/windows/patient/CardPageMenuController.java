@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 
-//import com.controllers.requests.PageController;
-
 /**
  * Created by Admin on 14.01.2019.
  */
@@ -67,9 +65,6 @@ public class CardPageMenuController extends MenuController {
 
     public void initialize(Stage stage) throws IOException {
         menuBarController.init(this);
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
 
@@ -81,12 +76,7 @@ public class CardPageMenuController extends MenuController {
         label_Doctor.setText(GlobalMap.getDoctorMap().get(1).getName() + " "
                 + GlobalMap.getDoctorMap().get(1).getSurname()
                 + " / " + GlobalMap.getDoctorMap().get(1).getSpecialization().getName());
-//        label_Doctor.setText(HazelCastMap.getDoctorMap().get(1).getName() + " "
-//                + HazelCastMap.getDoctorMap().get(1).getSurname()
-//                + " / " + HazelCastMap.getDoctorMap().get(1).getSpecialization().getName());
-
         label_PatientName.setText(GlobalMap.getPatientMap().get(1).getSurname() + " " + GlobalMap.getPatientMap().get(1).getName());
-//        label_PatientName.setText(HazelCastMap.getPatientMap().get(1).getSurname() + " " + HazelCastMap.getPatientMap().get(1).getName());
         label_CurrentDate.setText(String.valueOf(date));
 
         page = new Page();
@@ -127,9 +117,7 @@ public class CardPageMenuController extends MenuController {
             }
         });
         comboBox_Illness.setVisibleRowCount(5);
-
         change = true;
-
         button_Change.setVisible(false);
         button_Change.setGraphic(new ImageView(Constant.getEditIcon()));
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
@@ -137,37 +125,22 @@ public class CardPageMenuController extends MenuController {
 
     public void initialize(Stage stage, Page page) throws IOException {
         menuBarController.init(this);
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
-
         windowsController = new WindowsController();
         datasets = FXCollections.observableArrayList();
         create = false;
-
         this.page = page;
-
         label_Doctor.setText(GlobalMap.getDoctorMap().get(1).getName() + " "
                 + GlobalMap.getDoctorMap().get(1).getSurname()
                 + " / " + GlobalMap.getDoctorMap().get(1).getSpecialization().getName());
-
-//        label_Doctor.setText(HazelCastMap.getDoctorMap().get(1).getName() + " "
-//                + HazelCastMap.getDoctorMap().get(1).getSurname()
-//                + " / " + HazelCastMap.getDoctorMap().get(1).getSpecialization().getName());
-
         label_PatientName.setText(GlobalMap.getPatientMap().get(1).getName() + " " + GlobalMap.getPatientMap().get(1).getSurname());
-//        label_PatientName.setText(HazelCastMap.getPatientMap().get(1).getName() + " " + HazelCastMap.getPatientMap().get(1).getSurname());
         label_CurrentDate.setText(String.valueOf(page.getDatePlusDay()));
-
         textArea_Description.setText(this.page.getDescription());
         textArea_Description.setEditable(false);
         oldDescription = textArea_Description.getText();
-
         if (this.page.getAnswer() != null) {
             String[] result = this.page.getAnswer().split(":");
-//            if (result.length == 3) {
             if (result.length == 3) {
                 label_NameResult.setText(result[0]);
                 label_Result.setText(result[1]);
@@ -176,8 +149,6 @@ public class CardPageMenuController extends MenuController {
                 label_NameResult.setText(result[0]);
                 label_Result.setText(result[1]);
             }
-
-//            }
         }
         HttpResponse response = Dataset.getAllActiveDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
@@ -216,38 +187,29 @@ public class CardPageMenuController extends MenuController {
         comboBox_Illness.setVisibleRowCount(5);
 
         if (this.page.getDoctor().getId() == GlobalMap.getDoctorMap().get(1).getId()) {
-//        if (this.page.getDoctor().getId() == HazelCastMap.getDoctorMap().get(1).getId()) {
             button_Change.setDisable(false);
         } else {
             button_Change.setDisable(true);
         }
-
         change = false;
-
-
         comboBox_Illness.setDisable(true);
         button_Diagnostic.setDisable(true);
         button_Save.setDisable(true);
-
         button_Change.setGraphic(new ImageView(Constant.getEditIcon()));
         button_Back.setGraphic(new ImageView(Constant.getReturnIcon()));
     }
-
 
     public void savePage(ActionEvent event) throws IOException, ParseException {
         page.setDescription(textArea_Description.getText());
         if (create) {
             page.createPage(GlobalMap.getPatientMap().get(1).getId());
-//            page.createPage(HazelCastMap.getPatientMap().get(1).getId());
             change = false;
         } else {
             page.changePage();
         }
     }
 
-
     public void backToCardMenu(ActionEvent event) throws IOException {
-
         if (change) {
             boolean result = questionOkCancel("Do you really want to leave without save?");
             if (result) {
@@ -259,8 +221,6 @@ public class CardPageMenuController extends MenuController {
                     new CardMenuController(), null, true, 600, 680);
         }
     }
-
-//    }
 
     public void changePage(ActionEvent event) {
         button_Save.setDisable(false);
@@ -276,7 +236,6 @@ public class CardPageMenuController extends MenuController {
                     comboBox_Illness.getSelectionModel().getSelectedItem().getName(),
                     comboBox_Illness.getSelectionModel().getSelectedItem().getColumns());
             GlobalMap.getDataSetMap().put(1, dataset);
-//            HazelCastMap.getDataSetMap().put(1, dataset);
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
                     new DiagnosticMenuController(), page, "", 600, 440);
         } else {

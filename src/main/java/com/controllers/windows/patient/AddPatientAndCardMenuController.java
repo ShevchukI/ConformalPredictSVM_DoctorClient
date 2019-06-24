@@ -25,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 public class AddPatientAndCardMenuController extends MenuController {
 
     private TableView<Patient> tableView_PatientTable;
-    //    private int patientId;
     private Patient patient;
     private Record record;
 
@@ -45,37 +44,27 @@ public class AddPatientAndCardMenuController extends MenuController {
 
 
     public void initialize(Stage stage, Stage newWindow, TableView<Patient> tableView_PatientTable) {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         setNewWindow(newWindow);
         patientMenuController.init(this);
         recordMenuController.init(this);
         this.tableView_PatientTable = tableView_PatientTable;
         formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         patient = new Patient();
         record = new Record();
-
         button_Save.setGraphic(new ImageView(Constant.getOkIcon()));
         button_Cancel.setGraphic(new ImageView(Constant.getCancelIcon()));
     }
 
     public void initialize(Stage stage, Stage newWindow, Patient patientEntity, Record recordEntity) {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         setNewWindow(newWindow);
         patientMenuController.init(this);
         recordMenuController.init(this);
         label_PaneName.setText("Change patient");
         formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         patient = patientEntity;
         record = recordEntity;
-//        patientId = patient.getId();
         patientMenuController.getTextField_Name().setText(patient.getName());
         patientMenuController.getTextField_Surname().setText(patient.getSurname());
         patientMenuController.getTextField_Telephone().setText(patient.getTelephone());
@@ -86,7 +75,6 @@ public class AddPatientAndCardMenuController extends MenuController {
         DateTimeFormatter datePickerValueFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String bloodType = record.getBloodGroup().substring(record.getBloodGroup().length() - 1);
         String bloodGroup = record.getBloodGroup().replace(bloodType, "");
-
         String date = datePickerEditorFormat.format(record.getBirthday());
 
         recordMenuController.getDatePicker_Birthday().setValue(LocalDate.parse(date, datePickerValueFormat));
@@ -107,28 +95,10 @@ public class AddPatientAndCardMenuController extends MenuController {
 
     public void savePatient(ActionEvent event) throws IOException, ParseException {
         if (checkPatientFields() && checkCardFields()) {
-//            Patient patient = new Patient(patientMenuController.getTextField_Name().getText(),
-//                    patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
-//                    patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
-//            Record record = new Record(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
-//                    Double.parseDouble(recordMenuController.getTextField_Height().getText()),
-//                    recordMenuController.getChoiceBox_BloodGroup().getSelectionModel().getSelectedItem()
-//                            + recordMenuController.getChoiceBox_BloodType().getSelectionModel().getSelectedItem(),
-//                    formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()));
-//            if (recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem().equals("Male")) {
-//                record.setSex(true);
-//            } else {
-//                record.setSex(false);
-//            }
             if (tableView_PatientTable != null) {
                 int statusCode = patient.addNew(patientMenuController.getTextField_Name().getText(),
                         patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
                         patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
-//                HttpResponse response = PatientController.createPatient(patient);
-//                setStatusCode(response.getStatusLine().getStatusCode());
-//                if (checkStatusCode(getStatusCode())) {
-//                    int id = new Patient().getIdFromJson(response);
-//                    patient.setId(id);
                 if (checkStatusCode(statusCode)) {
                     statusCode = record.changeRecord(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
                             Double.parseDouble(recordMenuController.getTextField_Height().getText()),
@@ -137,8 +107,6 @@ public class AddPatientAndCardMenuController extends MenuController {
                             formatter.parse(recordMenuController.getDatePicker_Birthday().getValue().toString()),
                             recordMenuController.getChoiceBox_Sex().getSelectionModel().getSelectedItem(), patient);
                 }
-//                    response = RecordController.changeRecord(record, id);
-//                    setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(statusCode)) {
                     getAlert(null, "Patient is registered!", Alert.AlertType.INFORMATION);
                     if (tableView_PatientTable.getItems().size() < Constant.getObjectOnPage()) {
@@ -147,15 +115,11 @@ public class AddPatientAndCardMenuController extends MenuController {
                     tableView_PatientTable.refresh();
                     getNewWindow().close();
                 }
-//                }
+
             } else {
-//                patient.setId(patientId);
                 int statusCode = patient.changePatient(patientMenuController.getTextField_Name().getText(),
                         patientMenuController.getTextField_Surname().getText(), patientMenuController.getTextField_Telephone().getText(),
                         patientMenuController.getTextField_Address().getText(), patientMenuController.getTextField_Email().getText());
-
-//                HttpResponse response = PatientController.changePatient(patient);
-//                setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(statusCode)) {
                     statusCode = record.changeRecord(Double.parseDouble(recordMenuController.getTextField_Weight().getText()),
                             Double.parseDouble(recordMenuController.getTextField_Height().getText()),

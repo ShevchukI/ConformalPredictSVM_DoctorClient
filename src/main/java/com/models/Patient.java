@@ -1,7 +1,6 @@
 package com.models;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tools.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -10,9 +9,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.tools.Constant.*;
 
@@ -82,7 +78,6 @@ public class Patient implements Serializable {
         HttpResponse response = changePatient(this);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-//                this.id = getIdFromJson(response);
             return statusCode;
         }
         return statusCode;
@@ -176,42 +171,16 @@ public class Patient implements Serializable {
         return surname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
     public String getTelephone() {
         return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Patient> listFromJson(HttpResponse response) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        String json = reader.readLine();
-        Type patientListType = new TypeToken<ArrayList<Patient>>() {
-        }.getType();
-        Gson gson = new Gson();
-        List<Patient> list = gson.fromJson(json, patientListType);
-        return list;
     }
 
     public int getIdFromJson(HttpResponse response) throws IOException {
@@ -231,6 +200,5 @@ public class Patient implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
-
 
 }

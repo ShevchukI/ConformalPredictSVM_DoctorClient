@@ -24,7 +24,6 @@ import java.io.IOException;
  */
 public class ChangeInfoMenuController extends MenuController {
 
-//    private SpecializationController specializationController;
     private ObservableList<Specialization> specializations;
     private Tooltip tooltipError_CurrentPassword;
     private Tooltip tooltipError_NewPassword;
@@ -62,12 +61,8 @@ public class ChangeInfoMenuController extends MenuController {
 
     @FXML
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         setNewWindow(newWindow);
-//        specializationController = new SpecializationController();
         specializations = FXCollections.observableArrayList();
         tooltipError_CurrentPassword = new Tooltip();
         tooltipError_NewPassword = new Tooltip();
@@ -114,16 +109,10 @@ public class ChangeInfoMenuController extends MenuController {
             });
             comboBox_Specialization.setVisibleRowCount(5);
             comboBox_Specialization.getSelectionModel().select(GlobalMap.getDoctorMap().get(1).getSpecialization().getId());
-//            comboBox_Specialization.getSelectionModel().select(HazelCastMap.getDoctorMap().get(1).getSpecialization().getId());
             textField_Name.setText(GlobalMap.getDoctorMap().get(1).getName());
             textField_Surname.setText(GlobalMap.getDoctorMap().get(1).getSurname());
-//            textField_Name.setText(HazelCastMap.getDoctorMap().get(1).getName());
-//            textField_Surname.setText(HazelCastMap.getDoctorMap().get(1).getSurname());
-
             if (GlobalMap.getDoctorMap().get(1) != null) {
-//            if (HazelCastMap.getDoctorMap().get(1) != null) {
                 doctor = GlobalMap.getDoctorMap().get(1);
-//                doctor = HazelCastMap.getDoctorMap().get(1);
             } else {
                 doctor = new Doctor();
             }

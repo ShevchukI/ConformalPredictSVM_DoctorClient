@@ -2,9 +2,9 @@
 ### Java template
 
 # IntelliJ project files
-.idea
-*.iml
-target
+#.idea
+#*.iml
+#target
 
 .gitignore
 .idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_6_0.xml
@@ -15,3 +15,5 @@ target/generated-sources/
 
 target/
 .idea/
+*.iml
+out/

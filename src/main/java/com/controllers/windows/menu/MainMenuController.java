@@ -125,7 +125,7 @@ public class MainMenuController extends MenuController {
 
     public void addPatient(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow(Constant.getAddPatientAndRecordMenuRoot(), this.getStage(),
-                addPatientAndCardMenuController, tableView_PatientTable,"Add new patient", 740, 540);
+                addPatientAndCardMenuController, tableView_PatientTable,null, 740, 540);
     }
 
     public void viewPatient(ActionEvent event) throws IOException {

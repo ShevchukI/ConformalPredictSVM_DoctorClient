@@ -239,7 +239,7 @@ public class CardPageMenuController extends MenuController {
             windowsController.openNewModalWindow(Constant.getDiagnosticMenuRoot(), getStage(),
                     new DiagnosticMenuController(), page, "", 600, 440);
         } else {
-            getAlert(null, "Please, choice illness!", Alert.AlertType.INFORMATION);
+            getAlert(null, "Please, choose illness!", Alert.AlertType.INFORMATION);
         }
     }
 }

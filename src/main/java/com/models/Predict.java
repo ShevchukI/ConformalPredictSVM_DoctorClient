@@ -164,10 +164,10 @@ public class Predict {
                 case -1:
                     return "Negative";
                 default:
-                    return "Uncertain";
+                    return "Undefined";
             }
         } else {
-            return "Uncertain";
+            return "Undefined";
         }
     }
 
@@ -176,6 +176,5 @@ public class Predict {
         String json = reader.readLine();
         return new Gson().fromJson(json, Predict.class);
     }
-
 
 }
